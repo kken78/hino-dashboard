@@ -3,112 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>日野町 統計ダッシュボード</title>
+    <title>日野町 統計インタラクティブ・ダッシュボード</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
+        :root {
+            --primary-color: #1e5631; /* 日野の豊かな自然をイメージした深みのある緑 */
+            --primary-light: #e8f5e9;
+            --accent-blue: #2980b9;
+            --accent-orange: #d35400;
+            --text-color: #2c3e50;
+            --bg-color: #f4f7f6;
+        }
+
         body {
             font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
             padding: 20px;
+            transition: all 0.3s;
         }
+
+        /* iframe埋め込みモード (?embed=true) のスタイル */
+        body.embed-mode {
+            background-color: transparent;
+            padding: 0;
+        }
+        body.embed-mode .container {
+            box-shadow: none;
+            padding: 10px;
+            max-width: 100%;
+            background-color: transparent;
+        }
+        body.embed-mode h1, body.embed-mode .download-box {
+            display: none; /* 埋め込み時はタイトルやダウンロードボタンを隠す */
+        }
+
         .container {
-            max-width: 900px;
+            max-width: 950px;
             margin: 0 auto;
             background: #fff;
-            padding: 20px 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-        h1 { text-align: center; color: #2c3e50; }
-        .chart-wrapper { position: relative; height: 50vh; width: 100%; }
-        .source-note { text-align: right; font-size: 0.85em; color: #7f8c8d; margin-top: 15px; }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        /* タブメニューの装飾 */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #7f8c8d;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 55vh;
+            width: 100%;
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .footer-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .source-note {
+            font-size: 0.85em;
+            color: #7f8c8d;
+        }
+
         .download-link {
             display: inline-block;
-            padding: 8px 12px;
-            background-color: #27ae60;
+            padding: 8px 16px;
+            background-color: var(--primary-color);
             color: #fff;
             text-decoration: none;
-            border-radius: 4px;
-            font-size: 0.9em;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: bold;
+            transition: background 0.2s;
         }
-        .download-link:hover { background-color: #2ecc71; }
+
+        .download-link:hover {
+            opacity: 0.9;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>日野町 人口・世帯数の推移ダッシュボード</h1>
+    <h1>日野町 オープンデータ・ダッシュボード</h1>
+    
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('population', this)">人口・世帯数</button>
+        <button class="tab-btn" onclick="switchTab('land_area', this)">地目別面積</button>
+        <button class="tab-btn" onclick="switchTab('tourism', this)">観光客入込数</button>
+    </div>
+
     <div class="chart-wrapper">
         <canvas id="hinoChart"></canvas>
     </div>
     
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-        <a href="data/hino_population.csv" class="download-link" download>オープンデータ (CSV) をダウンロード</a>
+    <div class="footer-box">
+        <div class="download-box">
+            <a id="downloadBtn" href="data/hino_population.csv" class="download-link" download>このデータのCSVをダウンロード</a>
+        </div>
         <div class="source-note">出典：「統計でわかる！日野のすがた2025」</div>
     </div>
 </div>
 
 <script>
-    // GitHub Pages上でも動くように相対パスでCSVを読み込む
-    Papa.parse("data/hino_population.csv", {
-        download: true,
-        header: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-            const data = results.data;
-            const labels = [];
-            const populationData = [];
-            const householdData = [];
+    let currentChart = null;
 
-            data.forEach(row => {
-                labels.push(row['年']);
-                populationData.push(parseInt(row['総数'], 10));
-                householdData.push(parseInt(row['世帯数'], 10));
-            });
+    // URLパラメータをチェックして、埋め込みモードならbodyにクラスを付与
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('embed') === 'true') {
+        document.body.classList.add('embed-mode');
+    }
 
-            renderChart(labels, populationData, householdData);
-        }
-    });
+    // 最初は人口データを読み込む
+    loadGraph('population');
 
-    function renderChart(labels, populationData, householdData) {
-        const ctx = document.getElementById('hinoChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: '総人口 (人)',
-                        data: populationData,
-                        borderColor: '#3498db',
-                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        yAxisID: 'y'
-                    },
-                    {
-                        label: '世帯数 (世帯)',
-                        data: householdData,
-                        type: 'bar',
-                        backgroundColor: 'rgba(230, 126, 34, 0.7)',
-                        yAxisID: 'y1'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: { mode: 'index', intersect: false },
-                scales: {
-                    y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '人口 (人)' }, suggestedMin: 15000 },
-                    y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: '世帯数 (世帯)' }, grid: { drawOnChartArea: false } }
+    function switchTab(dataType, btnElement) {
+        // タブボタンの活性・非活性切り替え
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        btnElement.classList.add('active');
+        
+        // ダウンロードリンクの更新
+        document.getElementById('downloadBtn').href = `data/hino_${dataType}.csv`;
+
+        // グラフの再読み込み
+        loadGraph(dataType);
+    }
+
+    function loadGraph(dataType) {
+        Papa.parse(`data/hino_${dataType}.csv`, {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            complete: function(results) {
+                const data = results.data;
+                if (currentChart) {
+                    currentChart.destroy(); // 古いグラフを破棄してメモリを解放
+                }
+                
+                if (dataType === 'population') {
+                    renderPopulationGraph(data);
+                } else if (dataType === 'land_area') {
+                    renderLandAreaGraph(data);
+                } else if (dataType === 'tourism') {
+                    renderTourismGraph(data);
                 }
             }
         });
     }
+
+    // 1. 人口・世帯数のグラフ (ご要望を100%反映)
+    function renderPopulationGraph(data) {
+        const labels = data.map(r => rowNameClear(r['年']));
+        const population = data.map(r => parseInt(r['総数'], 10));
+        const households = data.map(r => parseInt(r['世帯数'], 10));
+
+        const ctx = document.getElementById('hinoChart').getContext('2d');
+        currentChart = new Chart(ctx, {
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        type: 'bar', // 総人口を棒グラフに
+                        label: '総人口（人、棒グラフ）',
+                        data: population,
+                        backgroundColor: 'rgba(30, 86, 49, 0.75)', /* Hino Green */
+                        borderColor: '#1e5631',
+                        borderWidth: 1,
+                        yAxisID: 'y'
+                    },
+                    {
+                        type: 'line', // 世帯数を折れ線グラフに
+                        label: '世帯数（世帯、折れ線グラフ）',
+                        data: households,
+                        borderColor: varColor('--accent-orange'),
+                        backgroundColor: 'transparent',
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: getCommonOptions({
+                y: { type: 'linear', position: 'left', title: { display: true, text: '人口 (人)' }, min: 0 }, /* 0から開始 */
+                y1: { type: 'linear', position: 'right', title: { display: true, text: '世帯数 (世帯)' }, min: 0, grid: { drawOnChartArea: false } }
+            })
+        });
+    }
+
+    // 2. 地目別面積のグラフ (新規: 積み上げ棒グラフ)
+    function renderLandAreaGraph(data) {
+        const labels = data.map(r => rowNameClear(r['年']));
+        ctx = document.getElementById('hinoChart').getContext('2d');
+        currentChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: '林山 (ha)', data: data.map(r => parseInt(r['林山'], 10)), backgroundColor: '#1e5631' },
+                    { label: '田 (ha)', data: data.map(r => parseInt(r['田'], 10)), backgroundColor: '#2ec4b6' },
+                    { label: '宅地 (ha)', data: data.map(r => parseInt(r['宅地'], 10)), backgroundColor: '#e74c3c' },
+                    { label: '畑 (ha)', data: data.map(r => parseInt(r['畑'], 10)), backgroundColor: '#f1c40f' }
+                ]
+            },
+            options: getCommonOptions({
+                x: { stacked: true },
+                y: { stacked: true, title: { display: true, text: '面積 (ha)' }, min: 0 }
+            })
+        });
+    }
+
+    // 3. 観光客入込数のグラフ (新規: 複数棒グラフ)
+    function renderTourismGraph(data) {
+        const labels = data.map(r => rowNameClear(r['年']));
+        ctx = document.getElementById('hinoChart').getContext('2d');
+        currentChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: '日帰り客数 (人)', data: data.map(r => parseInt(r['日帰り'], 10)), backgroundColor: varColor('--accent-blue') },
+                    { label: '宿泊客数 (人)', data: data.map(r => parseInt(r['宿泊'], 10)), backgroundColor: varColor('--accent-orange') }
+                ]
+            },
+            options: getCommonOptions({
+                y: { title: { display: true, text: '観光客数 (人)' }, min: 0 }
+            })
+        });
+    }
+
+    // 共通のオプション設定関数
+    function getCommonOptions(scalesConfig) {
+        return {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { position: 'top', labels: { boxWidth: 20, font: { weight: 'bold' } } },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label.split('（')[0] || context.dataset.label;
+                            label += ': ' + new Intl.NumberFormat('ja-JP').format(context.parsed.y);
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: scalesConfig
+        };
+    }
+
+    function varColor(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+    function rowNameClear(text) { return text ? text.replace(/[\s\n]/g, '') : ''; }
 </script>
 
 </body>
