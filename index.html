@@ -3,129 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>日野町 統計インタラクティブ・ダッシュボード</title>
+    <title>日野町 オープンデータ・ダッシュボード</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         :root {
-            --primary-color: #1e5631; /* 日野の豊かな自然をイメージした深みのある緑 */
-            --primary-light: #e8f5e9;
-            --accent-blue: #2980b9;
-            --accent-orange: #d35400;
-            --text-color: #2c3e50;
-            --bg-color: #f4f7f6;
+            /* デジタル庁ガイドラインを意識したカラーユニバーサルデザイン対応パレット */
+            --color-male: #1d4e89;    /* 深みのある青 */
+            --color-female: #d45d00;  /* 視認性の高いオレンジ */
+            --color-household: #007a5e; /* 世帯数用の緑 */
+            --color-tourism-day: #008eb0; 
+            --color-tourism-stay: #e69f00;
+            --text-main: #333333;
+            --text-sub: #666666;
+            --bg-body: #f4f6f9;
+            --bg-card: #ffffff;
+            --grid-line: #e0e0e0;
         }
 
         body {
-            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
             margin: 0;
             padding: 20px;
             transition: all 0.3s;
         }
 
-        /* iframe埋め込みモード (?embed=true) のスタイル */
-        body.embed-mode {
-            background-color: transparent;
-            padding: 0;
-        }
-        body.embed-mode .container {
-            box-shadow: none;
-            padding: 10px;
-            max-width: 100%;
-            background-color: transparent;
-        }
-        body.embed-mode h1, body.embed-mode .download-box {
-            display: none; /* 埋め込み時はタイトルやダウンロードボタンを隠す */
-        }
+        body.embed-mode { background-color: transparent; padding: 0; }
+        body.embed-mode .container { box-shadow: none; padding: 10px; max-width: 100%; border-radius: 0; }
+        body.embed-mode h1, body.embed-mode .download-box { display: none; }
 
         .container {
-            max-width: 950px;
+            max-width: 900px;
             margin: 0 auto;
-            background: #fff;
+            background: var(--bg-card);
             padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         h1 {
             text-align: center;
-            color: var(--primary-color);
-            margin-bottom: 25px;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
+            color: var(--text-main);
+            margin-bottom: 20px;
         }
 
-        /* タブメニューの装飾 */
         .tabs {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #e0e0e0;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--grid-line);
             padding-bottom: 10px;
         }
 
         .tab-btn {
-            padding: 10px 20px;
+            padding: 8px 16px;
             border: none;
             background: none;
             font-size: 1rem;
-            font-weight: bold;
-            color: #7f8c8d;
+            color: var(--text-sub);
             cursor: pointer;
-            border-radius: 6px;
-            transition: all 0.2s;
+            border-radius: 4px;
+            transition: 0.2s;
         }
 
-        .tab-btn:hover {
-            background-color: var(--primary-light);
-            color: var(--primary-color);
-        }
-
+        .tab-btn:hover { background-color: #f0f0f0; }
         .tab-btn.active {
-            background-color: var(--primary-color);
+            background-color: var(--text-main);
             color: #fff;
+            font-weight: bold;
         }
 
-        .chart-wrapper {
-            position: relative;
-            height: 55vh;
-            width: 100%;
-            background: #fff;
-            padding: 10px;
-            border-radius: 8px;
+        /* グラフを複数並べるためのコンテナ */
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
         }
+
+        .chart-box {
+            position: relative;
+            height: 35vh; /* 2つ並べるため少し高さを抑える */
+            width: 100%;
+        }
+
+        /* シングルグラフの時は少し高くする */
+        .chart-box.single { height: 50vh; }
 
         .footer-box {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 20px;
+            margin-top: 30px;
             padding-top: 15px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid var(--grid-line);
         }
 
-        .source-note {
-            font-size: 0.85em;
-            color: #7f8c8d;
-        }
-
+        .source-note { font-size: 0.85em; color: var(--text-sub); }
         .download-link {
-            display: inline-block;
             padding: 8px 16px;
-            background-color: var(--primary-color);
-            color: #fff;
+            background-color: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--text-main);
             text-decoration: none;
-            border-radius: 6px;
+            border-radius: 4px;
             font-size: 0.85em;
-            font-weight: bold;
-            transition: background 0.2s;
+            transition: 0.2s;
         }
-
-        .download-link:hover {
-            opacity: 0.9;
-        }
+        .download-link:hover { background-color: var(--text-main); color: #fff; }
     </style>
 </head>
 <body>
@@ -139,40 +127,51 @@
         <button class="tab-btn" onclick="switchTab('tourism', this)">観光客入込数</button>
     </div>
 
-    <div class="chart-wrapper">
-        <canvas id="hinoChart"></canvas>
-    </div>
+    <div id="chartArea" class="chart-container"></div>
     
     <div class="footer-box">
         <div class="download-box">
-            <a id="downloadBtn" href="data/hino_population.csv" class="download-link" download>このデータのCSVをダウンロード</a>
+            <a id="downloadBtn" href="data/hino_population.csv" class="download-link" download>CSVデータをダウンロード</a>
         </div>
         <div class="source-note">出典：「統計でわかる！日野のすがた2025」</div>
     </div>
 </div>
 
 <script>
-    let currentChart = null;
+    let activeCharts = [];
 
-    // URLパラメータをチェックして、埋め込みモードならbodyにクラスを付与
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('embed') === 'true') {
+    // iframe用モード切替
+    if (new URLSearchParams(window.location.search).get('embed') === 'true') {
         document.body.classList.add('embed-mode');
     }
 
-    // 最初は人口データを読み込む
+    // 初期ロード
     loadGraph('population');
 
     function switchTab(dataType, btnElement) {
-        // タブボタンの活性・非活性切り替え
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         btnElement.classList.add('active');
-        
-        // ダウンロードリンクの更新
         document.getElementById('downloadBtn').href = `data/hino_${dataType}.csv`;
-
-        // グラフの再読み込み
         loadGraph(dataType);
+    }
+
+    // 既存のグラフを破棄してキャンバスを作り直す
+    function resetCanvases(count) {
+        activeCharts.forEach(chart => chart.destroy());
+        activeCharts = [];
+        const chartArea = document.getElementById('chartArea');
+        chartArea.innerHTML = ''; // クリア
+
+        const canvases = [];
+        for (let i = 0; i < count; i++) {
+            const wrapper = document.createElement('div');
+            wrapper.className = count === 1 ? 'chart-box single' : 'chart-box';
+            const canvas = document.createElement('canvas');
+            wrapper.appendChild(canvas);
+            chartArea.appendChild(wrapper);
+            canvases.push(canvas.getContext('2d'));
+        }
+        return canvases;
     }
 
     function loadGraph(dataType) {
@@ -181,126 +180,106 @@
             header: true,
             skipEmptyLines: true,
             complete: function(results) {
-                const data = results.data;
-                if (currentChart) {
-                    currentChart.destroy(); // 古いグラフを破棄してメモリを解放
-                }
-                
-                if (dataType === 'population') {
-                    renderPopulationGraph(data);
-                } else if (dataType === 'land_area') {
-                    renderLandAreaGraph(data);
-                } else if (dataType === 'tourism') {
-                    renderTourismGraph(data);
-                }
+                if (dataType === 'population') renderPopulationGraph(results.data);
+                else if (dataType === 'land_area') renderLandAreaGraph(results.data);
+                else if (dataType === 'tourism') renderTourismGraph(results.data);
             }
         });
     }
 
-    // 1. 人口・世帯数のグラフ (ご要望を100%反映)
+    // 1. 人口・世帯数（2軸廃止、上下に分割。人口は男女積み上げ）
     function renderPopulationGraph(data) {
-        const labels = data.map(r => rowNameClear(r['年']));
-        const population = data.map(r => parseInt(r['総数'], 10));
-        const households = data.map(r => parseInt(r['世帯数'], 10));
+        const ctxs = resetCanvases(2); // 2つのキャンバスを生成
+        const labels = data.map(r => r['年']);
 
-        const ctx = document.getElementById('hinoChart').getContext('2d');
-        currentChart = new Chart(ctx, {
+        // 上段：総人口（男女積み上げ）
+        activeCharts.push(new Chart(ctxs[0], {
+            type: 'bar',
             data: {
                 labels: labels,
                 datasets: [
-                    {
-                        type: 'bar', // 総人口を棒グラフに
-                        label: '総人口（人、棒グラフ）',
-                        data: population,
-                        backgroundColor: 'rgba(30, 86, 49, 0.75)', /* Hino Green */
-                        borderColor: '#1e5631',
-                        borderWidth: 1,
-                        yAxisID: 'y'
-                    },
-                    {
-                        type: 'line', // 世帯数を折れ線グラフに
-                        label: '世帯数（世帯、折れ線グラフ）',
-                        data: households,
-                        borderColor: varColor('--accent-orange'),
-                        backgroundColor: 'transparent',
-                        borderWidth: 3,
-                        pointRadius: 4,
-                        yAxisID: 'y1'
-                    }
+                    { label: '男 (人)', data: data.map(r => r['男']), backgroundColor: 'var(--color-male)' },
+                    { label: '女 (人)', data: data.map(r => r['女']), backgroundColor: 'var(--color-female)' }
                 ]
             },
-            options: getCommonOptions({
-                y: { type: 'linear', position: 'left', title: { display: true, text: '人口 (人)' }, min: 0 }, /* 0から開始 */
-                y1: { type: 'linear', position: 'right', title: { display: true, text: '世帯数 (世帯)' }, min: 0, grid: { drawOnChartArea: false } }
-            })
-        });
+            options: getBaseOptions('人口推移（男女別積み上げ）', { x: { stacked: true }, y: { stacked: true, min: 0 } })
+        }));
+
+        // 下段：世帯数（独立した棒グラフ）
+        activeCharts.push(new Chart(ctxs[1], {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{ label: '世帯数 (世帯)', data: data.map(r => r['世帯数']), backgroundColor: 'var(--color-household)' }]
+            },
+            options: getBaseOptions('世帯数推移', { y: { min: 0 } })
+        }));
     }
 
-    // 2. 地目別面積のグラフ (新規: 積み上げ棒グラフ)
+    // 2. 地目別面積（積み上げ棒グラフ）
     function renderLandAreaGraph(data) {
-        const labels = data.map(r => rowNameClear(r['年']));
-        ctx = document.getElementById('hinoChart').getContext('2d');
-        currentChart = new Chart(ctx, {
+        const ctxs = resetCanvases(1);
+        const labels = data.map(r => r['年']);
+        activeCharts.push(new Chart(ctxs[0], {
             type: 'bar',
             data: {
                 labels: labels,
                 datasets: [
-                    { label: '林山 (ha)', data: data.map(r => parseInt(r['林山'], 10)), backgroundColor: '#1e5631' },
-                    { label: '田 (ha)', data: data.map(r => parseInt(r['田'], 10)), backgroundColor: '#2ec4b6' },
-                    { label: '宅地 (ha)', data: data.map(r => parseInt(r['宅地'], 10)), backgroundColor: '#e74c3c' },
-                    { label: '畑 (ha)', data: data.map(r => parseInt(r['畑'], 10)), backgroundColor: '#f1c40f' }
+                    { label: '林山 (ha)', data: data.map(r => r['林山']), backgroundColor: '#447c59' },
+                    { label: '田 (ha)', data: data.map(r => r['田']), backgroundColor: '#98b46b' },
+                    { label: '畑 (ha)', data: data.map(r => r['畑']), backgroundColor: '#e2d37c' },
+                    { label: '宅地 (ha)', data: data.map(r => r['宅地']), backgroundColor: '#c76b6b' }
                 ]
             },
-            options: getCommonOptions({
-                x: { stacked: true },
-                y: { stacked: true, title: { display: true, text: '面積 (ha)' }, min: 0 }
-            })
-        });
+            options: getBaseOptions('地目別面積推移', { x: { stacked: true }, y: { stacked: true, min: 0 } })
+        }));
     }
 
-    // 3. 観光客入込数のグラフ (新規: 複数棒グラフ)
+    // 3. 観光客数（合計が意味を持つため積み上げ棒グラフ）
     function renderTourismGraph(data) {
-        const labels = data.map(r => rowNameClear(r['年']));
-        ctx = document.getElementById('hinoChart').getContext('2d');
-        currentChart = new Chart(ctx, {
+        const ctxs = resetCanvases(1);
+        const labels = data.map(r => r['年']);
+        activeCharts.push(new Chart(ctxs[0], {
             type: 'bar',
             data: {
                 labels: labels,
                 datasets: [
-                    { label: '日帰り客数 (人)', data: data.map(r => parseInt(r['日帰り'], 10)), backgroundColor: varColor('--accent-blue') },
-                    { label: '宿泊客数 (人)', data: data.map(r => parseInt(r['宿泊'], 10)), backgroundColor: varColor('--accent-orange') }
+                    { label: '日帰り客 (人)', data: data.map(r => r['日帰り']), backgroundColor: 'var(--color-tourism-day)' },
+                    { label: '宿泊客 (人)', data: data.map(r => r['宿泊']), backgroundColor: 'var(--color-tourism-stay)' }
                 ]
             },
-            options: getCommonOptions({
-                y: { title: { display: true, text: '観光客数 (人)' }, min: 0 }
-            })
-        });
+            options: getBaseOptions('観光客入込数推移', { x: { stacked: true }, y: { stacked: true, min: 0 } })
+        }));
     }
 
-    // 共通のオプション設定関数
-    function getCommonOptions(scalesConfig) {
+    // データインク比を高めた共通オプション
+    function getBaseOptions(titleText, customScales) {
         return {
             responsive: true,
             maintainAspectRatio: false,
             interaction: { mode: 'index', intersect: false },
             plugins: {
-                legend: { position: 'top', labels: { boxWidth: 20, font: { weight: 'bold' } } },
+                title: { display: true, text: titleText, color: 'var(--text-main)', font: { size: 14 } },
+                legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 10 } },
                 tooltip: {
+                    backgroundColor: 'rgba(255,255,255,0.95)',
+                    titleColor: '#333',
+                    bodyColor: '#333',
+                    borderColor: '#ccc',
+                    borderWidth: 1,
                     callbacks: {
                         label: function(context) {
-                            let label = context.dataset.label.split('（')[0] || context.dataset.label;
-                            label += ': ' + new Intl.NumberFormat('ja-JP').format(context.parsed.y);
-                            return label;
+                            return context.dataset.label + ': ' + new Intl.NumberFormat('ja-JP').format(context.raw);
                         }
                     }
                 }
             },
-            scales: scalesConfig
+            scales: Object.assign({
+                x: { grid: { display: false } }, // X軸の縦線を消してすっきりさせる
+                y: { grid: { color: 'var(--grid-line)' } }
+            }, customScales)
         };
     }
-
-    function varColor(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
-    function rowNameClear(text) { return text ? text.replace(/[\s\n]/g, '') : ''; }
 </script>
 
 </body>
