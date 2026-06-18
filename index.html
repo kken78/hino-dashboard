@@ -3,279 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>日野町 オープンデータ・ダッシュボード</title>
+    <title>日野町 オープンデータ・ポータル</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         :root {
-            --text-main: #333333;
-            --text-sub: #666666;
-            --bg-body: #f4f6f9;
-            --bg-card: #ffffff;
-            --grid-line: #e0e0e0;
+            --primary: #1d4e89; --secondary: #007a5e; --accent: #d45d00;
+            --bg-body: #f4f6f9; --bg-card: #ffffff; --grid-line: #e0e0e0;
+            --text-main: #333333; --text-sub: #666666;
         }
+        body { font-family: "Helvetica Neue", Arial, sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; }
+        
+        /* ヘッダーナビゲーション */
+        header { background-color: var(--primary); color: #fff; padding: 15px 20px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        header h1 { margin: 0; font-size: 1.5rem; }
 
-        body {
-            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            transition: all 0.3s;
-        }
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+        
+        /* インデックス（ホーム）ビュー */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: var(--bg-card); border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-decoration: none; color: inherit; transition: transform 0.2s, box-shadow 0.2s; display: block; border-top: 4px solid var(--primary); }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
+        .card h3 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; }
+        .card p { margin: 0; color: var(--text-sub); font-size: 0.9rem; line-height: 1.5; }
+        .card-icon { font-size: 2rem; margin-bottom: 10px; }
 
-        body.embed-mode { background-color: transparent; padding: 0; }
-        body.embed-mode .container { box-shadow: none; padding: 10px; max-width: 100%; border-radius: 0; }
-        body.embed-mode h1, body.embed-mode .download-box { display: none; }
+        /* ダッシュボードビュー */
+        .dashboard-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--bg-card); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .btn-home { background: var(--secondary); color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; text-decoration: none; font-weight: bold; }
+        .btn-home:hover { opacity: 0.9; }
+        select.dash-selector { padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 1rem; }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: var(--bg-card);
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            text-align: center;
-            font-size: 1.5rem;
-            color: var(--text-main);
-            margin-bottom: 20px;
-        }
-
-        .tabs {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 25px;
-            border-bottom: 1px solid var(--grid-line);
-            padding-bottom: 10px;
-        }
-
-        .tab-btn {
-            padding: 8px 16px;
-            border: none;
-            background: none;
-            font-size: 1rem;
-            color: var(--text-sub);
-            cursor: pointer;
-            border-radius: 4px;
-            transition: 0.2s;
-        }
-
-        .tab-btn:hover { background-color: #f0f0f0; }
-        .tab-btn.active {
-            background-color: var(--text-main);
-            color: #fff;
-            font-weight: bold;
-        }
-
-        .chart-container {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .chart-box {
-            position: relative;
-            height: 35vh; 
-            width: 100%;
-        }
-
+        .chart-panel { background: var(--bg-card); padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .chart-box { position: relative; height: 35vh; width: 100%; margin-bottom: 20px; }
         .chart-box.single { height: 50vh; }
-
-        .footer-box {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 30px;
-            padding-top: 15px;
-            border-top: 1px solid var(--grid-line);
-        }
-
-        .source-note { font-size: 0.85em; color: var(--text-sub); }
-        .download-link {
-            padding: 8px 16px;
-            background-color: transparent;
-            color: var(--text-main);
-            border: 1px solid var(--text-main);
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 0.85em;
-            transition: 0.2s;
-        }
-        .download-link:hover { background-color: var(--text-main); color: #fff; }
+        
+        .footer-box { display: flex; justify-content: space-between; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--grid-line); }
+        .download-link { padding: 6px 12px; border: 1px solid var(--text-sub); color: var(--text-main); text-decoration: none; border-radius: 4px; font-size: 0.85em; }
+        .download-link:hover { background: var(--text-main); color: #fff; }
     </style>
 </head>
 <body>
 
+<header>
+    <h1>日野町 オープンデータ・ポータル</h1>
+</header>
+
 <div class="container">
-    <h1>日野町 オープンデータ・ダッシュボード</h1>
-    
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('population', this)">人口・世帯数</button>
-        <button class="tab-btn" onclick="switchTab('land_area', this)">地目別面積</button>
-        <button class="tab-btn" onclick="switchTab('tourism', this)">観光客入込数</button>
+    <!-- ホーム画面（インデックス） -->
+    <div id="view-home">
+        <p style="margin-bottom: 20px; color: var(--text-sub);">「統計でわかる！日野のすがた2025」から抽出したデータを、直感的なダッシュボードで公開しています。各カードをクリックして詳細をご覧ください。</p>
+        <div class="card-grid" id="cardGrid"></div>
     </div>
 
-    <div id="chartArea" class="chart-container"></div>
-    
-    <div class="footer-box">
-        <div class="download-box">
-            <a id="downloadBtn" href="data/hino_population.csv" class="download-link" download>CSVデータをダウンロード</a>
+    <!-- ダッシュボード画面 -->
+    <div id="view-dashboard" style="display: none;">
+        <div class="dashboard-nav">
+            <a href="#" class="btn-home">◀ ホームへ戻る</a>
+            <select id="dashSelector" class="dash-selector" onchange="window.location.hash = this.value">
+                <!-- JSでオプションを生成 -->
+            </select>
         </div>
-        <div class="source-note">出典：「統計でわかる！日野のすがた2025」</div>
+        
+        <div class="chart-panel">
+            <h2 id="dashTitle" style="text-align: center; margin-top:0;"></h2>
+            <p id="dashDesc" style="text-align: center; color: var(--text-sub); font-size: 0.9rem; margin-bottom: 20px;"></p>
+            
+            <div id="chartArea"></div>
+            
+            <div class="footer-box">
+                <a id="downloadBtn" href="#" class="download-link" download>CSVデータをダウンロード</a>
+                <span style="font-size: 0.85em; color: var(--text-sub);">出典：「統計でわかる！日野のすがた2025」</span>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
-    let activeCharts = [];
-
-    // デジタル庁ガイドラインを意識したカラーパレット（直接HEXで指定）
-    const colors = {
-        male: '#1d4e89',        // 深みのある青
-        female: '#d45d00',      // 視認性の高いオレンジ
-        household: '#007a5e',   // 世帯数用の緑
-        tourismDay: '#008eb0',  // ターコイズブルー
-        tourismStay: '#e69f00', // イエローオレンジ
-        forest: '#447c59',      // 林山（緑）
-        rice: '#98b46b',        // 田（黄緑）
-        field: '#e2d37c',       // 畑（黄）
-        residential: '#c76b6b'  // 宅地（赤茶）
+    // データ定義オブジェクト
+    const dashConfig = {
+        'population': { title: '人口・世帯数', icon: '👥', desc: '日野町の総人口（男女別）および世帯数の長期的な推移です。', file: 'hino_population.csv', render: renderPopulation },
+        'age': { title: '年齢3区分別人口', icon: '🎂', desc: '年少・生産年齢・老年人口の構成変化を可視化しています。', file: 'hino_age.csv', render: renderAge },
+        'industry': { title: '産業区分別就業者数', icon: '🏭', desc: '第一次〜第三次産業における就業者数の移り変わりです。', file: 'hino_industry.csv', render: renderIndustry },
+        'land_area': { title: '地目別面積', icon: '🗺️', desc: '町内の田、畑、宅地、林山などの面積の推移です。', file: 'hino_land_area.csv', render: renderLandArea },
+        'tourism': { title: '観光客入込数', icon: '🚌', desc: '日帰り・宿泊別の観光客数の直近の動向です。', file: 'hino_tourism.csv', render: renderTourism },
+        'garbage': { title: 'ごみ投入量', icon: '♻️', desc: '可燃物および不燃物の排出量（処理量）の推移です。', file: 'hino_garbage.csv', render: renderGarbage }
     };
 
-    if (new URLSearchParams(window.location.search).get('embed') === 'true') {
-        document.body.classList.add('embed-mode');
-    }
+    let activeCharts = [];
 
-    loadGraph('population');
-
-    function switchTab(dataType, btnElement) {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        btnElement.classList.add('active');
-        document.getElementById('downloadBtn').href = `data/hino_${dataType}.csv`;
-        loadGraph(dataType);
-    }
-
-    function resetCanvases(count) {
-        activeCharts.forEach(chart => chart.destroy());
-        activeCharts = [];
-        const chartArea = document.getElementById('chartArea');
-        chartArea.innerHTML = ''; 
-
-        const canvases = [];
-        for (let i = 0; i < count; i++) {
-            const wrapper = document.createElement('div');
-            wrapper.className = count === 1 ? 'chart-box single' : 'chart-box';
-            const canvas = document.createElement('canvas');
-            wrapper.appendChild(canvas);
-            chartArea.appendChild(wrapper);
-            canvases.push(canvas.getContext('2d'));
+    // 初期化処理
+    function init() {
+        // カードの生成
+        const grid = document.getElementById('cardGrid');
+        const selector = document.getElementById('dashSelector');
+        
+        for (const [key, conf] of Object.entries(dashConfig)) {
+            // カード追加
+            grid.innerHTML += `
+                <a href="#${key}" class="card">
+                    <div class="card-icon">${conf.icon}</div>
+                    <h3>${conf.title}</h3>
+                    <p>${conf.desc}</p>
+                </a>`;
+            // プルダウン追加
+            selector.innerHTML += `<option value="${key}">${conf.title}</option>`;
         }
-        return canvases;
+
+        // ハッシュ（URL）の監視と初回ルーティング
+        window.addEventListener('hashchange', handleRoute);
+        handleRoute();
     }
 
-    function loadGraph(dataType) {
-        Papa.parse(`data/hino_${dataType}.csv`, {
-            download: true,
-            header: true,
-            skipEmptyLines: true,
-            complete: function(results) {
-                if (dataType === 'population') renderPopulationGraph(results.data);
-                else if (dataType === 'land_area') renderLandAreaGraph(results.data);
-                else if (dataType === 'tourism') renderTourismGraph(results.data);
-            }
+    // ルーティング（画面切り替え）
+    function handleRoute() {
+        const hash = window.location.hash.substring(1);
+        if (hash && dashConfig[hash]) {
+            showDashboard(hash);
+        } else {
+            showHome();
+        }
+    }
+
+    function showHome() {
+        document.getElementById('view-home').style.display = 'block';
+        document.getElementById('view-dashboard').style.display = 'none';
+        activeCharts.forEach(c => c.destroy());
+    }
+
+    function showDashboard(key) {
+        document.getElementById('view-home').style.display = 'none';
+        document.getElementById('view-dashboard').style.display = 'block';
+        
+        const conf = dashConfig[key];
+        document.getElementById('dashTitle').innerText = conf.icon + ' ' + conf.title;
+        document.getElementById('dashDesc').innerText = conf.desc;
+        document.getElementById('dashSelector').value = key;
+        document.getElementById('downloadBtn').href = `data/${conf.file}`;
+
+        // データロード
+        Papa.parse(`data/${conf.file}`, {
+            download: true, header: true, skipEmptyLines: true,
+            complete: function(results) { conf.render(results.data); }
         });
     }
 
-    function renderPopulationGraph(data) {
+    // --- チャート管理ユーティリティ ---
+    function resetCanvases(count) {
+        activeCharts.forEach(c => c.destroy());
+        activeCharts = [];
+        const area = document.getElementById('chartArea');
+        area.innerHTML = '';
+        const ctxs = [];
+        for(let i=0; i<count; i++){
+            const div = document.createElement('div');
+            div.className = count === 1 ? 'chart-box single' : 'chart-box';
+            const canvas = document.createElement('canvas');
+            div.appendChild(canvas);
+            area.appendChild(div);
+            ctxs.push(canvas.getContext('2d'));
+        }
+        return ctxs;
+    }
+
+    function getBaseOptions(title, scales) {
+        return {
+            responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+            plugins: { title: { display: true, text: title, color: '#333' } },
+            scales: Object.assign({ x: { grid: { display: false } }, y: { grid: { color: '#e0e0e0' } } }, scales)
+        };
+    }
+
+    // --- 各グラフの描画ロジック ---
+    function renderPopulation(data) {
         const ctxs = resetCanvases(2);
         const labels = data.map(r => r['年']);
-
         activeCharts.push(new Chart(ctxs[0], {
             type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [
-                    { label: '男 (人)', data: data.map(r => r['男']), backgroundColor: colors.male },
-                    { label: '女 (人)', data: data.map(r => r['女']), backgroundColor: colors.female }
-                ]
-            },
-            options: getBaseOptions('人口推移（男女別積み上げ）', { x: { stacked: true }, y: { stacked: true, min: 0 } })
+            data: { labels, datasets: [ { label: '男', data: data.map(r=>r['男']), backgroundColor: '#1d4e89' }, { label: '女', data: data.map(r=>r['女']), backgroundColor: '#d45d00' } ] },
+            options: getBaseOptions('人口推移', { x: { stacked: true }, y: { stacked: true, min: 0 } })
         }));
-
         activeCharts.push(new Chart(ctxs[1], {
             type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{ label: '世帯数 (世帯)', data: data.map(r => r['世帯数']), backgroundColor: colors.household }]
-            },
+            data: { labels, datasets: [{ label: '世帯数', data: data.map(r=>r['世帯数']), backgroundColor: '#007a5e' }] },
             options: getBaseOptions('世帯数推移', { y: { min: 0 } })
         }));
     }
 
-    function renderLandAreaGraph(data) {
+    function renderAge(data) {
         const ctxs = resetCanvases(1);
-        const labels = data.map(r => r['年']);
         activeCharts.push(new Chart(ctxs[0], {
             type: 'bar',
             data: {
-                labels: labels,
+                labels: data.map(r => r['年']),
                 datasets: [
-                    { label: '林山 (ha)', data: data.map(r => r['林山']), backgroundColor: colors.forest },
-                    { label: '田 (ha)', data: data.map(r => r['田']), backgroundColor: colors.rice },
-                    { label: '畑 (ha)', data: data.map(r => r['畑']), backgroundColor: colors.field },
-                    { label: '宅地 (ha)', data: data.map(r => r['宅地']), backgroundColor: colors.residential }
+                    { label: '年少人口', data: data.map(r => r['年少人口']), backgroundColor: '#4a90e2' },
+                    { label: '生産年齢人口', data: data.map(r => r['生産年齢人口']), backgroundColor: '#2ecc71' },
+                    { label: '老年人口', data: data.map(r => r['老年人口']), backgroundColor: '#e74c3c' }
+                ]
+            },
+            options: getBaseOptions('年齢3区分別人口の推移', { x: { stacked: true }, y: { stacked: true, min: 0 } })
+        }));
+    }
+
+    function renderIndustry(data) {
+        const ctxs = resetCanvases(1);
+        activeCharts.push(new Chart(ctxs[0], {
+            type: 'bar',
+            data: {
+                labels: data.map(r => r['年']),
+                datasets: [
+                    { label: '第一次産業', data: data.map(r => r['第一次産業']), backgroundColor: '#8d6e63' },
+                    { label: '第二次産業', data: data.map(r => r['第二次産業']), backgroundColor: '#78909c' },
+                    { label: '第三次産業', data: data.map(r => r['第三次産業']), backgroundColor: '#5c6bc0' }
+                ]
+            },
+            options: getBaseOptions('産業区分別就業者数', { x: { stacked: true }, y: { stacked: true, min: 0 } })
+        }));
+    }
+
+    function renderLandArea(data) {
+        const ctxs = resetCanvases(1);
+        activeCharts.push(new Chart(ctxs[0], {
+            type: 'bar',
+            data: {
+                labels: data.map(r => r['年']),
+                datasets: [
+                    { label: '林山', data: data.map(r=>r['林山']), backgroundColor: '#447c59' },
+                    { label: '田', data: data.map(r=>r['田']), backgroundColor: '#98b46b' },
+                    { label: '畑', data: data.map(r=>r['畑']), backgroundColor: '#e2d37c' },
+                    { label: '宅地', data: data.map(r=>r['宅地']), backgroundColor: '#c76b6b' }
                 ]
             },
             options: getBaseOptions('地目別面積推移', { x: { stacked: true }, y: { stacked: true, min: 0 } })
         }));
     }
 
-    function renderTourismGraph(data) {
+    function renderTourism(data) {
         const ctxs = resetCanvases(1);
-        const labels = data.map(r => r['年']);
         activeCharts.push(new Chart(ctxs[0], {
             type: 'bar',
             data: {
-                labels: labels,
+                labels: data.map(r => r['年']),
                 datasets: [
-                    { label: '日帰り客 (人)', data: data.map(r => r['日帰り']), backgroundColor: colors.tourismDay },
-                    { label: '宿泊客 (人)', data: data.map(r => r['宿泊']), backgroundColor: colors.tourismStay }
+                    { label: '日帰り', data: data.map(r=>r['日帰り']), backgroundColor: '#008eb0' },
+                    { label: '宿泊', data: data.map(r=>r['宿泊']), backgroundColor: '#e69f00' }
                 ]
             },
-            options: getBaseOptions('観光客入込数推移', { x: { stacked: true }, y: { stacked: true, min: 0 } })
+            options: getBaseOptions('観光客入込数', { x: { stacked: true }, y: { stacked: true, min: 0 } })
         }));
     }
 
-    function getBaseOptions(titleText, customScales) {
-        return {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { mode: 'index', intersect: false },
-            plugins: {
-                title: { display: true, text: titleText, color: '#333', font: { size: 14 } },
-                legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 10 } },
-                tooltip: {
-                    backgroundColor: 'rgba(255,255,255,0.95)',
-                    titleColor: '#333',
-                    bodyColor: '#333',
-                    borderColor: '#ccc',
-                    borderWidth: 1,
-                    callbacks: {
-                        label: function(context) {
-                            return context.dataset.label + ': ' + new Intl.NumberFormat('ja-JP').format(context.raw);
-                        }
-                    }
-                }
-            },
-            scales: Object.assign({
-                x: { grid: { display: false } },
-                y: { grid: { color: '#e0e0e0' } }
-            }, customScales)
-        };
+    function renderGarbage(data) {
+        const ctxs = resetCanvases(2); // 可燃と不燃はスケールが違いすぎるので上下に分割
+        const labels = data.map(r => r['年']);
+        activeCharts.push(new Chart(ctxs[0], {
+            type: 'bar',
+            data: { labels, datasets: [{ label: '可燃物 (t)', data: data.map(r=>r['可燃物']), backgroundColor: '#e67e22' }] },
+            options: getBaseOptions('可燃物排出量', { y: { min: 0 } })
+        }));
+        activeCharts.push(new Chart(ctxs[1], {
+            type: 'bar',
+            data: { labels, datasets: [{ label: '不燃物 (t)', data: data.map(r=>r['不燃物']), backgroundColor: '#95a5a6' }] },
+            options: getBaseOptions('不燃物排出量', { y: { min: 0 } })
+        }));
     }
+
+    // 起動
+    window.onload = init;
 </script>
 
 </body>
