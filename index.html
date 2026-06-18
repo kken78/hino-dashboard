@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日野町 統計ダッシュボード</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 { text-align: center; color: #2c3e50; }
+        .chart-wrapper { position: relative; height: 50vh; width: 100%; }
+        .source-note { text-align: right; font-size: 0.85em; color: #7f8c8d; margin-top: 15px; }
+        .download-link {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: #27ae60;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .download-link:hover { background-color: #2ecc71; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>日野町 人口・世帯数の推移ダッシュボード</h1>
+    <div class="chart-wrapper">
+        <canvas id="hinoChart"></canvas>
+    </div>
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+        <a href="data/hino_population.csv" class="download-link" download>オープンデータ (CSV) をダウンロード</a>
+        <div class="source-note">出典：「統計でわかる！日野のすがた2025」</div>
+    </div>
+</div>
+
+<script>
+    // GitHub Pages上でも動くように相対パスでCSVを読み込む
+    Papa.parse("data/hino_population.csv", {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+            const data = results.data;
+            const labels = [];
+            const populationData = [];
+            const householdData = [];
+
+            data.forEach(row => {
+                labels.push(row['年']);
+                populationData.push(parseInt(row['総数'], 10));
+                householdData.push(parseInt(row['世帯数'], 10));
+            });
+
+            renderChart(labels, populationData, householdData);
+        }
+    });
+
+    function renderChart(labels, populationData, householdData) {
+        const ctx = document.getElementById('hinoChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: '総人口 (人)',
+                        data: populationData,
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: '世帯数 (世帯)',
+                        data: householdData,
+                        type: 'bar',
+                        backgroundColor: 'rgba(230, 126, 34, 0.7)',
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                    y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '人口 (人)' }, suggestedMin: 15000 },
+                    y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: '世帯数 (世帯)' }, grid: { drawOnChartArea: false } }
+                }
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
