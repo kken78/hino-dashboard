@@ -8,12 +8,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         :root {
-            /* デジタル庁ガイドラインを意識したカラーユニバーサルデザイン対応パレット */
-            --color-male: #1d4e89;    /* 深みのある青 */
-            --color-female: #d45d00;  /* 視認性の高いオレンジ */
-            --color-household: #007a5e; /* 世帯数用の緑 */
-            --color-tourism-day: #008eb0; 
-            --color-tourism-stay: #e69f00;
             --text-main: #333333;
             --text-sub: #666666;
             --bg-body: #f4f6f9;
@@ -77,7 +71,6 @@
             font-weight: bold;
         }
 
-        /* グラフを複数並べるためのコンテナ */
         .chart-container {
             display: flex;
             flex-direction: column;
@@ -86,11 +79,10 @@
 
         .chart-box {
             position: relative;
-            height: 35vh; /* 2つ並べるため少し高さを抑える */
+            height: 35vh; 
             width: 100%;
         }
 
-        /* シングルグラフの時は少し高くする */
         .chart-box.single { height: 50vh; }
 
         .footer-box {
@@ -140,12 +132,23 @@
 <script>
     let activeCharts = [];
 
-    // iframe用モード切替
+    // デジタル庁ガイドラインを意識したカラーパレット（直接HEXで指定）
+    const colors = {
+        male: '#1d4e89',        // 深みのある青
+        female: '#d45d00',      // 視認性の高いオレンジ
+        household: '#007a5e',   // 世帯数用の緑
+        tourismDay: '#008eb0',  // ターコイズブルー
+        tourismStay: '#e69f00', // イエローオレンジ
+        forest: '#447c59',      // 林山（緑）
+        rice: '#98b46b',        // 田（黄緑）
+        field: '#e2d37c',       // 畑（黄）
+        residential: '#c76b6b'  // 宅地（赤茶）
+    };
+
     if (new URLSearchParams(window.location.search).get('embed') === 'true') {
         document.body.classList.add('embed-mode');
     }
 
-    // 初期ロード
     loadGraph('population');
 
     function switchTab(dataType, btnElement) {
@@ -155,12 +158,11 @@
         loadGraph(dataType);
     }
 
-    // 既存のグラフを破棄してキャンバスを作り直す
     function resetCanvases(count) {
         activeCharts.forEach(chart => chart.destroy());
         activeCharts = [];
         const chartArea = document.getElementById('chartArea');
-        chartArea.innerHTML = ''; // クリア
+        chartArea.innerHTML = ''; 
 
         const canvases = [];
         for (let i = 0; i < count; i++) {
@@ -187,36 +189,32 @@
         });
     }
 
-    // 1. 人口・世帯数（2軸廃止、上下に分割。人口は男女積み上げ）
     function renderPopulationGraph(data) {
-        const ctxs = resetCanvases(2); // 2つのキャンバスを生成
+        const ctxs = resetCanvases(2);
         const labels = data.map(r => r['年']);
 
-        // 上段：総人口（男女積み上げ）
         activeCharts.push(new Chart(ctxs[0], {
             type: 'bar',
             data: {
                 labels: labels,
                 datasets: [
-                    { label: '男 (人)', data: data.map(r => r['男']), backgroundColor: 'var(--color-male)' },
-                    { label: '女 (人)', data: data.map(r => r['女']), backgroundColor: 'var(--color-female)' }
+                    { label: '男 (人)', data: data.map(r => r['男']), backgroundColor: colors.male },
+                    { label: '女 (人)', data: data.map(r => r['女']), backgroundColor: colors.female }
                 ]
             },
             options: getBaseOptions('人口推移（男女別積み上げ）', { x: { stacked: true }, y: { stacked: true, min: 0 } })
         }));
 
-        // 下段：世帯数（独立した棒グラフ）
         activeCharts.push(new Chart(ctxs[1], {
             type: 'bar',
             data: {
                 labels: labels,
-                datasets: [{ label: '世帯数 (世帯)', data: data.map(r => r['世帯数']), backgroundColor: 'var(--color-household)' }]
+                datasets: [{ label: '世帯数 (世帯)', data: data.map(r => r['世帯数']), backgroundColor: colors.household }]
             },
             options: getBaseOptions('世帯数推移', { y: { min: 0 } })
         }));
     }
 
-    // 2. 地目別面積（積み上げ棒グラフ）
     function renderLandAreaGraph(data) {
         const ctxs = resetCanvases(1);
         const labels = data.map(r => r['年']);
@@ -225,17 +223,16 @@
             data: {
                 labels: labels,
                 datasets: [
-                    { label: '林山 (ha)', data: data.map(r => r['林山']), backgroundColor: '#447c59' },
-                    { label: '田 (ha)', data: data.map(r => r['田']), backgroundColor: '#98b46b' },
-                    { label: '畑 (ha)', data: data.map(r => r['畑']), backgroundColor: '#e2d37c' },
-                    { label: '宅地 (ha)', data: data.map(r => r['宅地']), backgroundColor: '#c76b6b' }
+                    { label: '林山 (ha)', data: data.map(r => r['林山']), backgroundColor: colors.forest },
+                    { label: '田 (ha)', data: data.map(r => r['田']), backgroundColor: colors.rice },
+                    { label: '畑 (ha)', data: data.map(r => r['畑']), backgroundColor: colors.field },
+                    { label: '宅地 (ha)', data: data.map(r => r['宅地']), backgroundColor: colors.residential }
                 ]
             },
             options: getBaseOptions('地目別面積推移', { x: { stacked: true }, y: { stacked: true, min: 0 } })
         }));
     }
 
-    // 3. 観光客数（合計が意味を持つため積み上げ棒グラフ）
     function renderTourismGraph(data) {
         const ctxs = resetCanvases(1);
         const labels = data.map(r => r['年']);
@@ -244,22 +241,21 @@
             data: {
                 labels: labels,
                 datasets: [
-                    { label: '日帰り客 (人)', data: data.map(r => r['日帰り']), backgroundColor: 'var(--color-tourism-day)' },
-                    { label: '宿泊客 (人)', data: data.map(r => r['宿泊']), backgroundColor: 'var(--color-tourism-stay)' }
+                    { label: '日帰り客 (人)', data: data.map(r => r['日帰り']), backgroundColor: colors.tourismDay },
+                    { label: '宿泊客 (人)', data: data.map(r => r['宿泊']), backgroundColor: colors.tourismStay }
                 ]
             },
             options: getBaseOptions('観光客入込数推移', { x: { stacked: true }, y: { stacked: true, min: 0 } })
         }));
     }
 
-    // データインク比を高めた共通オプション
     function getBaseOptions(titleText, customScales) {
         return {
             responsive: true,
             maintainAspectRatio: false,
             interaction: { mode: 'index', intersect: false },
             plugins: {
-                title: { display: true, text: titleText, color: 'var(--text-main)', font: { size: 14 } },
+                title: { display: true, text: titleText, color: '#333', font: { size: 14 } },
                 legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 10 } },
                 tooltip: {
                     backgroundColor: 'rgba(255,255,255,0.95)',
@@ -275,8 +271,8 @@
                 }
             },
             scales: Object.assign({
-                x: { grid: { display: false } }, // X軸の縦線を消してすっきりさせる
-                y: { grid: { color: 'var(--grid-line)' } }
+                x: { grid: { display: false } },
+                y: { grid: { color: '#e0e0e0' } }
             }, customScales)
         };
     }
