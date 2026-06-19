@@ -8,7 +8,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         :root {
-            --primary: #1d4e89; --secondary: #007a5e; --bg-body: #f4f6f9; --bg-card: #ffffff; --grid-line: #e0e0e0; --text-main: #333333; --text-sub: #666666;
+            --primary: #1d4e89; --secondary: #007a5e; --accent: #d45d00;
+            --bg-body: #f4f6f9; --bg-card: #ffffff; --grid-line: #e0e0e0; --text-main: #333333; --text-sub: #666666;
         }
         body { font-family: "Helvetica Neue", Arial, sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; }
         header { background-color: var(--primary); color: #fff; padding: 15px 20px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
@@ -21,19 +22,18 @@
         .kpi-card { background: var(--bg-card); padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 5px solid var(--secondary); display: flex; flex-direction: column; justify-content: space-between; }
         .kpi-label { display: block; font-size: 0.9rem; color: var(--primary); font-weight: bold; margin-bottom: 5px; text-align: left; }
         
-        /* 動的数値・増減エリア */
         .kpi-value-box { text-align: center; margin-top: 5px; }
         .kpi-value { font-size: 2rem; font-weight: bold; color: var(--text-main); }
         .kpi-unit { font-size: 1rem; font-weight: normal; margin-left: 5px; color: var(--text-sub); }
+        
         .kpi-diff-box { text-align: center; font-size: 0.85rem; margin-bottom: 12px; }
-        .kpi-diff { font-weight: bold; padding: 2px 6px; border-radius: 4px; display: inline-block; }
-        .kpi-diff.diff-plus { color: #d45d00; background-color: #fdf2e9; }
-        .kpi-diff.diff-minus { color: #1d4e89; background-color: #ebf3fc; }
+        .kpi-diff { font-weight: bold; padding: 2px 8px; border-radius: 4px; display: inline-block; }
+        .kpi-diff.diff-plus { color: #d45d00; background-color: #fdf2e9; } /* ポジティブ（増加・改善） */
+        .kpi-diff.diff-minus { color: #1d4e89; background-color: #ebf3fc; } /* ネガティブ（減少・悪化） */
         .kpi-diff.diff-zero { color: #666; background-color: #eee; }
         .kpi-prev-text { color: var(--text-sub); margin-left: 5px; }
         
-        /* 統計の注記ボックス */
-        .kpi-note-box { background: #eef3fc; border: 1px solid #d0e0f5; padding: 15px; border-radius: 8px; margin-bottom: 30px; font-size: 0.85rem; line-height: 1.5; text-align: left; }
+        .kpi-note-box { background: #eef3fc; border: 1px solid #d0e0f5; padding: 15px; border-radius: 8px; margin-top: 40px; font-size: 0.85rem; line-height: 1.5; text-align: left; }
         .kpi-note-box ul { margin: 5px 0 0 20px; padding: 0; }
 
         .kpi-explain { font-size: 0.75rem; color: var(--text-sub); background-color: #f8f9fa; padding: 12px; border-radius: 4px; border: 1px solid #f0f0f0; margin-top: auto; text-align: left; line-height: 1.45; }
@@ -65,71 +65,60 @@
 <div class="container">
     <div id="view-home">
         <div class="kpi-section">
-            <h2>📊 最新の町勢ハイライト（データ自動算出・比較）</h2>
-            
-            <div class="kpi-note-box">
-                <strong>💡 なぜデータの年次（令和2年と令和6年など）が混在しているの？</strong><br>
-                本ダッシュボードに掲載している数値は、統計の種類によって調査周期が異なるため最新年が異なります。<br>
-                <ul>
-                    <li><strong>国勢調査データ（人口・世帯数など）:</strong> 国が5年に1度実施する法的全数調査のため、確報値としての最新は<strong>「令和2年」</strong>となります。</li>
-                    <li><strong>自治体業務データ（外国人、ごみ、鉄道、財政など）:</strong> 町が毎年独自に集計・決算を行っているため、直近の内部確定値である<strong>「令和6年（令和6年度）」</strong>のデータが存在します。</li>
-                </ul>
-                データの新旧ではなく、それぞれの統計制度における<strong>「もっとも新しく、客観的で正確な公式データ」</strong>を厳密に採用しています。
-            </div>
-
+            <h2>📊 最新の町勢ハイライト（厳密なデータ同期・自動算出）</h2>
             <div class="kpi-grid">
                 <div class="kpi-card" id="kpi-pop">
-                    <span class="kpi-label">👪 1世帯あたりの人員（国勢調査最新）</span>
+                    <span class="kpi-label">👪 1世帯あたりの人員（国勢調査）</span>
                     <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">人/世帯</span></div>
                     <div class="kpi-diff-box"></div>
                     <div class="kpi-explain">
-                        <span class="kpi-subtext-dynamic">データ読込中...</span>
-                        <strong>💡 算出根拠:</strong> 総人口 ÷ 総世帯数（5年周期の国勢調査データに基づく確定値）<br>
-                        <strong>📝 指標の意味:</strong> 町内の核家族化や単身世帯化の進行度合い（世帯の小規模化トレンド）を測る指標です。
+                        <span class="kpi-subtext-dynamic">データ確認中...</span>
+                        <strong>💡 算出根拠:</strong> 総人口 ÷ 総世帯数（5年周期の国勢調査確定値に準拠）<br>
+                        <strong>📝 指標の意味:</strong> 町内の核家族化や単身世帯化の進行度（世帯の小規模化構造）を測る標準指標です。
                     </div>
                 </div>
                 <div class="kpi-card" id="kpi-for">
-                    <span class="kpi-label">🌍 外国籍住民の登録数（毎年集計）</span>
+                    <span class="kpi-label">🌍 外国籍住民の登録数（業務統計）</span>
                     <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">人</span></div>
                     <div class="kpi-diff-box"></div>
                     <div class="kpi-explain">
-                        <span class="kpi-subtext-dynamic">データ読込中...</span>
-                        <strong>💡 算出根拠:</strong> 各年12月末時点の外国人登録者数の全籍合計値<br>
-                        <strong>📝 指標の意味:</strong> 地域社会における多文化共生の広がりや、生産年齢人口等の多様化の進展度を客観的な数として把握し、行政サービスや地域コミュニティのあり方を検討する基礎となります（令和6年住基人口比で約4.69%）。
+                        <span class="kpi-subtext-dynamic">データ確認中...</span>
+                        <strong>💡 算出根拠:</strong> 各年末時点の外国人登録者数の全籍合計値（毎年集計）<br>
+                        <strong>📝 指標の意味:</strong> 地域社会における多文化共生の進展度や、生産年齢人口等の多様化の進展を客観的な数として追跡します（令和6年住基人口比で約4.69%）。
                     </div>
                 </div>
                 <div class="kpi-card" id="kpi-gar">
-                    <span class="kpi-label">🗑️ 1人あたりの可燃ごみ（毎年集計）</span>
+                    <span class="kpi-label">🗑️ 1人あたりの可燃ごみ（業務統計）</span>
                     <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">kg/人・年</span></div>
                     <div class="kpi-diff-box"></div>
                     <div class="kpi-explain">
-                        <span class="kpi-subtext-dynamic">データ読込中...</span>
-                        <strong>💡 算出根拠:</strong> 年間可燃ごみ総投入量 ÷ 各年度末の総人口（算出基準住民数 20,611人）<br>
-                        <strong>📝 指標の意味:</strong> 自治体全体の総量ではなく住民1人あたりに換算（1日あたり約685g）することで、環境意識の浸透度や行政のごみ減量化施策の成果を住民目線で「自分ごと化」して評価するための指標です。
+                        <span class="kpi-subtext-dynamic">データ確認中...</span>
+                        <strong>💡 算出根拠:</strong> 年間可燃ごみ総投入量 ÷ 各年度末の住基総人口（算出基準住民数 20,611人）<br>
+                        <strong>📝 指標の意味:</strong> 自治体全体の総量ではなく住民1人あたりに平準化し、環境意識の浸透やごみ減量化施策の成果を測ります。
                     </div>
                 </div>
                 <div class="kpi-card" id="kpi-tou">
-                    <span class="kpi-label">✨ 町民1人あたりの観光活力（毎年集計）</span>
-                    <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">人</span></div>
-                    <div class="kpi-diff-box"></div>
-                    <div class="kpi-explain">
-                        <span class="kpi-subtext-dynamic">データ読込中...</span>
-                        <strong>💡 算出根拠:</strong> 年間観光客入込数（日帰り＋宿泊） ÷ 直近国勢調査総人口（20,964人）<br>
-                        <strong>⚠️ 注意事項:</strong> 分母と分子の基準年が異なるため、町民の生活規模に対してどれだけの「交流人口（賑わい）」が外から訪れているかのボリューム感を相対的に測る参考値です。
-                    </div>
-                </div>
-                <div class="kpi-card" id="kpi-rail">
-                    <span class="kpi-label">🚊 日野駅の1日平均乗降客（毎年集計）</span>
+                    <span class="kpi-label">🚌 1日平均の観光客入込数（観光統計）</span>
                     <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">人/日</span></div>
                     <div class="kpi-diff-box"></div>
                     <div class="kpi-explain">
-                        <span class="kpi-subtext-dynamic">データ読込中...</span>
-                        <strong>💡 算出根拠:</strong> 近江鉄道日野駅の年間総乗降客数（乗車＋降車の全合計値） ÷ 年間日数（365日）<br>
-                        <strong>📝 指標の意味:</strong> 年間総数ではなく「1日平均」に平準化することで、地域の基幹公共交通機関が日常の移動手段としてどの程度アクティブに機能しているかを可視化します。
+                        <span class="kpi-subtext-dynamic">データ確認中...</span>
+                        <strong>💡 算出根拠:</strong> 年間観光客入込総数（日帰り＋宿泊） ÷ その年の総日数（閏年・平年を自動判定）<br>
+                        <strong>📝 指標の意味:</strong> 人口減少のバイアスを受けない公的観光統計基準。1日あたり平均してどれだけの交流人口（賑わい）が町を訪れているかの活力を示します。
+                    </div>
+                </div>
+                <div class="kpi-card" id="kpi-rail">
+                    <span class="kpi-label">🚊 日野駅の1日平均乗降客（交通統計）</span>
+                    <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">人/日</span></div>
+                    <div class="kpi-diff-box"></div>
+                    <div class="kpi-explain">
+                        <span class="kpi-subtext-dynamic">データ確認中...</span>
+                        <strong>💡 算出根拠:</strong> 近江鉄道日野駅の年間総乗降客数 ÷ その年度の総日数（会計年度の閏日を厳密に考慮）<br>
+                        <strong>📝 指標の意味:</strong> 地域の基幹公共交通機関が日常の移動手段としてどの程度機能しているかを可視化します。
                     </div>
                 </div>
                 <div class="kpi-card" id="kpi-fin" style="border-left: 5px solid var(--accent);">
-                    <span class="kpi-label">🏦 財政構造の弾力性（毎年決算）</span>
+                    <span class="kpi-label">🏦 財政構造の弾力性（決算統計）</span>
                     <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">%</span></div>
                     <div class="kpi-diff-box"></div>
                     <div class="kpi-explain">
@@ -139,9 +128,19 @@
                         <strong>分子:</strong> 人件費、福祉手当、借金返済など、毎年度決まって出ていく「経常的経費」に充てられた一般財源<br>
                         <br>
                         <strong>📝 住民向けの補足解説:</strong><br>
-                        公的解説では「給料に対する固定費の割合」に例えられます。日野町はこれが93.5%となっており、災害対応や独自の新規施策（投資的経費）に柔軟に使える財源が「残り6.5%」であることを示し、高いほど財政が硬直しているサインとなります。
+                        数値が低いほど新しい施策（独自の住民サービス等）に柔軟に割ける財源が多いことを示し、数値が「下がる」ことは財政構造が「改善」されたことを意味します。
                     </div>
                 </div>
+            </div>
+
+            <div class="kpi-note-box">
+                <strong>💡 データの年次（令和2年と令和6年など）が混在している理由について</strong><br>
+                本ダッシュボードに掲載している数値は、政府・自治体の統計制度によって調査周期が異なるため最新年が異なります。<br>
+                <ul>
+                    <li><strong>国勢調査データ（人口・世帯数など）:</strong> 国が5年に1度実施する法的全数調査のため、確報値としての最新は<strong>「令和2年」</strong>となります。</li>
+                    <li><strong>自治体業務データ（外国人、ごみ、鉄道、財政など）:</strong> 町が毎年独自に集計・決算を行っているため、直近の確定値である<strong>「令和6年（令和6年度）」</strong>のデータを採用しています。</li>
+                </ul>
+                データの新旧ではなく、それぞれの統計種別における<strong>「もっとも新しく、客観的で正確な公式データ」</strong>を厳密に採用しています。
             </div>
         </div>
         <div class="card-section">
@@ -211,9 +210,26 @@
             selector.innerHTML += `<option value="${key}">【${conf.cat}】${conf.title}</option>`;
         }
         window.addEventListener('hashchange', handleRoute); handleRoute();
-        
-        // CSVからデータを読み込んでKPIエリアを動的に自動算出・更新
         loadKPIData();
+    }
+
+    // --- 厳密な 閏年 / 閏年度 判定ロジック ---
+    function getDaysInYearOrFiscalYear(yearStr) {
+        const isFiscal = yearStr.includes('度');
+        const match = yearStr.match(/(昭和|平成|令和)(\d+)/);
+        if (!match) return 365;
+        const gengo = match[1]; const nen = parseInt(match[2]);
+        let seireki = 0;
+        if (gengo === '令和') seireki = 2018 + nen;
+        else if (gengo === '平成') seireki = 1988 + nen;
+        else if (gengo === '昭和') seireki = 1925 + nen;
+        
+        if (isFiscal) {
+            const nextYear = seireki + 1; // 年度の場合は翌年2月に閏日があるかを判定
+            return ((nextYear % 4 === 0 && nextYear % 100 !== 0) || nextYear % 400 === 0) ? 366 : 365;
+        } else {
+            return ((seireki % 4 === 0 && seireki % 100 !== 0) || seireki % 400 === 0) ? 366 : 365;
+        }
     }
 
     // --- KPI自動計算ロジック（CSV直接パース） ---
@@ -222,7 +238,7 @@
             Papa.parse(`data/${file}`, { download: true, header: true, skipEmptyLines: true, complete: res => callback(res.data) });
         };
 
-        // 1. 人口・世帯人員 (国勢調査)
+        // 1. 人口・世帯人員
         parseKPI('hino_population.csv', d => {
             if(d.length < 2) return;
             const lat = d[d.length-1], prv = d[d.length-2];
@@ -234,11 +250,11 @@
         // 2. 外国人登録数
         parseKPI('hino_foreigners.csv', d => {
             if(d.length < 2) return;
-            const keys = ['ブラジル','フィリピン','中国','韓国・朝鮮','ペルー','other','その他'];
+            const keys = ['ブラジル','フィリピン','中国','韓国・朝鮮','ペルー','その他'];
             const sum = row => Object.keys(row).reduce((acc, k) => keys.includes(k) ? acc + parseInt(row[k]||0) : acc, 0);
             const lat = d[d.length-1], prv = d[d.length-2];
             const vLat = sum(lat), vPrv = sum(prv);
-            updateKPICard('kpi-for', vLat.toLocaleString(), vLat - vPrv, '人', `前年(${prv['年']}): ${vPrv.toLocaleString()}`, `${lat['年']}計: 国籍別登録者の総数（多文化共生のリアルな進展度）`);
+            updateKPICard('kpi-for', vLat.toLocaleString(), vLat - vPrv, '人', `前年(${prv['年']}): ${vPrv.toLocaleString()}`, `${lat['年']}計: 国籍別登録者の総数`);
         });
 
         // 3. 可燃ごみ排出量
@@ -247,24 +263,26 @@
             const lat = d[d.length-1], prv = d[d.length-2];
             const vLat = (parseInt(lat['可燃物'])*1000/20611).toFixed(1);
             const vPrv = (parseInt(prv['可燃物'])*1000/20611).toFixed(1);
-            updateKPICard('kpi-gar', vLat, (vLat - vPrv).toFixed(1), 'kg/人・年', `前年: ${vPrv}`, `${lat['年']}度: 年間総投入量 ${Number(lat['可燃物']).toLocaleString()}t (前年比 ${parseInt(lat['可燃物'])-parseInt(prv['可燃物']) > 0 ? '▲' : '▼'} ${Math.abs(parseInt(lat['可燃物'])-parseInt(prv['可燃物']))}t)`);
+            updateKPICard('kpi-gar', vLat, (vLat - vPrv).toFixed(1), 'kg/人・年', `前年: ${vPrv}`, `${lat['年']}: 年間総投入量 ${Number(lat['可燃物']).toLocaleString()}t`);
         });
 
-        // 4. 観光活力
+        // 4. 観光客数（1日平均入込・呼称/数理の適正化）
         parseKPI('hino_tourism.csv', d => {
             if(d.length < 2) return;
             const lat = d[d.length-1], prv = d[d.length-2];
             const sLat = parseInt(lat['日帰り'])+parseInt(lat['宿泊']), sPrv = parseInt(prv['日帰り'])+parseInt(prv['宿泊']);
-            const vLat = (sLat/20964).toFixed(1), vPrv = (sPrv/20964).toFixed(1);
-            updateKPICard('kpi-tou', vLat, (vLat - vPrv).toFixed(1), '人', `前年: ${vPrv}`, `${lat['年']}計: 総入込数 ${sLat.toLocaleString()}人 (前年比 ${sLat-sPrv > 0 ? '▲' : '▼'} ${Math.abs(sLat-sPrv).toLocaleString()}人)`);
+            const daysLat = getDaysInYearOrFiscalYear(lat['年']), daysPrv = getDaysInYearOrFiscalYear(prv['年']);
+            const vLat = Math.round(sLat / daysLat), vPrv = Math.round(sPrv / daysPrv);
+            updateKPICard('kpi-tou', vLat.toLocaleString(), vLat - vPrv, '人/日', `前年: ${vPrv.toLocaleString()}`, `${lat['年']}計: 年間総入込数 ${sLat.toLocaleString()}人 (${daysLat}日間換算)`);
         });
 
-        // 5. 日野駅の1日平均乗降客
+        // 5. 日野駅の1日平均乗降客（年度日数の厳密化）
         parseKPI('hino_railway.csv', d => {
             if(d.length < 2) return;
             const lat = d[d.length-1], prv = d[d.length-2];
-            const vLat = Math.round(parseInt(lat['乗降客数'])/365), vPrv = Math.round(parseInt(prv['乗降客数'])/365);
-            updateKPICard('kpi-rail', vLat, vLat - vPrv, '人/日', `前年: ${vPrv}`, `${lat['年度']}: 年間総乗降客数 ${Number(lat['乗降客数']).toLocaleString()}人`);
+            const daysLat = getDaysInYearOrFiscalYear(lat['年度']), daysPrv = getDaysInYearOrFiscalYear(prv['年度']);
+            const vLat = Math.round(parseInt(lat['乗降客数'])/daysLat), vPrv = Math.round(parseInt(prv['乗降客数'])/daysPrv);
+            updateKPICard('kpi-rail', vLat.toLocaleString(), vLat - vPrv, '人/日', `前年: ${vPrv.toLocaleString()}`, `${lat['年度']}: 年間総乗降客数 ${Number(lat['乗降客数']).toLocaleString()}人 (${daysLat}日間換算)`);
         });
 
         // 6. 経常収支比率
@@ -279,17 +297,25 @@
     function updateKPICard(id, val, diff, unit, prevText, subtext) {
         const card = document.getElementById(id); if(!card) return;
         const dNum = parseFloat(diff);
-        let dClass = 'diff-zero', dSign = '±';
-        if (dNum > 0) { dClass = 'diff-plus'; dSign = '▲ +'; }
-        else if (dNum < 0) { dClass = 'diff-minus'; dSign = '▼ '; }
+        let dClass = 'diff-zero', dSign = '±', labelText = ' 変動なし';
+        
+        // 指標ごとの「良し悪し」の判定反転（財政・ごみはマイナスが「改善」）
+        if (id === 'kpi-fin' || id === 'kpi-gar') {
+            if (dNum < 0) { dClass = 'diff-plus'; dSign = '▼ '; labelText = ' 改善'; }
+            else if (dNum > 0) { dClass = 'diff-minus'; dSign = '▲ +'; labelText = ' 硬直化・増加'; }
+        } else {
+            if (dNum > 0) { dClass = 'diff-plus'; dSign = '▲ +'; labelText = ' 増加'; }
+            else if (dNum < 0) { dClass = 'diff-minus'; dSign = '▼ '; labelText = ' 減少'; }
+        }
         
         card.querySelector('.kpi-value-box').innerHTML = `<span class="kpi-value">${val}</span><span class="kpi-unit">${unit}</span>`;
-        card.querySelector('.kpi-diff-box').innerHTML = `<span class="kpi-diff ${dClass}">${dSign}${Math.abs(dNum).toFixed(id==='kpi-pop'||id==='kpi-gar'||id==='kpi-tou'||id==='kpi-fin'?2:0)}</span><span class="kpi-prev-text">(${prevText})</span>`;
+        card.querySelector('.kpi-diff-box').innerHTML = `<span class="kpi-diff ${dClass}">${dSign}${Math.abs(dNum).toFixed(id==='kpi-pop'||id==='kpi-gar'||id==='kpi-fin'?2:0)}${labelText}</span><span class="kpi-prev-text">(${prevText})</span>`;
         card.querySelector('.kpi-subtext-dynamic').innerText = subtext;
     }
 
     function handleRoute() { const hash = window.location.hash.substring(1); if (hash && dashConfig[hash]) showDashboard(hash); else showHome(); }
     function showHome() { document.getElementById('view-home').style.display = 'block'; document.getElementById('view-dashboard').style.display = 'none'; activeCharts.forEach(c => c.destroy()); }
+    
     function showDashboard(key) {
         document.getElementById('view-home').style.display = 'none'; document.getElementById('view-dashboard').style.display = 'block';
         const conf = dashConfig[key];
@@ -298,32 +324,131 @@
         Papa.parse(`data/${conf.file}`, { download: true, header: true, skipEmptyLines: true, complete: function(results) { conf.render(results.data); }});
     }
 
-    /* 各種グラフ描画処理（省略なし） */
-    function renderLandArea(data) { const ctxs = resetCanvases(1); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '林山', data: data.map(r=>r['林山']), backgroundColor: '#447c59' }, { label: '田', data: data.map(r=>r['田']), backgroundColor: '#98b46b' }, { label: '畑', data: data.map(r=>r['畑']), backgroundColor: '#e2d37c' }, { label: '宅地', data: data.map(r=>r['宅地']), backgroundColor: '#c76b6b' } ] }, options: getBaseOptions('地目別面積推移', { x: { stacked: true }, y: { stacked: true, min: 0 } }) })); }
-    function renderWeather(data) { const ctxs = resetCanvases(2); activeCharts.push(new Chart(ctxs[0], { type: 'line', data: { labels: data.map(r=>r['月']), datasets: [{ label: '平均気温 (℃)', data: data.map(r=>r['平均気温']), borderColor: '#e74c3c', backgroundColor: '#e74c3c' }] }, options: getBaseOptions('月別平均気温 (令和6年)') })); activeCharts.push(new Chart(ctxs[1], { type: 'bar', data: { labels: data.map(r=>r['月']), datasets: [{ label: '降水量 (mm)', data: data.map(r=>r['降水量']), backgroundColor: '#3498db' }] }, options: getBaseOptions('月別降水量 (令和6年)') })); }
-    function renderPopulation(data) { const ctxs = resetCanvases(2); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '男', data: data.map(r=>r['男']), backgroundColor: '#1d4e89' }, { label: '女', data: data.map(r=>r['女']), backgroundColor: '#d45d00' } ] }, options: getBaseOptions('人口推移', { x: { stacked: true }, y: { stacked: true, min: 0 } }) })); activeCharts.push(new Chart(ctxs[1], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '世帯数', data: data.map(r=>r['世帯数']), backgroundColor: '#007a5e' }] }, options: getBaseOptions('世帯数推移') })); }
-    function renderVitalStats(data) { const ctxs = resetCanvases(2); activeCharts.push(new Chart(ctxs[0], { type: 'line', data: { labels: data.map(r=>r['年次']), datasets: [ { label: '出生数', data: data.map(r=>r['出生数']), borderColor: '#2ecc71', backgroundColor: '#2ecc71' }, { label: '死亡数', data: data.map(r=>r['死亡数']), borderColor: '#e74c3c', backgroundColor: '#e74c3c' } ] }, options: getBaseOptions('自然動態（出生・死亡）') })); activeCharts.push(new Chart(ctxs[1], { type: 'line', data: { labels: data.map(r=>r['年次']), datasets: [ { label: '転入', data: data.map(r=>r['転入']), borderColor: '#3498db', backgroundColor: '#3498db' }, { label: '転出', data: data.map(r=>r['転出']), borderColor: '#f39c12', backgroundColor: '#f39c12' } ] }, options: getBaseOptions('社会動態（転入・転出）') })); }
-    function renderForeigners(data) { const ctxs = resetCanvases(1); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: 'ブラジル', data: data.map(r=>r['ブラジル']), backgroundColor: '#2ecc71' }, { label: 'フィリピン', data: data.map(r=>r['フィリピン']), backgroundColor: '#f1c40f' }, { label: '中国', data: data.map(r=>r['中国']), backgroundColor: '#3498db' }, { label: '韓国・朝鮮', data: data.map(r=>r['韓国・朝鮮']), backgroundColor: '#e74c3c' }, { label: 'ペルー', data: data.map(r=>r['ペルー']), backgroundColor: '#9b59b6' }, { label: 'その他', data: data.map(r=>r['その他']), backgroundColor: '#95a5a6' } ] }, options: getBaseOptions('国籍別外国人登録者数の推移', { x: { stacked: true }, y: { stacked: true, min: 0 } }) })); }
-    function renderIndustry(data) { const ctxs = resetCanvases(1); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '第一次産業', data: data.map(r=>r['第一次産業']), backgroundColor: '#8d6e63' }, { label: '第二次産業', data: data.map(r=>r['第二次産業']), backgroundColor: '#78909c' }, { label: '第三次産業', data: data.map(r=>r['第三次産業']), backgroundColor: '#5c6bc0' } ] }, options: getBaseOptions('産業区分別就業者数', { x: { stacked: true }, y: { stacked: true, min: 0 } }) })); }
-    function renderAge(data) { const ctxs = resetCanvases(1); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '年少人口', data: data.map(r=>r['年少人口']), backgroundColor: '#4a90e2' }, { label: '生産年齢人口', data: data.map(r=>r['生産年齢人口']), backgroundColor: '#2ecc71' }, { label: '老年人口', data: data.map(r=>r['老年人口']), backgroundColor: '#e74c3c' } ] }, options: getBaseOptions('年齢3区分別人口の推移', { x: { stacked: true }, y: { stacked: true, min: 0 } }) })); }
-    function renderTourism(data) { const ctxs = resetCanvases(1); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '日帰り', data: data.map(r=>r['日帰り']), backgroundColor: '#008eb0' }, { label: '宿泊', data: data.map(r=>r['宿泊']), backgroundColor: '#e69f00' } ] }, options: getBaseOptions('観光客入込数', { x: { stacked: true }, y: { stacked: true, min: 0 } }) })); }
-    function renderIndustryTrend(data) { const ctxs = resetCanvases(2); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '事業所数', data: data.map(r=>r['事業所数']), backgroundColor: '#5c6bc0' }] }, options: getBaseOptions('工業事業所数') })); activeCharts.push(new Chart(ctxs[1], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [{ label: '従業者数', data: data.map(r=>r['従業者数']), borderColor: '#8e44ad', backgroundColor: '#8e44ad' }] }, options: getBaseOptions('工業従業者数') })); }
-    function renderFarmingArea(data) { const ctxs = resetCanvases(1); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '田 (a)', data: data.map(r=>r['田']), backgroundColor: '#98b46b' }, { label: '畑 (a)', data: data.map(r=>r['畑']), backgroundColor: '#e2d37c' }, { label: '樹園地 (a)', data: data.map(r=>r['樹園地']), backgroundColor: '#e67e22' } ] }, options: getBaseOptions('経営耕地面積', { x: { stacked: true }, y: { stacked: true, min: 0 } }) })); }
-    function renderFarmlandConversion(data) { const ctxs = resetCanvases(1); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [ { label: '住宅用地 (㎡)', data: data.map(r=>r['住宅用地']), backgroundColor: '#e74c3c' }, { label: '駐車場 (㎡)', data: data.map(r=>r['駐車場']), backgroundColor: '#34495e' } ] }, options: getBaseOptions('農地転用面積の推移', { x: { stacked: true }, y: { stacked: true, min: 0 } }) })); }
-    function renderRailway(data) { const ctxs = resetCanvases(1); activeCharts.push(new Chart(ctxs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '年間乗降客数 (人)', data: data.map(r=>r['乗降客数']), borderColor: '#2980b9', backgroundColor: 'rgba(41, 128, 185, 0.1)', borderWidth: 3, fill: true }] }, options: getBaseOptions('近江鉄道日野駅 年間乗降客数') })); }
-    function renderBus(data) { const ctxs = resetCanvases(1); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '定期利用', data: data.map(r=>r['定期']), backgroundColor: '#3498db' }, { label: '定期外利用', data: data.map(r=>r['定期外']), backgroundColor: '#9b59b6' } ] }, options: getBaseOptions('町営バス利用者数', { x: { stacked: true }, y: { stacked: true, min: 0 } }) })); }
-    function renderTraffic(data) { const ctxs = resetCanvases(1); activeCharts.push(new Chart(ctxs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '事故件数', data: data.map(r=>r['事故件数']), borderColor: '#c0392b', backgroundColor: 'rgba(192, 57, 43, 0.1)', borderWidth: 3, fill: true }] }, options: getBaseOptions('交通事故発生件数') })); }
-    function renderWaterSupply(data) { const ctxs = resetCanvases(2); activeCharts.push(new Chart(ctxs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '給水人口 (人)', data: data.map(r=>r['給水人口']), borderColor: '#3498db', backgroundColor: '#3498db' }] }, options: getBaseOptions('給水人口') })); activeCharts.push(new Chart(ctxs[1], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '年間総配水量 (千m3)', data: data.map(r=>r['年間総配水量']), backgroundColor: '#008eb0' }] }, options: getBaseOptions('年間総配水量') })); }
-    function renderSewerage(data) { const ctxs = resetCanvases(2); activeCharts.push(new Chart(ctxs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '普及率 (%)', data: data.map(r=>r['普及率']), borderColor: '#1abc9c', backgroundColor: '#1abc9c' }] }, options: getBaseOptions('下水道普及率') })); activeCharts.push(new Chart(ctxs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '水洗化率 (%)', data: data.map(r=>r['水洗化率']), borderColor: '#2980b9', backgroundColor: '#2980b9' }] }, options: getBaseOptions('水洗化率') })); }
-    function renderGarbage(data) { const ctxs = resetCanvases(2); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '可燃物 (t)', data: data.map(r=>r['可燃物']), backgroundColor: '#e67e22' }] }, options: getBaseOptions('可燃物排出量') })); activeCharts.push(new Chart(ctxs[1], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '不燃物 (t)', data: data.map(r=>r['不燃物']), backgroundColor: '#95a5a6' }] }, options: getBaseOptions('不燃物排出量') })); }
-    function renderNhis(data) { const ctxs = resetCanvases(2); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '被保険者数', data: data.map(r=>r['被保険者数']), backgroundColor: '#1abc9c' }] }, options: getBaseOptions('国保被保険者数') })); activeCharts.push(new Chart(ctxs[1], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [{ label: '加入率 (%)', data: data.map(r=>r['加入率']), borderColor: '#16a085', backgroundColor: '#16a085' }] }, options: getBaseOptions('国保加入率') })); }
-    function renderNursingCare(data) { const ctxs = resetCanvases(1); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [ { label: '前期高齢者', data: data.map(r=>r['前期高齢者']), backgroundColor: '#f1c40f' }, { label: '後期高齢者', data: data.map(r=>r['後期高齢者']), backgroundColor: '#e67e22' } ] }, options: getBaseOptions('介護保険1号被保険者数', { x: { stacked: true }, y: { stacked: true, min: 0 } }) })); }
-    function renderChildcare(data) { const ctxs = resetCanvases(1); activeCharts.push(new Chart(ctxs[0], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [ { label: '定員', data: data.map(r=>r['定員']), borderColor: '#8e44ad', backgroundColor: 'transparent', borderWidth: 2 }, { label: '在籍人員', data: data.map(r=>r['在籍人員']), type: 'bar', backgroundColor: '#9b59b6' } ] }, options: getBaseOptions('保育所・認定こども園の状況') })); }
-    function renderDiseases(data) { const ctxs = resetCanvases(1); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年次']), datasets: [ { label: '悪性新生物', data: data.map(r=>r['悪性新生物']), backgroundColor: '#34495e' }, { label: '心疾患', data: data.map(r=>r['心疾患']), backgroundColor: '#e74c3c' }, { label: '脳血管疾患', data: data.map(r=>r['脳血管疾患']), backgroundColor: '#95a5a6' } ] }, options: getBaseOptions('三大疾病別死亡数の推移', { x: { stacked: true }, y: { stacked: true, min: 0 } }) })); }
-    function renderLibrary(data) { const ctxs = resetCanvases(2); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '来館者数 (人)', data: data.map(r=>r['来館者数']), backgroundColor: '#16a085' }] }, options: getBaseOptions('図書館 来館者数') })); activeCharts.push(new Chart(ctxs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '利用冊数 (冊)', data: data.map(r=>r['利用冊数']), borderColor: '#27ae60', backgroundColor: '#27ae60' }] }, options: getBaseOptions('図書館 利用(貸出)冊数') })); }
-    function renderCulturalFacilities(data) { const ctxs = resetCanvases(1); activeCharts.push(new Chart(ctxs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [ { label: '近江日野商人館', data: data.map(r=>r['近江日野商人館']), borderColor: '#2980b9', backgroundColor: 'transparent', borderWidth: 2 }, { label: '近江日野ふるさと館', data: data.map(r=>r['近江日野ふるさと館']), borderColor: '#27ae60', backgroundColor: 'transparent', borderWidth: 2 }, { label: '日野まちかど感応館', data: data.map(r=>r['日野まちかど感応館']), borderColor: '#e67e22', backgroundColor: 'transparent', borderWidth: 2 } ] }, options: getBaseOptions('町内主要文化施設 年間入館者数') })); }
-    function renderFinanceIndex(data) { const ctxs = resetCanvases(2); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '経常収支比率 (%)', data: data.map(r=>r['経常収支比率']), backgroundColor: '#f1c40f' }] }, options: getBaseOptions('経常収支比率') })); activeCharts.push(new Chart(ctxs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '将来負担比率 (%)', data: data.map(r=>r['将来負担比率']), borderColor: '#d35400', backgroundColor: 'rgba(211, 84, 0, 0.1)', fill: true }] }, options: getBaseOptions('将来負担比率') })); }
-    function renderFireAmbulance(data) { const ctxs = resetCanvases(2); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '火災発生件数', data: data.map(r=>r['火災発生件数']), backgroundColor: '#e74c3c' }] }, options: getBaseOptions('火災発生件数') })); activeCharts.push(new Chart(ctxs[1], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [{ label: '救急車出動件数', data: data.map(r=>r['救急車出動件数']), borderColor: '#e67e22', backgroundColor: '#e67e22' }] }, options: getBaseOptions('救急車出動件数') })); }
+    // Canvas要素そのものを引き渡すように修正（サイズバグの完全解消）
+    function resetCanvases(count) {
+        activeCharts.forEach(c => c.destroy()); activeCharts = [];
+        const area = document.getElementById('chartArea'); area.innerHTML = ''; const canvases = [];
+        for(let i=0; i<count; i++){
+            const div = document.createElement('div'); div.className = count === 1 ? 'chart-box single' : 'chart-box';
+            const canvas = document.createElement('canvas'); div.appendChild(canvas); area.appendChild(div); canvases.push(canvas);
+        }
+        return canvases;
+    }
+
+    function getBaseOptions(title, scales) { return { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { title: { display: true, text: title, color: '#333' } }, scales: Object.assign({ x: { grid: { display: false } }, y: { grid: { color: '#e0e0e0' }, min: 0 } }, scales) }; }
+
+    /* --- 13個の個別描画関数（展開・シンタックスチェック完了） --- */
+    function renderLandArea(data) {
+        const cvs = resetCanvases(1);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '林山', data: data.map(r=>r['林山']), backgroundColor: '#447c59' }, { label: '田', data: data.map(r=>r['田']), backgroundColor: '#98b46b' }, { label: '畑', data: data.map(r=>r['畑']), backgroundColor: '#e2d37c' }, { label: '宅地', data: data.map(r=>r['宅地']), backgroundColor: '#c76b6b' } ] }, options: getBaseOptions('地目別面積推移', { x: { stacked: true }, y: { stacked: true } }) }));
+    }
+    function renderWeather(data) {
+        const cvs = resetCanvases(2);
+        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['月']), datasets: [{ label: '平均気温 (℃)', data: data.map(r=>r['平均気温']), borderColor: '#e74c3c', backgroundColor: '#e74c3c' }] }, options: getBaseOptions('月別平均気温 (令和6年)') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'bar', data: { labels: data.map(r=>r['月']), datasets: [{ label: '降水量 (mm)', data: data.map(r=>r['降水量']), backgroundColor: '#3498db' }] }, options: getBaseOptions('月別降水量 (令和6年)') }));
+    }
+    function renderPopulation(data) {
+        const cvs = resetCanvases(2);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '男', data: data.map(r=>r['男']), backgroundColor: '#1d4e89' }, { label: '女', data: data.map(r=>r['女']), backgroundColor: '#d45d00' } ] }, options: getBaseOptions('人口推移', { x: { stacked: true }, y: { stacked: true } }) }));
+        activeCharts.push(new Chart(cvs[1], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '世帯数', data: data.map(r=>r['世帯数']), backgroundColor: '#007a5e' }] }, options: getBaseOptions('世帯数推移') }));
+    }
+    function renderVitalStats(data) {
+        const cvs = resetCanvases(2);
+        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年次']), datasets: [ { label: '出生数', data: data.map(r=>r['出生数']), borderColor: '#2ecc71', backgroundColor: '#2ecc71' }, { label: '死亡数', data: data.map(r=>r['死亡数']), borderColor: '#e74c3c', backgroundColor: '#e74c3c' } ] }, options: getBaseOptions('自然動態（出生・死亡）') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年次']), datasets: [ { label: '転入', data: data.map(r=>r['転入']), borderColor: '#3498db', backgroundColor: '#3498db' }, { label: '転出', data: data.map(r=>r['転出']), borderColor: '#f39c12', backgroundColor: '#f39c12' } ] }, options: getBaseOptions('社会動態（転入・転出）') }));
+    }
+    function renderForeigners(data) {
+        const cvs = resetCanvases(1);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: 'ブラジル', data: data.map(r=>r['ブラジル']), backgroundColor: '#2ecc71' }, { label: 'フィリピン', data: data.map(r=>r['フィリピン']), backgroundColor: '#f1c40f' }, { label: '中国', data: data.map(r=>r['中国']), backgroundColor: '#3498db' }, { label: '韓国・朝鮮', data: data.map(r=>r['韓国・朝鮮']), backgroundColor: '#e74c3c' }, { label: 'ペルー', data: data.map(r=>r['ペルー']), backgroundColor: '#9b59b6' }, { label: 'その他', data: data.map(r=>r['その他']), backgroundColor: '#95a5a6' } ] }, options: getBaseOptions('国籍別外国人登録者数の推移', { x: { stacked: true }, y: { stacked: true } }) }));
+    }
+    function renderIndustry(data) {
+        const cvs = resetCanvases(1);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '第一次産業', data: data.map(r=>r['第一次産業']), backgroundColor: '#8d6e63' }, { label: '第二次産業', data: data.map(r=>r['第二次産業']), backgroundColor: '#78909c' }, { label: '第三次産業', data: data.map(r=>r['第三次産業']), backgroundColor: '#5c6bc0' } ] }, options: getBaseOptions('産業区分別就業者数', { x: { stacked: true }, y: { stacked: true } }) }));
+    }
+    function renderAge(data) {
+        const cvs = resetCanvases(1);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '年少人口', data: data.map(r=>r['年少人口']), backgroundColor: '#4a90e2' }, { label: '生産年齢人口', data: data.map(r=>r['生産年齢人口']), backgroundColor: '#2ecc71' }, { label: '老年人口', data: data.map(r=>r['老年人口']), backgroundColor: '#e74c3c' } ] }, options: getBaseOptions('年齢3区分別人口の推移', { x: { stacked: true }, y: { stacked: true } }) }));
+    }
+    function renderTourism(data) {
+        const cvs = resetCanvases(1);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '日帰り', data: data.map(r=>r['日帰り']), backgroundColor: '#008eb0' }, { label: '宿泊', data: data.map(r=>r['宿泊']), backgroundColor: '#e69f00' } ] }, options: getBaseOptions('観光客入込数', { x: { stacked: true }, y: { stacked: true } }) }));
+    }
+    function renderIndustryTrend(data) {
+        const cvs = resetCanvases(2);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '事業所数', data: data.map(r=>r['事業所数']), backgroundColor: '#5c6bc0' }] }, options: getBaseOptions('工業事業所数') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [{ label: '従業者数', data: data.map(r=>r['従業者数']), borderColor: '#8e44ad', backgroundColor: '#8e44ad' }] }, options: getBaseOptions('工業従業者数') }));
+    }
+    function renderFarmingArea(data) {
+        const cvs = resetCanvases(1);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '田 (a)', data: data.map(r=>r['田']), backgroundColor: '#98b46b' }, { label: '畑 (a)', data: data.map(r=>r['畑']), backgroundColor: '#e2d37c' }, { label: '樹園地 (a)', data: data.map(r=>r['樹園地']), backgroundColor: '#e67e22' } ] }, options: getBaseOptions('経営耕地面積', { x: { stacked: true }, y: { stacked: true } }) }));
+    }
+    function renderFarmlandConversion(data) {
+        const cvs = resetCanvases(1);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [ { label: '住宅用地 (㎡)', data: data.map(r=>r['住宅用地']), backgroundColor: '#e74c3c' }, { label: '駐車場 (㎡)', data: data.map(r=>r['駐車場']), backgroundColor: '#34495e' } ] }, options: getBaseOptions('農地転用面積の推移', { x: { stacked: true }, y: { stacked: true } }) }));
+    }
+    function renderRailway(data) {
+        const cvs = resetCanvases(1);
+        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '年間乗降客数 (人)', data: data.map(r=>r['乗降客数']), borderColor: '#2980b9', backgroundColor: 'rgba(41, 128, 185, 0.1)', borderWidth: 3, fill: true }] }, options: getBaseOptions('近江鉄道日野駅 年間乗降客数') }));
+    }
+    function renderBus(data) {
+        const cvs = resetCanvases(1);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '定期利用', data: data.map(r=>r['定期']), backgroundColor: '#3498db' }, { label: '定期外利用', data: data.map(r=>r['定期外']), backgroundColor: '#9b59b6' } ] }, options: getBaseOptions('町営バス利用者数', { x: { stacked: true }, y: { stacked: true } }) }));
+    }
+    function renderTraffic(data) {
+        const cvs = resetCanvases(1);
+        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '事故件数', data: data.map(r=>r['事故件数']), borderColor: '#c0392b', backgroundColor: 'rgba(192, 57, 43, 0.1)', borderWidth: 3, fill: true }] }, options: getBaseOptions('交通事故発生件数') }));
+    }
+    function renderWaterSupply(data) {
+        const cvs = resetCanvases(2);
+        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '給水人口 (人)', data: data.map(r=>r['給水人口']), borderColor: '#3498db', backgroundColor: '#3498db' }] }, options: getBaseOptions('給水人口') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '年間総配水量 (千m3)', data: data.map(r=>r['年間総配水量']), backgroundColor: '#008eb0' }] }, options: getBaseOptions('年間総配水量') }));
+    }
+    function renderSewerage(data) {
+        const cvs = resetCanvases(2);
+        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '普及率 (%)', data: data.map(r=>r['普及率']), borderColor: '#1abc9c', backgroundColor: '#1abc9c' }] }, options: getBaseOptions('下水道普及率') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '水洗化率 (%)', data: data.map(r=>r['水洗化率']), borderColor: '#2980b9', backgroundColor: '#2980b9' }] }, options: getBaseOptions('水洗化率') }));
+    }
+    function renderGarbage(data) {
+        const cvs = resetCanvases(2);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '可燃物 (t)', data: data.map(r=>r['可燃物']), backgroundColor: '#e67e22' }] }, options: getBaseOptions('可燃物排出量') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '不燃物 (t)', data: data.map(r=>r['不燃物']), backgroundColor: '#95a5a6' }] }, options: getBaseOptions('不燃物排出量') }));
+    }
+    function renderNhis(data) {
+        const cvs = resetCanvases(2);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '被保険者数', data: data.map(r=>r['被保険者数']), backgroundColor: '#1abc9c' }] }, options: getBaseOptions('国保被保険者数') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [{ label: '加入率 (%)', data: data.map(r=>r['加入率']), borderColor: '#16a085', backgroundColor: '#16a085' }] }, options: getBaseOptions('国保加入率') }));
+    }
+    function renderNursingCare(data) {
+        const cvs = resetCanvases(1);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [ { label: '前期高齢者', data: data.map(r=>r['前期高齢者']), backgroundColor: '#f1c40f' }, { label: '後期高齢者', data: data.map(r=>r['後期高齢者']), backgroundColor: '#e67e22' } ] }, options: getBaseOptions('介護保険1号被保険者数', { x: { stacked: true }, y: { stacked: true } }) }));
+    }
+    function renderChildcare(data) {
+        const cvs = resetCanvases(1);
+        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [ { label: '定員', data: data.map(r=>r['定員']), borderColor: '#8e44ad', backgroundColor: 'transparent', borderWidth: 2 }, { label: '在籍人員', data: data.map(r=>r['在籍人員']), type: 'bar', backgroundColor: '#9b59b6' } ] }, options: getBaseOptions('保育所・認定こども園の状況') }));
+    }
+    function renderDiseases(data) {
+        const cvs = resetCanvases(1);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年次']), datasets: [ { label: '悪性新生物', data: data.map(r=>r['悪性新生物']), backgroundColor: '#34495e' }, { label: '心疾患', data: data.map(r=>r['心疾患']), backgroundColor: '#e74c3c' }, { label: '脳血管疾患', data: data.map(r=>r['脳血管疾患']), backgroundColor: '#95a5a6' } ] }, options: getBaseOptions('三大疾病別死亡数の推移', { x: { stacked: true }, y: { stacked: true } }) }));
+    }
+    function renderLibrary(data) {
+        const cvs = resetCanvases(2);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '来館者数 (人)', data: data.map(r=>r['来館者数']), backgroundColor: '#16a085' }] }, options: getBaseOptions('図書館 来館者数') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '利用冊数 (冊)', data: data.map(r=>r['利用冊数']), borderColor: '#27ae60', backgroundColor: '#27ae60' }] }, options: getBaseOptions('図書館 利用(貸出)冊数') }));
+    }
+    function renderCulturalFacilities(data) {
+        const cvs = resetCanvases(1);
+        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [ { label: '近江日野商人館', data: data.map(r=>r['近江日野商人館']), borderColor: '#2980b9', backgroundColor: 'transparent', borderWidth: 2 }, { label: '近江日野ふるさと館', data: data.map(r=>r['近江日野ふるさと館']), borderColor: '#27ae60', backgroundColor: 'transparent', borderWidth: 2 }, { label: '日野まちかど感応館', data: data.map(r=>r['日野まちかど感応館']), borderColor: '#e67e22', backgroundColor: 'transparent', borderWidth: 2 } ] }, options: getBaseOptions('町内主要文化施設 年間入館者数') }));
+    }
+    function renderFinanceIndex(data) {
+        const cvs = resetCanvases(2);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '経常収支比率 (%)', data: data.map(r=>r['経常収支比率']), backgroundColor: '#f1c40f' }] }, options: getBaseOptions('経常収支比率') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '将来負担比率 (%)', data: data.map(r=>r['将来負担比率']), borderColor: '#d35400', backgroundColor: 'rgba(211, 84, 0, 0.1)', fill: true }] }, options: getBaseOptions('将来負担比率') }));
+    }
+    function renderFireAmbulance(data) {
+        const cvs = resetCanvases(2);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '火災発生件数', data: data.map(r=>r['火災発生件数']), backgroundColor: '#e74c3c' }] }, options: getBaseOptions('火災発生件数') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [{ label: '救急車出動件数', data: data.map(r=>r['救急車出動件数']), borderColor: '#e67e22', backgroundColor: '#e67e22' }] }, options: getBaseOptions('救急車出動件数') }));
+    }
 
     window.onload = init;
 </script>
