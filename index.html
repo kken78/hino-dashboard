@@ -28,8 +28,8 @@
         
         .kpi-diff-box { text-align: center; font-size: 0.85rem; margin-bottom: 12px; }
         .kpi-diff { font-weight: bold; padding: 2px 8px; border-radius: 4px; display: inline-block; }
-        .kpi-diff.diff-plus { color: #d45d00; background-color: #fdf2e9; } /* ポジティブ（増加・改善） */
-        .kpi-diff.diff-minus { color: #1d4e89; background-color: #ebf3fc; } /* ネガティブ（減少・悪化） */
+        .kpi-diff.diff-plus { color: #d45d00; background-color: #fdf2e9; }
+        .kpi-diff.diff-minus { color: #1d4e89; background-color: #ebf3fc; }
         .kpi-diff.diff-zero { color: #666; background-color: #eee; }
         .kpi-prev-text { color: var(--text-sub); margin-left: 5px; }
         
@@ -48,10 +48,17 @@
         .card p { margin: 0; color: var(--text-sub); font-size: 0.85rem; line-height: 1.5; }
         .card-icon { font-size: 1.8rem; margin-bottom: 10px; }
         
-        .dashboard-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--bg-card); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .btn-home { background: var(--secondary); color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; text-decoration: none; font-weight: bold; }
+        /* 強化された詳細ナビゲーションバー */
+        .dashboard-nav { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 20px; background: var(--bg-card); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .nav-cluster { display: flex; align-items: center; gap: 8px; }
+        .btn-home { background: var(--secondary); color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
         .btn-home:hover { opacity: 0.9; }
-        select.dash-selector { padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 1rem; max-width: 60%; }
+        .btn-action { background: #fff; color: var(--text-main); border: 1px solid #ccc; padding: 8px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.9rem; transition: background 0.1s; }
+        .btn-action:hover { background: #eee; }
+        .btn-play { background: var(--accent) !important; color: #fff !important; border: none !important; }
+        .btn-play:hover { opacity: 0.9; }
+        select.dash-selector { padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 0.9rem; font-weight: bold; color: var(--text-main); }
+        
         .chart-panel { background: var(--bg-card); padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .chart-box { position: relative; height: 35vh; width: 100%; margin-bottom: 20px; }
         .chart-box.single { height: 50vh; }
@@ -74,7 +81,7 @@
                     <div class="kpi-explain">
                         <span class="kpi-subtext-dynamic">データ確認中...</span>
                         <strong>💡 算出根拠:</strong> 総人口 ÷ 総世帯数（5年周期の国勢調査確定値に準拠）<br>
-                        <strong>📝 指標の意味:</strong> 町内の核家族化や単身世帯化の進行度（世帯の小規模化構造）を測る標準指標です。
+                        <strong>📝 指張の意味:</strong> 町内の核家族化や単身世帯化の進行度（世帯の小規模化構造）を測る標準指標です。
                     </div>
                 </div>
                 <div class="kpi-card" id="kpi-for">
@@ -94,7 +101,7 @@
                     <div class="kpi-explain">
                         <span class="kpi-subtext-dynamic">データ確認中...</span>
                         <strong>💡 算出根拠:</strong> 年間可燃ごみ総投入量 ÷ 各年度末の住基総人口（算出基準住民数 20,611人）<br>
-                        <strong>📝 指標の意味:</strong> 自治体全体の総量ではなく住民1人あたりに平準化し、環境意識の浸透やごみ減量化施策の成果を測ります。
+                        <strong>📝 指標の意味:</strong> 自治体全体の総量ではなく住民1人あたりに平準化し、環境意識の浸透やごみ減量化施施の成果を測ります。
                     </div>
                 </div>
                 <div class="kpi-card" id="kpi-tou">
@@ -148,10 +155,20 @@
             <div id="cardGrid"></div>
         </div>
     </div>
+    
     <div id="view-dashboard" style="display: none;">
         <div class="dashboard-nav">
-            <a href="#" class="btn-home">◀ ホームへ戻る</a>
-            <select id="dashSelector" class="dash-selector" onchange="window.location.hash = this.value"></select>
+            <div class="nav-cluster">
+                <a href="#" class="btn-home">🏠 ホーム</a>
+            </div>
+            <div class="nav-cluster">
+                <button class="btn-action" onclick="stopRotation(); navigateDashboard(-1)">◀ 前の統計</button>
+                <select id="dashSelector" class="dash-selector" onchange="stopRotation(); window.location.hash = this.value"></select>
+                <button class="btn-action" onclick="stopRotation(); navigateDashboard(1)">次の統計 ▶</button>
+            </div>
+            <div class="nav-cluster">
+                <button id="btnPlay" class="btn-action btn-play" onclick="toggleRotation()">🔄 自動巡回</button>
+            </div>
         </div>
         <div class="chart-panel">
             <h2 id="dashTitle" style="text-align: center; margin-top:0;"></h2>
@@ -195,6 +212,7 @@
     };
 
     let activeCharts = [];
+    let rotateInterval = null;
 
     function init() {
         const grid = document.getElementById('cardGrid');
@@ -213,7 +231,7 @@
         loadKPIData();
     }
 
-    // --- 厳密な 閏年 / 閏年度 判定ロジック ---
+    // --- 厳密な 閏年 / 閏年度 自動判定ロジック ---
     function getDaysInYearOrFiscalYear(yearStr) {
         const isFiscal = yearStr.includes('度');
         const match = yearStr.match(/(昭和|平成|令和)(\d+)/);
@@ -232,13 +250,47 @@
         }
     }
 
+    // --- シーケンシャル移動 & 自動巡回機能ロジック ---
+    function navigateDashboard(direction) {
+        const keys = Object.keys(dashConfig);
+        const hash = window.location.hash.substring(1);
+        let idx = keys.indexOf(hash);
+        if (idx === -1) idx = 0;
+        idx = (idx + direction + keys.length) % keys.length;
+        window.location.hash = keys[idx];
+    }
+
+    function toggleRotation() {
+        const btn = document.getElementById('btnPlay');
+        if (rotateInterval) {
+            stopRotation();
+        } else {
+            btn.innerText = '⏸ 停止する';
+            btn.style.background = '#333';
+            rotateInterval = setInterval(() => {
+                navigateDashboard(1);
+            }, 5000); // 5秒間隔でローテーション
+        }
+    }
+
+    function stopRotation() {
+        if (rotateInterval) {
+            clearInterval(rotateInterval);
+            rotateInterval = null;
+            const btn = document.getElementById('btnPlay');
+            if (btn) {
+                btn.innerText = '🔄 自動巡回';
+                btn.style.background = 'var(--accent)';
+            }
+        }
+    }
+
     // --- KPI自動計算ロジック（CSV直接パース） ---
     function loadKPIData() {
         const parseKPI = (file, callback) => {
             Papa.parse(`data/${file}`, { download: true, header: true, skipEmptyLines: true, complete: res => callback(res.data) });
         };
 
-        // 1. 人口・世帯人員
         parseKPI('hino_population.csv', d => {
             if(d.length < 2) return;
             const lat = d[d.length-1], prv = d[d.length-2];
@@ -247,7 +299,6 @@
             updateKPICard('kpi-pop', vLat, (vLat - vPrv).toFixed(2), '人/世帯', `前回(${prv['年']}): ${vPrv}`, `${lat['年']}確定値: 総人口 ${Number(lat['総数']).toLocaleString()}人 / ${Number(lat['世帯数']).toLocaleString()}世帯`);
         });
 
-        // 2. 外国人登録数
         parseKPI('hino_foreigners.csv', d => {
             if(d.length < 2) return;
             const keys = ['ブラジル','フィリピン','中国','韓国・朝鮮','ペルー','その他'];
@@ -257,7 +308,6 @@
             updateKPICard('kpi-for', vLat.toLocaleString(), vLat - vPrv, '人', `前年(${prv['年']}): ${vPrv.toLocaleString()}`, `${lat['年']}計: 国籍別登録者の総数`);
         });
 
-        // 3. 可燃ごみ排出量
         parseKPI('hino_garbage.csv', d => {
             if(d.length < 2) return;
             const lat = d[d.length-1], prv = d[d.length-2];
@@ -266,7 +316,6 @@
             updateKPICard('kpi-gar', vLat, (vLat - vPrv).toFixed(1), 'kg/人・年', `前年: ${vPrv}`, `${lat['年']}: 年間総投入量 ${Number(lat['可燃物']).toLocaleString()}t`);
         });
 
-        // 4. 観光客数（1日平均入込・呼称/数理の適正化）
         parseKPI('hino_tourism.csv', d => {
             if(d.length < 2) return;
             const lat = d[d.length-1], prv = d[d.length-2];
@@ -276,7 +325,6 @@
             updateKPICard('kpi-tou', vLat.toLocaleString(), vLat - vPrv, '人/日', `前年: ${vPrv.toLocaleString()}`, `${lat['年']}計: 年間総入込数 ${sLat.toLocaleString()}人 (${daysLat}日間換算)`);
         });
 
-        // 5. 日野駅の1日平均乗降客（年度日数の厳密化）
         parseKPI('hino_railway.csv', d => {
             if(d.length < 2) return;
             const lat = d[d.length-1], prv = d[d.length-2];
@@ -285,7 +333,6 @@
             updateKPICard('kpi-rail', vLat.toLocaleString(), vLat - vPrv, '人/日', `前年: ${vPrv.toLocaleString()}`, `${lat['年度']}: 年間総乗降客数 ${Number(lat['乗降客数']).toLocaleString()}人 (${daysLat}日間換算)`);
         });
 
-        // 6. 経常収支比率
         parseKPI('hino_finance_index.csv', d => {
             if(d.length < 2) return;
             const lat = d[d.length-1], prv = d[d.length-2];
@@ -299,7 +346,6 @@
         const dNum = parseFloat(diff);
         let dClass = 'diff-zero', dSign = '±', labelText = ' 変動なし';
         
-        // 指標ごとの「良し悪し」の判定反転（財政・ごみはマイナスが「改善」）
         if (id === 'kpi-fin' || id === 'kpi-gar') {
             if (dNum < 0) { dClass = 'diff-plus'; dSign = '▼ '; labelText = ' 改善'; }
             else if (dNum > 0) { dClass = 'diff-minus'; dSign = '▲ +'; labelText = ' 硬直化・増加'; }
@@ -313,7 +359,7 @@
         card.querySelector('.kpi-subtext-dynamic').innerText = subtext;
     }
 
-    function handleRoute() { const hash = window.location.hash.substring(1); if (hash && dashConfig[hash]) showDashboard(hash); else showHome(); }
+    function handleRoute() { const hash = window.location.hash.substring(1); if (hash && dashConfig[hash]) showDashboard(hash); else { stopRotation(); showHome(); } }
     function showHome() { document.getElementById('view-home').style.display = 'block'; document.getElementById('view-dashboard').style.display = 'none'; activeCharts.forEach(c => c.destroy()); }
     
     function showDashboard(key) {
@@ -324,7 +370,7 @@
         Papa.parse(`data/${conf.file}`, { download: true, header: true, skipEmptyLines: true, complete: function(results) { conf.render(results.data); }});
     }
 
-    // Canvas要素そのものを引き渡すように修正（サイズバグの完全解消）
+    // Chart.jsのDOMタイミング・描画不具合を完全にクリアする新設計
     function resetCanvases(count) {
         activeCharts.forEach(c => c.destroy()); activeCharts = [];
         const area = document.getElementById('chartArea'); area.innerHTML = ''; const canvases = [];
@@ -337,7 +383,7 @@
 
     function getBaseOptions(title, scales) { return { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { title: { display: true, text: title, color: '#333' } }, scales: Object.assign({ x: { grid: { display: false } }, y: { grid: { color: '#e0e0e0' }, min: 0 } }, scales) }; }
 
-    /* --- 13個の個別描画関数（展開・シンタックスチェック完了） --- */
+    /* --- 各種グラフ描画処理（安定化拡張版） --- */
     function renderLandArea(data) {
         const cvs = resetCanvases(1);
         activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '林山', data: data.map(r=>r['林山']), backgroundColor: '#447c59' }, { label: '田', data: data.map(r=>r['田']), backgroundColor: '#98b46b' }, { label: '畑', data: data.map(r=>r['畑']), backgroundColor: '#e2d37c' }, { label: '宅地', data: data.map(r=>r['宅地']), backgroundColor: '#c76b6b' } ] }, options: getBaseOptions('地目別面積推移', { x: { stacked: true }, y: { stacked: true } }) }));
@@ -454,4 +500,3 @@
 </script>
 </body>
 </html>
-EOF
