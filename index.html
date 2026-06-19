@@ -10,144 +10,115 @@
         :root {
             --primary: #1d4e89; --secondary: #007a5e; --accent: #d45d00;
             --bg-body: #f4f6f9; --bg-card: #ffffff; --grid-line: #e0e0e0; --text-main: #333333; --text-sub: #666666;
+            --good: #1f7a3d; --good-bg: #eaf5ed; --bad: #b3401a; --bad-bg: #fbeee8; --neutral: #555; --neutral-bg: #eee;
         }
-        body { font-family: "Helvetica Neue", Arial, sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; }
+        * { box-sizing: border-box; }
+        body { font-family: "Helvetica Neue", Arial, sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; line-height: 1.6; }
         header { background-color: var(--primary); color: #fff; padding: 15px 20px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        header h1 { margin: 0; font-size: 1.5rem; }
-        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
-        
+        header h1 { margin: 0; font-size: 1.4rem; }
+        header p { margin: 4px 0 0; font-size: 0.8rem; opacity: 0.85; font-weight: normal; }
+        .container { max-width: 1040px; margin: 30px auto; padding: 0 16px; }
+
         .kpi-section { margin-bottom: 40px; }
-        .kpi-section h2, .card-section h2 { color: var(--primary); font-size: 1.3rem; border-bottom: 2px solid var(--primary); padding-bottom: 5px; margin-bottom: 20px; }
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .kpi-card { background: var(--bg-card); padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 5px solid var(--secondary); display: flex; flex-direction: column; justify-content: space-between; }
-        .kpi-label { display: block; font-size: 0.9rem; color: var(--primary); font-weight: bold; margin-bottom: 5px; text-align: left; }
-        
-        .kpi-value-box { text-align: center; margin-top: 5px; }
+        .kpi-section h2, .card-section h2 { color: var(--primary); font-size: 1.25rem; border-bottom: 2px solid var(--primary); padding-bottom: 6px; margin-bottom: 8px; }
+        .section-lead { color: var(--text-sub); font-size: 0.85rem; margin: 0 0 20px; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 16px; }
+        .kpi-card { background: var(--bg-card); padding: 18px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 5px solid var(--secondary); display: flex; flex-direction: column; }
+        .kpi-card.is-pop { border-left-color: var(--primary); }
+        .kpi-card.is-fiscal { border-left-color: var(--accent); }
+        .kpi-label { display: block; font-size: 0.9rem; color: var(--primary); font-weight: bold; margin-bottom: 4px; }
+        .kpi-source-tag { font-size: 0.68rem; color: #fff; background: var(--text-sub); padding: 1px 6px; border-radius: 3px; margin-left: 6px; vertical-align: middle; font-weight: normal; white-space: nowrap; display: inline-block; }
+        .kpi-source-tag.census { background: #6a5acd; }
+        .kpi-source-tag.gyomu { background: #2e8b57; }
+
+        .kpi-main-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+        .kpi-value-box { text-align: left; }
         .kpi-value { font-size: 2rem; font-weight: bold; color: var(--text-main); }
-        .kpi-unit { font-size: 1rem; font-weight: normal; margin-left: 5px; color: var(--text-sub); }
-        
-        .kpi-diff-box { text-align: center; font-size: 0.85rem; margin-bottom: 12px; }
+        .kpi-unit { font-size: 0.95rem; font-weight: normal; margin-left: 4px; color: var(--text-sub); }
+        .kpi-spark-box { width: 120px; height: 40px; flex-shrink: 0; position: relative; }
+        .kpi-spark { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
+
+        .kpi-diff-box { font-size: 0.82rem; margin: 8px 0 4px; }
         .kpi-diff { font-weight: bold; padding: 2px 8px; border-radius: 4px; display: inline-block; }
-        .kpi-diff.diff-plus { color: #d45d00; background-color: #fdf2e9; }
-        .kpi-diff.diff-minus { color: #1d4e89; background-color: #ebf3fc; }
-        .kpi-diff.diff-zero { color: #666; background-color: #eee; }
-        .kpi-prev-text { color: var(--text-sub); margin-left: 5px; }
-        
-        .kpi-note-box { background: #eef3fc; border: 1px solid #d0e0f5; padding: 15px; border-radius: 8px; margin-top: 40px; font-size: 0.85rem; line-height: 1.5; text-align: left; }
-        .kpi-note-box ul { margin: 5px 0 0 20px; padding: 0; }
+        .kpi-diff.diff-good { color: var(--good); background-color: var(--good-bg); }
+        .kpi-diff.diff-bad { color: var(--bad); background-color: var(--bad-bg); }
+        .kpi-diff.diff-zero { color: var(--neutral); background-color: var(--neutral-bg); }
+        .kpi-direction { font-size: 0.7rem; color: var(--text-sub); display: block; margin-top: 4px; }
+        .kpi-prev-text { color: var(--text-sub); margin-left: 4px; }
 
-        .kpi-explain { font-size: 0.75rem; color: var(--text-sub); background-color: #f8f9fa; padding: 12px; border-radius: 4px; border: 1px solid #f0f0f0; margin-top: auto; text-align: left; line-height: 1.45; }
-        .kpi-explain strong { color: var(--text-main); }
-        .kpi-subtext-dynamic { display: block; font-weight: bold; color: var(--text-main); margin-bottom: 5px; }
+        .kpi-explain { font-size: 0.74rem; color: var(--text-sub); margin-top: 10px; }
+        .kpi-explain summary { cursor: pointer; color: var(--primary); font-weight: bold; outline-offset: 2px; }
+        .kpi-explain summary:focus-visible { outline: 2px solid var(--accent); }
+        .kpi-explain .body { background-color: #f8f9fa; padding: 10px; border-radius: 4px; border: 1px solid #f0f0f0; margin-top: 6px; line-height: 1.45; }
+        .kpi-subtext-dynamic { display: block; font-weight: bold; color: var(--text-main); margin-bottom: 4px; }
 
-        .card-category { font-size: 1.1rem; color: var(--text-sub); margin: 30px 0 10px 0; border-bottom: 1px dashed var(--grid-line); padding-bottom: 5px;}
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: var(--bg-card); border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-decoration: none; color: inherit; transition: transform 0.2s; display: block; border-top: 4px solid var(--primary); }
-        .card:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
-        .card h3 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.1rem; }
-        .card p { margin: 0; color: var(--text-sub); font-size: 0.85rem; line-height: 1.5; }
-        .card-icon { font-size: 1.8rem; margin-bottom: 10px; }
-        
-        /* 強化された詳細ナビゲーションバー */
-        .dashboard-nav { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 20px; background: var(--bg-card); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .nav-cluster { display: flex; align-items: center; gap: 8px; }
-        .btn-home { background: var(--secondary); color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+        .kpi-note-box { background: #eef3fc; border: 1px solid #d0e0f5; padding: 14px 16px; border-radius: 8px; margin-top: 28px; font-size: 0.82rem; line-height: 1.55; }
+        .kpi-note-box ul { margin: 6px 0 0 18px; padding: 0; }
+
+        .card-category { font-size: 1.05rem; color: var(--text-sub); margin: 28px 0 10px; border-bottom: 1px dashed var(--grid-line); padding-bottom: 4px; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+        .card { background: var(--bg-card); border-radius: 10px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-decoration: none; color: inherit; transition: transform 0.15s, box-shadow 0.15s; display: block; border-top: 4px solid var(--primary); }
+        .card:hover, .card:focus-visible { transform: translateY(-3px); box-shadow: 0 6px 14px rgba(0,0,0,0.12); outline: none; }
+        .card:focus-visible { box-shadow: 0 0 0 3px var(--accent); }
+        .card h3 { margin: 0 0 8px; color: var(--primary); font-size: 1.05rem; }
+        .card p { margin: 0; color: var(--text-sub); font-size: 0.82rem; line-height: 1.5; }
+        .card-icon { font-size: 1.7rem; margin-bottom: 8px; }
+
+        .dashboard-nav { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 18px; background: var(--bg-card); padding: 12px 14px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .nav-cluster { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .btn-home { background: var(--secondary); color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; text-decoration: none; font-weight: bold; font-size: 0.88rem; }
         .btn-home:hover { opacity: 0.9; }
-        .btn-action { background: #fff; color: var(--text-main); border: 1px solid #ccc; padding: 8px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.9rem; transition: background 0.1s; }
+        .btn-action { background: #fff; color: var(--text-main); border: 1px solid #ccc; padding: 8px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.88rem; }
         .btn-action:hover { background: #eee; }
-        .btn-play { background: var(--accent) !important; color: #fff !important; border: none !important; }
+        .btn-action:focus-visible, .btn-home:focus-visible, .dash-selector:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .btn-play { background: var(--accent); color: #fff; border: none; }
         .btn-play:hover { opacity: 0.9; }
-        select.dash-selector { padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 0.9rem; font-weight: bold; color: var(--text-main); }
-        
+        select.dash-selector { padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 0.88rem; font-weight: bold; color: var(--text-main); max-width: 100%; }
+
         .chart-panel { background: var(--bg-card); padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .chart-box { position: relative; height: 35vh; width: 100%; margin-bottom: 20px; }
-        .chart-box.single { height: 50vh; }
-        .footer-box { display: flex; justify-content: space-between; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--grid-line); }
-        .download-link { padding: 6px 12px; border: 1px solid var(--text-sub); color: var(--text-main); text-decoration: none; border-radius: 4px; font-size: 0.85em; }
+        .chart-box { position: relative; height: 35vh; min-height: 240px; width: 100%; margin-bottom: 20px; }
+        .chart-box.single { height: 48vh; min-height: 300px; }
+        .footer-box { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--grid-line); }
+        .download-link { padding: 6px 12px; border: 1px solid var(--text-sub); color: var(--text-main); text-decoration: none; border-radius: 4px; font-size: 0.82rem; }
         .download-link:hover { background: var(--text-main); color: #fff; }
+
+        /* embed mode */
+        body.embed header, body.embed .card-section, body.embed .kpi-section, body.embed .dashboard-nav .btn-home { display: none; }
+        body.embed .container { margin: 8px auto; }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.15rem; }
+            .kpi-grid { grid-template-columns: 1fr; }
+            .kpi-value { font-size: 1.8rem; }
+            .dashboard-nav { justify-content: center; }
+            .nav-cluster { justify-content: center; width: 100%; }
+            select.dash-selector { flex: 1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .card { transition: none; }
+        }
     </style>
 </head>
 <body>
-<header><h1>日野のすがた｜ダッシュボード</h1></header>
+<header>
+    <h1>日野のすがた｜ダッシュボード</h1>
+    <p>滋賀県日野町の公式統計をひと目で（実証実験プロトタイプ）</p>
+</header>
 <div class="container">
     <div id="view-home">
         <div class="kpi-section">
-            <h2>📊 最新の町勢ハイライト</h2>
-            <div class="kpi-grid">
-                <div class="kpi-card" id="kpi-pop">
-                    <span class="kpi-label">👪 1世帯あたりの人員（国勢調査）</span>
-                    <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">人/世帯</span></div>
-                    <div class="kpi-diff-box"></div>
-                    <div class="kpi-explain">
-                        <span class="kpi-subtext-dynamic">データ確認中...</span>
-                        <strong>💡 算出根拠:</strong> 総人口 ÷ 総世帯数（5年周期の国勢調査確定値に準拠）<br>
-                        <strong>📝 指張の意味:</strong> 町内の核家族化や単身世帯化の進行度（世帯の小規模化構造）を測る標準指標です。
-                    </div>
-                </div>
-                <div class="kpi-card" id="kpi-for">
-                    <span class="kpi-label">🌍 外国籍住民の登録数（業務統計）</span>
-                    <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">人</span></div>
-                    <div class="kpi-diff-box"></div>
-                    <div class="kpi-explain">
-                        <span class="kpi-subtext-dynamic">データ確認中...</span>
-                        <strong>💡 算出根拠:</strong> 各年末時点の外国人登録者数の全籍合計値（毎年集計）<br>
-                        <strong>📝 指標の意味:</strong> 地域社会における多文化共生の進展度や、生産年齢人口等の多様化の進展を客観的な数として追跡します（令和6年住基人口比で約4.69%）。
-                    </div>
-                </div>
-                <div class="kpi-card" id="kpi-gar">
-                    <span class="kpi-label">🗑️ 1人あたりの可燃ごみ（業務統計）</span>
-                    <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">kg/人・年</span></div>
-                    <div class="kpi-diff-box"></div>
-                    <div class="kpi-explain">
-                        <span class="kpi-subtext-dynamic">データ確認中...</span>
-                        <strong>💡 算出根拠:</strong> 年間可燃ごみ総投入量 ÷ 各年度末の住基総人口（算出基準住民数 20,611人）<br>
-                        <strong>📝 指標の意味:</strong> 自治体全体の総量ではなく住民1人あたりに平準化し、環境意識の浸透やごみ減量化施施の成果を測ります。
-                    </div>
-                </div>
-                <div class="kpi-card" id="kpi-tou">
-                    <span class="kpi-label">🚌 1日平均の観光客入込数（観光統計）</span>
-                    <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">人/日</span></div>
-                    <div class="kpi-diff-box"></div>
-                    <div class="kpi-explain">
-                        <span class="kpi-subtext-dynamic">データ確認中...</span>
-                        <strong>💡 算出根拠:</strong> 年間観光客入込総数（日帰り＋宿泊） ÷ その年の総日数（閏年・平年を自動判定）<br>
-                        <strong>📝 指標の意味:</strong> 人口減少のバイアスを受けない公的観光統計基準。1日あたり平均してどれだけの交流人口（賑わい）が町を訪れているかの活力を示します。
-                    </div>
-                </div>
-                <div class="kpi-card" id="kpi-rail">
-                    <span class="kpi-label">🚊 日野駅の1日平均乗降客（交通統計）</span>
-                    <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">人/日</span></div>
-                    <div class="kpi-diff-box"></div>
-                    <div class="kpi-explain">
-                        <span class="kpi-subtext-dynamic">データ確認中...</span>
-                        <strong>💡 算出根拠:</strong> 近江鉄道日野駅の年間総乗降客数 ÷ その年度の総日数（会計年度の閏日を厳密に考慮）<br>
-                        <strong>📝 指標の意味:</strong> 地域の基幹公共交通機関が日常の移動手段としてどの程度機能しているかを可視化します。
-                    </div>
-                </div>
-                <div class="kpi-card" id="kpi-fin" style="border-left: 5px solid var(--accent);">
-                    <span class="kpi-label">🏦 財政構造の弾力性（決算統計）</span>
-                    <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">%</span></div>
-                    <div class="kpi-diff-box"></div>
-                    <div class="kpi-explain">
-                        <strong>🔍 総務省基準に基づく公的定義と解説</strong><br>
-                        地方自治体の財政構造の「ゆとり（弾力性）」を測定する代表的な指標です。<br>
-                        <strong>分母:</strong> 地方税や地方交付税など、使い道が限定されず毎年度決まって入る「経常一般財源」<br>
-                        <strong>分子:</strong> 人件費、福祉手当、借金返済など、毎年度決まって出ていく「経常的経費」に充てられた一般財源<br>
-                        <br>
-                        <strong>📝 住民向けの補足解説:</strong><br>
-                        数値が低いほど新しい施策（独自の住民サービス等）に柔軟に割ける財源が多いことを示し、数値が「下がる」ことは財政構造が「改善」されたことを意味します。
-                    </div>
-                </div>
-            </div>
+            <h2>📊 まちの今を読み解く 9つの指標</h2>
+            <p class="section-lead">人口の動きを中心に、暮らし・行財政の健康状態をまとめました。各カードの数値はCSVから自動算出しています。「上がると良い／悪い」を指標ごとに明記しています。</p>
+            <div class="kpi-grid" id="kpiGrid"></div>
 
             <div class="kpi-note-box">
-                <strong>💡 データの年次（令和2年と令和6年など）が混在している理由について</strong><br>
-                本ダッシュボードに掲載している数値は、政府・自治体の統計制度によって調査周期が異なるため最新年が異なります。<br>
+                <strong>💡 データの年次（令和2年と令和6年など）が混在している理由</strong><br>
+                統計制度によって調査周期が異なるため、指標ごとに「もっとも新しい確定値」を採用しています。
                 <ul>
-                    <li><strong>国勢調査データ（人口・世帯数など）:</strong> 国が5年に1度実施する法的全数調査のため、確報値としての最新は<strong>「令和2年」</strong>となります。</li>
-                    <li><strong>自治体業務データ（外国人、ごみ、鉄道、財政など）:</strong> 町が毎年独自に集計・決算を行っているため、直近の確定値である<strong>「令和6年（令和6年度）」</strong>のデータを採用しています。</li>
+                    <li><strong>国勢調査（人口・世帯・年齢など）：</strong>国が5年に1度行う全数調査のため、最新確定値は<strong>令和2年（2020年）</strong>です。<span class="kpi-source-tag census">国勢</span>タグの指標が該当します。次回令和7年調査の結果が公表され次第、差し替えます。</li>
+                    <li><strong>町の業務・決算統計（出生・社会増減・ごみ・財政など）：</strong>毎年集計されるため、<strong>令和6年（度）</strong>の値を採用しています。<span class="kpi-source-tag gyomu">業務</span>タグが該当します。</li>
                 </ul>
-                データの新旧ではなく、それぞれの統計種別における<strong>「もっとも新しく、客観的で正確な公式データ」</strong>を厳密に採用しています。
+                出典：「統計でわかる！日野のすがた2025」（日野町）
             </div>
         </div>
         <div class="card-section">
@@ -155,7 +126,7 @@
             <div id="cardGrid"></div>
         </div>
     </div>
-    
+
     <div id="view-dashboard" style="display: none;">
         <div class="dashboard-nav">
             <div class="nav-cluster">
@@ -163,7 +134,7 @@
             </div>
             <div class="nav-cluster">
                 <button class="btn-action" onclick="stopRotation(); navigateDashboard(-1)">◀ 前の統計</button>
-                <select id="dashSelector" class="dash-selector" onchange="stopRotation(); window.location.hash = this.value"></select>
+                <select id="dashSelector" class="dash-selector" aria-label="統計を選択" onchange="stopRotation(); window.location.hash = this.value"></select>
                 <button class="btn-action" onclick="stopRotation(); navigateDashboard(1)">次の統計 ▶</button>
             </div>
             <div class="nav-cluster">
@@ -176,7 +147,7 @@
             <div id="chartArea"></div>
             <div class="footer-box">
                 <a id="downloadBtn" href="#" class="download-link" download>CSVデータをダウンロード</a>
-                <span style="font-size: 0.85em; color: var(--text-sub);">出典：「統計でわかる！日野のすがた2025」</span>
+                <span style="font-size: 0.82rem; color: var(--text-sub);">出典：「統計でわかる！日野のすがた2025」</span>
             </div>
         </div>
     </div>
@@ -184,13 +155,13 @@
 
 <script>
     const dashConfig = {
-        'land_area': { cat: '位置・地勢・気象', title: '地目別面積', icon: '🗺️', desc: '町内の田、畑、宅地、林山などの面積推移です。', file: 'hino_land_area.csv', render: renderLandArea },
+        'land_area': { cat: '位置・地勢・気象', title: '地目別面積', icon: '🗺️', desc: '町内の田、畑、宅地、山林などの面積推移です。', file: 'hino_land_area.csv', render: renderLandArea },
         'weather': { cat: '位置・地勢・気象', title: '気象概況', icon: '🌤️', desc: '令和6年の月別平均気温と降水量です。', file: 'hino_weather.csv', render: renderWeather },
         'population': { cat: '人口', title: '人口・世帯数', icon: '👥', desc: '総人口（男女別）および世帯数の推移です。', file: 'hino_population.csv', render: renderPopulation },
-        'vital_stats': { cat: '人口', title: '人口動態', icon: '📈', desc: '出生・死亡および転入・転出の推移です。', file: 'hino_vital_stats.csv', render: renderVitalStats },
+        'age': { cat: '人口', title: '年齢3区分別人口', icon: '🎂', desc: '年少・生産年齢・老年人口の構成と高齢化率の推移です。', file: 'hino_age.csv', render: renderAge },
+        'vital_stats': { cat: '人口', title: '人口動態', icon: '📈', desc: '出生・死亡（自然動態）と転入・転出（社会動態）の推移です。', file: 'hino_vital_stats.csv', render: renderVitalStats },
         'foreigners': { cat: '人口', title: '外国人登録者数', icon: '🌍', desc: '町内の国籍別外国人登録者数の推移（積み上げ表示）です。', file: 'hino_foreigners.csv', render: renderForeigners },
         'industry': { cat: '人口', title: '産業別就業者数', icon: '🧑‍🌾', desc: '第一次〜第三次産業における就業者数の推移です。', file: 'hino_industry.csv', render: renderIndustry },
-        'age': { cat: '人口', title: '年齢3区分別人口', icon: '🎂', desc: '年少・生産年齢・老年人口の構成変化です。', file: 'hino_age.csv', render: renderAge },
         'tourism': { cat: '産業', title: '観光客入込数', icon: '🚌', desc: '日帰り・宿泊別の観光客数の動向です。', file: 'hino_tourism.csv', render: renderTourism },
         'industry_trend': { cat: '産業', title: '工業の推移', icon: '⚙️', desc: '工業事業所数および従業者数の推移です。', file: 'hino_industry_trend.csv', render: renderIndustryTrend },
         'farming_area': { cat: '農林業', title: '経営耕地面積', icon: '🌾', desc: '田、畑、樹園地の面積推移です。', file: 'hino_farming_area.csv', render: renderFarmingArea },
@@ -200,21 +171,52 @@
         'traffic': { cat: '運輸・交通', title: '交通事故発生状況', icon: '🚗', desc: '町内における交通事故件数の推移です。', file: 'hino_traffic_accident.csv', render: renderTraffic },
         'water_supply': { cat: '水道・通信・消費', title: '上水道給水状況', icon: '💧', desc: '給水人口と年間総配水量の推移です。', file: 'hino_water_supply.csv', render: renderWaterSupply },
         'sewerage': { cat: '水道・通信・消費', title: '公共下水道整備状況', icon: '🚰', desc: '下水道の普及率と水洗化率の推移です。', file: 'hino_sewerage.csv', render: renderSewerage },
-        'garbage': { cat: '水道・通信・消費', title: 'ごみ投入量', icon: '♻️', desc: '可燃物および不燃物の排出量トレンドです。', file: 'hino_garbage.csv', render: renderGarbage },
+        'garbage': { cat: '水道・通信・消費', title: 'ごみ投入量', icon: '♻️', desc: '可燃物・不燃物の投入量と1人あたり排出量の推移です。', file: 'hino_garbage.csv', render: renderGarbage },
+        'tobacco': { cat: '水道・通信・消費', title: 'たばこ消費量', icon: '🚬', desc: '町内のたばこ年間消費量（千本）の推移です。', file: 'hino_tobacco.csv', render: renderTobacco },
         'nhis': { cat: '社会保障', title: '国民健康保険', icon: '🏥', desc: '国保被保険者数と加入率の推移です。', file: 'hino_nhis.csv', render: renderNhis },
-        'nursing_care': { cat: '社会保障', title: '介護保険', icon: '🧓', desc: '介護保険の第1号被保険者数の推移です。', file: 'hino_nursing_care.csv', render: renderNursingCare },
+        'latter_elderly': { cat: '社会保障', title: '後期高齢者医療', icon: '🧑‍⚕️', desc: '後期高齢者医療の受給者数と1人あたり費用額の推移です。', file: 'hino_latter_elderly.csv', render: renderLatterElderly },
+        'nursing_care': { cat: '社会保障', title: '介護保険（被保険者）', icon: '🧓', desc: '介護保険の第1号被保険者数（前期・後期別）の推移です。', file: 'hino_nursing_care.csv', render: renderNursingCare },
+        'care_certification': { cat: '社会保障', title: '要介護認定者数', icon: '♿', desc: '要支援・要介護の認定者数の推移（段階別）です。', file: 'hino_care_certification.csv', render: renderCareCertification },
         'childcare': { cat: '社会保障', title: '保育所・こども園', icon: '👶', desc: '保育所等の定員および在籍人員の推移です。', file: 'hino_childcare.csv', render: renderChildcare },
         'diseases': { cat: '保健衛生', title: '三大疾病別死亡数', icon: '🩺', desc: '悪性新生物・心疾患・脳血管疾患による死亡数の推移です。', file: 'hino_diseases.csv', render: renderDiseases },
         'library': { cat: '教育・文化', title: '図書館の利用状況', icon: '📚', desc: '図書館の来館者数と利用（貸出）冊数の推移です。', file: 'hino_library.csv', render: renderLibrary },
         'cultural_facilities': { cat: '教育・文化', title: '文化施設入館者数', icon: '🏛️', desc: '町内主要文化・観光施設の年間入館者数推移です。', file: 'hino_cultural_facilities.csv', render: renderCulturalFacilities },
-        'finance_index': { cat: '財政', title: '決算分析指数', icon: '📊', desc: '経常収支比率などの財政の健全化指標です。', file: 'hino_finance_index.csv', render: renderFinanceIndex },
+        'finance_index': { cat: '財政', title: '決算分析指数', icon: '📊', desc: '経常収支比率・将来負担比率などの財政健全化指標です。', file: 'hino_finance_index.csv', render: renderFinanceIndex },
         'fire_ambulance': { cat: '治安・消防', title: '火災・救急出動', icon: '🚒', desc: '火災発生件数と救急車出動件数の推移です。', file: 'hino_fire_ambulance.csv', render: renderFireAmbulance }
     };
 
+    // --- KPIカード定義（向き：good=増加が良い / bad=増加が悪い / neutral=方向を出さない） ---
+    const kpiDefs = [
+        { id: 'kpi-birth', cls: 'is-pop', tag: ['業務','gyomu'], label: '👶 年間出生数', unit: '人', dir: 'good',
+          explain: { sub: '', root: 'hino_vital_stats.csv の最新年「出生数」。', meaning: 'まちの将来世代の規模を映す最重要指標。少子化の進行を直接示します。', dirText: '増えるほど良い指標' } },
+        { id: 'kpi-aging', cls: 'is-pop', tag: ['国勢','census'], label: '🎂 高齢化率（65歳以上）', unit: '%', dir: 'neutral',
+          explain: { sub: '', root: '老年人口 ÷ 総数（令和2年国勢調査）。', meaning: '人口に占める高齢者の割合。社会保障や地域支え合いの負荷を測ります。', dirText: '高低だけで良し悪しは判断しません' } },
+        { id: 'kpi-social', cls: 'is-pop', tag: ['業務','gyomu'], label: '↔️ 社会増減（転入−転出）', unit: '人', dir: 'good',
+          explain: { sub: '', root: '転入 − 転出（住民基本台帳、最新年）。', meaning: '政策で動かしやすい人口の出入り。プラスなら転入超過＝定住促進が効いている状態。', dirText: 'プラス（転入超過）が良い指標' } },
+        { id: 'kpi-pop', cls: 'is-pop', tag: ['国勢','census'], label: '👪 1世帯あたりの人員', unit: '人/世帯', dir: 'neutral',
+          explain: { sub: '', root: '総人口 ÷ 総世帯数（令和2年国勢調査）。', meaning: '核家族化・単身世帯化の進行度。低下は世帯の小規模化を意味します。', dirText: '高低だけで良し悪しは判断しません' } },
+        { id: 'kpi-for', cls: '', tag: ['業務','gyomu'], label: '🌍 外国籍住民の登録数', unit: '人', dir: 'neutral',
+          explain: { sub: '', root: '各年末の国籍別登録者の総数（住民課）。', meaning: '多文化共生や担い手の多様化の進展を客観的な数で追跡します。', dirText: '高低だけで良し悪しは判断しません' } },
+        { id: 'kpi-tou', cls: '', tag: ['業務','gyomu'], label: '🚌 1日平均の観光客入込数', unit: '人/日', dir: 'good',
+          explain: { sub: '', root: '年間観光客入込総数（日帰り＋宿泊）÷ その年の総日数（閏年を自動判定）。', meaning: '人口減少の影響を受けない交流人口の指標。まちの賑わいを示します。', dirText: '増えるほど良い指標' } },
+        { id: 'kpi-gar', cls: '', tag: ['業務','gyomu'], label: '🗑️ 1人あたりの可燃ごみ', unit: 'kg/人・年', dir: 'bad',
+          explain: { sub: '', root: '公式統計の「1人当り（kg）」をそのまま採用（令和6年度）。', meaning: 'ごみ減量や環境意識の浸透度。減るほど望ましい指標です。', dirText: '減るほど良い指標' } },
+        { id: 'kpi-rail', cls: '', tag: ['業務','gyomu'], label: '🚊 日野駅の1日平均乗降客', unit: '人/日', dir: 'good',
+          explain: { sub: '', root: '年間総乗降客数 ÷ その年度の総日数（会計年度の閏日を考慮）。', meaning: '基幹公共交通が日常の移動手段としてどの程度機能しているかを示します。', dirText: '増えるほど良い指標' } },
+        { id: 'kpi-fin', cls: 'is-fiscal', tag: ['業務','gyomu'], label: '🏦 財政構造の弾力性（経常収支比率）', unit: '%', dir: 'bad',
+          explain: { sub: '', root: '経常的経費に充てた一般財源 ÷ 経常一般財源（令和6年度・総務省基準）。', meaning: '財政の「ゆとり」。低いほど新しい施策に使える財源が多く、下がる＝改善です。', dirText: '下がるほど良い（改善）指標' } }
+    ];
+
     let activeCharts = [];
+    let sparkCharts = {};
     let rotateInterval = null;
+    const COLORS = { primary:'#1d4e89', secondary:'#007a5e', accent:'#d45d00', red:'#c0392b', amber:'#e69f00', teal:'#008eb0', purple:'#7b5ea7', grey:'#95a5a6', green:'#1f7a3d' };
+
+    function isEmbed() { return new URLSearchParams(location.search).get('embed') === 'true'; }
 
     function init() {
+        if (isEmbed()) document.body.classList.add('embed');
+        buildKpiCards();
         const grid = document.getElementById('cardGrid');
         const selector = document.getElementById('dashSelector');
         let currentCat = ''; let catDiv = null;
@@ -224,276 +226,409 @@
                 catDiv = document.createElement('div'); catDiv.className = 'card-grid'; grid.appendChild(catDiv);
                 currentCat = conf.cat;
             }
-            catDiv.innerHTML += `<a href="#${key}" class="card"><div class="card-icon">${conf.icon}</div><h3>${conf.title}</h3><p>${conf.desc}</p></a>`;
+            catDiv.innerHTML += `<a href="#${key}" class="card"><div class="card-icon" aria-hidden="true">${conf.icon}</div><h3>${conf.title}</h3><p>${conf.desc}</p></a>`;
             selector.innerHTML += `<option value="${key}">【${conf.cat}】${conf.title}</option>`;
         }
         window.addEventListener('hashchange', handleRoute); handleRoute();
-        loadKPIData();
+        loadKPIData(); kpiLoaded = true;
     }
 
-    // --- 厳密な 閏年 / 閏年度 自動判定ロジック ---
+    function buildKpiCards() {
+        const grid = document.getElementById('kpiGrid');
+        grid.innerHTML = kpiDefs.map(d => `
+            <div class="kpi-card ${d.cls}" id="${d.id}">
+                <span class="kpi-label">${d.label}<span class="kpi-source-tag ${d.tag[1]}">${d.tag[0]}</span></span>
+                <div class="kpi-main-row">
+                    <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">${d.unit}</span></div>
+                    <div class="kpi-spark-box"><canvas class="kpi-spark" id="${d.id}-spark" aria-hidden="true"></canvas></div>
+                </div>
+                <div class="kpi-diff-box"></div>
+                <details class="kpi-explain">
+                    <summary>算出根拠と指標の意味</summary>
+                    <div class="body">
+                        <span class="kpi-subtext-dynamic">データ確認中...</span>
+                        <strong>💡 算出根拠:</strong> ${d.explain.root}<br>
+                        <strong>📝 指標の意味:</strong> ${d.explain.meaning}
+                    </div>
+                </details>
+            </div>`).join('');
+    }
+
     function getDaysInYearOrFiscalYear(yearStr) {
         const isFiscal = yearStr.includes('度');
-        const match = yearStr.match(/(昭和|平成|令和)(\d+)/);
+        const match = yearStr.match(/(昭和|平成|令和)(\d+|元)/);
         if (!match) return 365;
-        const gengo = match[1]; const nen = parseInt(match[2]);
+        const gengo = match[1]; const nen = match[2] === '元' ? 1 : parseInt(match[2]);
         let seireki = 0;
         if (gengo === '令和') seireki = 2018 + nen;
         else if (gengo === '平成') seireki = 1988 + nen;
         else if (gengo === '昭和') seireki = 1925 + nen;
-        
-        if (isFiscal) {
-            const nextYear = seireki + 1; // 年度の場合は翌年2月に閏日があるかを判定
-            return ((nextYear % 4 === 0 && nextYear % 100 !== 0) || nextYear % 400 === 0) ? 366 : 365;
-        } else {
-            return ((seireki % 4 === 0 && seireki % 100 !== 0) || seireki % 400 === 0) ? 366 : 365;
-        }
+        const leap = y => (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
+        return isFiscal ? (leap(seireki + 1) ? 366 : 365) : (leap(seireki) ? 366 : 365);
     }
 
-    // --- シーケンシャル移動 & 自動巡回機能ロジック ---
     function navigateDashboard(direction) {
         const keys = Object.keys(dashConfig);
         const hash = window.location.hash.substring(1);
-        let idx = keys.indexOf(hash);
-        if (idx === -1) idx = 0;
+        let idx = keys.indexOf(hash); if (idx === -1) idx = 0;
         idx = (idx + direction + keys.length) % keys.length;
         window.location.hash = keys[idx];
     }
-
     function toggleRotation() {
         const btn = document.getElementById('btnPlay');
-        if (rotateInterval) {
-            stopRotation();
-        } else {
-            btn.innerText = '⏸ 停止する';
-            btn.style.background = '#333';
-            rotateInterval = setInterval(() => {
-                navigateDashboard(1);
-            }, 5000); // 5秒間隔でローテーション
-        }
+        if (rotateInterval) { stopRotation(); }
+        else { btn.innerText = '⏸ 停止する'; btn.style.background = '#333';
+            rotateInterval = setInterval(() => navigateDashboard(1), 5000); }
     }
-
     function stopRotation() {
-        if (rotateInterval) {
-            clearInterval(rotateInterval);
-            rotateInterval = null;
+        if (rotateInterval) { clearInterval(rotateInterval); rotateInterval = null;
             const btn = document.getElementById('btnPlay');
-            if (btn) {
-                btn.innerText = '🔄 自動巡回';
-                btn.style.background = 'var(--accent)';
-            }
-        }
+            if (btn) { btn.innerText = '🔄 自動巡回'; btn.style.background = 'var(--accent)'; } }
     }
 
-    // --- KPI自動計算ロジック（CSV直接パース） ---
     function loadKPIData() {
-        const parseKPI = (file, callback) => {
-            Papa.parse(`data/${file}`, { download: true, header: true, skipEmptyLines: true, complete: res => callback(res.data) });
-        };
+        const parseKPI = (file, cb) => Papa.parse(`data/${file}`, { download: true, header: true, skipEmptyLines: true, complete: r => cb(r.data) });
+
+        parseKPI('hino_vital_stats.csv', d => {
+            if (d.length < 2) return;
+            const series = d.map(r => parseInt(r['出生数']));
+            const lat = d[d.length-1], prv = d[d.length-2];
+            const vLat = parseInt(lat['出生数']), vPrv = parseInt(prv['出生数']);
+            updateKPICard('kpi-birth', vLat.toLocaleString(), vLat - vPrv, `前年(${prv['年次']}): ${vPrv}人`, `${lat['年次']}: 死亡数 ${lat['死亡数']}人を大きく下回り自然減が続く`, series);
+            // 社会増減
+            const soc = d.map(r => parseInt(r['社会増加']));
+            const sLat = parseInt(lat['社会増加']), sPrv = parseInt(prv['社会増加']);
+            updateKPICard('kpi-social', (sLat>0?'+':'') + sLat.toLocaleString(), sLat - sPrv, `前年: ${sPrv>0?'+':''}${sPrv}人`, `${lat['年次']}: 転入${lat['転入']}人 − 転出${lat['転出']}人`, soc);
+        });
+
+        parseKPI('hino_age.csv', d => {
+            if (d.length < 1) return;
+            const series = d.map(r => parseFloat(r['高齢化率']));
+            const lat = d[d.length-1], prv = d[d.length-2];
+            const vLat = parseFloat(lat['高齢化率']), vPrv = parseFloat(prv['高齢化率']);
+            updateKPICard('kpi-aging', vLat.toFixed(1), (vLat - vPrv).toFixed(1), `前回(${prv['年']}): ${vPrv.toFixed(1)}%`, `${lat['年']}: 老年人口 ${Number(lat['老年人口']).toLocaleString()}人`, series, 1);
+        });
 
         parseKPI('hino_population.csv', d => {
-            if(d.length < 2) return;
+            if (d.length < 2) return;
+            const series = d.map(r => parseFloat(r['総数'])/parseFloat(r['世帯数']));
             const lat = d[d.length-1], prv = d[d.length-2];
-            const vLat = (parseFloat(lat['総数'])/parseFloat(lat['世帯数'])).toFixed(2);
-            const vPrv = (parseFloat(prv['総数'])/parseFloat(prv['世帯数'])).toFixed(2);
-            updateKPICard('kpi-pop', vLat, (vLat - vPrv).toFixed(2), '人/世帯', `前回(${prv['年']}): ${vPrv}`, `${lat['年']}確定値: 総人口 ${Number(lat['総数']).toLocaleString()}人 / ${Number(lat['世帯数']).toLocaleString()}世帯`);
+            const vLat = (parseFloat(lat['総数'])/parseFloat(lat['世帯数']));
+            const vPrv = (parseFloat(prv['総数'])/parseFloat(prv['世帯数']));
+            updateKPICard('kpi-pop', vLat.toFixed(2), (vLat - vPrv), `前回(${prv['年']}): ${vPrv.toFixed(2)}`, `${lat['年']}: 総人口 ${Number(lat['総数']).toLocaleString()}人 / ${Number(lat['世帯数']).toLocaleString()}世帯`, series, 2);
         });
 
         parseKPI('hino_foreigners.csv', d => {
-            if(d.length < 2) return;
+            if (d.length < 2) return;
             const keys = ['ブラジル','フィリピン','中国','韓国・朝鮮','ペルー','その他'];
-            const sum = row => Object.keys(row).reduce((acc, k) => keys.includes(k) ? acc + parseInt(row[k]||0) : acc, 0);
+            const sum = row => keys.reduce((a, k) => a + (parseInt(row[k]) || 0), 0);
+            const series = d.map(sum);
             const lat = d[d.length-1], prv = d[d.length-2];
             const vLat = sum(lat), vPrv = sum(prv);
-            updateKPICard('kpi-for', vLat.toLocaleString(), vLat - vPrv, '人', `前年(${prv['年']}): ${vPrv.toLocaleString()}`, `${lat['年']}計: 国籍別登録者の総数`);
-        });
-
-        parseKPI('hino_garbage.csv', d => {
-            if(d.length < 2) return;
-            const lat = d[d.length-1], prv = d[d.length-2];
-            const vLat = (parseInt(lat['可燃物'])*1000/20611).toFixed(1);
-            const vPrv = (parseInt(prv['可燃物'])*1000/20611).toFixed(1);
-            updateKPICard('kpi-gar', vLat, (vLat - vPrv).toFixed(1), 'kg/人・年', `前年: ${vPrv}`, `${lat['年']}: 年間総投入量 ${Number(lat['可燃物']).toLocaleString()}t`);
+            updateKPICard('kpi-for', vLat.toLocaleString(), vLat - vPrv, `前年(${prv['年']}): ${vPrv.toLocaleString()}`, `${lat['年']}: 国籍別登録者の総数`, series);
         });
 
         parseKPI('hino_tourism.csv', d => {
-            if(d.length < 2) return;
+            if (d.length < 2) return;
+            const perDay = r => Math.round((parseInt(r['日帰り'])+parseInt(r['宿泊'])) / getDaysInYearOrFiscalYear(r['年']));
+            const series = d.map(perDay);
             const lat = d[d.length-1], prv = d[d.length-2];
-            const sLat = parseInt(lat['日帰り'])+parseInt(lat['宿泊']), sPrv = parseInt(prv['日帰り'])+parseInt(prv['宿泊']);
-            const daysLat = getDaysInYearOrFiscalYear(lat['年']), daysPrv = getDaysInYearOrFiscalYear(prv['年']);
-            const vLat = Math.round(sLat / daysLat), vPrv = Math.round(sPrv / daysPrv);
-            updateKPICard('kpi-tou', vLat.toLocaleString(), vLat - vPrv, '人/日', `前年: ${vPrv.toLocaleString()}`, `${lat['年']}計: 年間総入込数 ${sLat.toLocaleString()}人 (${daysLat}日間換算)`);
+            const sLat = parseInt(lat['日帰り'])+parseInt(lat['宿泊']);
+            updateKPICard('kpi-tou', perDay(lat).toLocaleString(), perDay(lat) - perDay(prv), `前年: ${perDay(prv).toLocaleString()}`, `${lat['年']}: 年間総入込数 ${sLat.toLocaleString()}人`, series);
+        });
+
+        parseKPI('hino_garbage.csv', d => {
+            if (d.length < 2) return;
+            const series = d.map(r => parseFloat(r['可燃物1人当り']));
+            const lat = d[d.length-1], prv = d[d.length-2];
+            const vLat = parseFloat(lat['可燃物1人当り']), vPrv = parseFloat(prv['可燃物1人当り']);
+            updateKPICard('kpi-gar', vLat.toFixed(1), (vLat - vPrv), `前年: ${vPrv.toFixed(1)}`, `${lat['年度']}: 公式統計の1人当り排出量`, series, 1);
         });
 
         parseKPI('hino_railway.csv', d => {
-            if(d.length < 2) return;
+            if (d.length < 2) return;
+            const perDay = r => Math.round(parseInt(r['乗降客数']) / getDaysInYearOrFiscalYear(r['年度']));
+            const series = d.map(perDay);
             const lat = d[d.length-1], prv = d[d.length-2];
-            const daysLat = getDaysInYearOrFiscalYear(lat['年度']), daysPrv = getDaysInYearOrFiscalYear(prv['年度']);
-            const vLat = Math.round(parseInt(lat['乗降客数'])/daysLat), vPrv = Math.round(parseInt(prv['乗降客数'])/daysPrv);
-            updateKPICard('kpi-rail', vLat.toLocaleString(), vLat - vPrv, '人/日', `前年: ${vPrv.toLocaleString()}`, `${lat['年度']}: 年間総乗降客数 ${Number(lat['乗降客数']).toLocaleString()}人 (${daysLat}日間換算)`);
+            updateKPICard('kpi-rail', perDay(lat).toLocaleString(), perDay(lat) - perDay(prv), `前年: ${perDay(prv).toLocaleString()}`, `${lat['年度']}: 年間総乗降客数 ${Number(lat['乗降客数']).toLocaleString()}人`, series);
         });
 
         parseKPI('hino_finance_index.csv', d => {
-            if(d.length < 2) return;
+            if (d.length < 2) return;
+            const series = d.map(r => parseFloat(r['経常収支比率']));
             const lat = d[d.length-1], prv = d[d.length-2];
             const vLat = parseFloat(lat['経常収支比率']), vPrv = parseFloat(prv['経常収支比率']);
-            updateKPICard('kpi-fin', vLat.toFixed(1), (vLat - vPrv).toFixed(1), '%', `前年: ${vPrv.toFixed(1)}%`, `${lat['年度']}: 経常一般財源に対する経常的経費の使途充当割合`);
+            updateKPICard('kpi-fin', vLat.toFixed(1), (vLat - vPrv), `前年: ${vPrv.toFixed(1)}%`, `${lat['年度']}: 経常一般財源に対する経常的経費の割合`, series, 1);
         });
     }
 
-    function updateKPICard(id, val, diff, unit, prevText, subtext) {
-        const card = document.getElementById(id); if(!card) return;
+    function updateKPICard(id, val, diff, prevText, subtext, series, decimals) {
+        const card = document.getElementById(id); if (!card) return;
+        const def = kpiDefs.find(k => k.id === id);
         const dNum = parseFloat(diff);
+        const dec = decimals || 0;
         let dClass = 'diff-zero', dSign = '±', labelText = ' 変動なし';
-        
-        if (id === 'kpi-fin' || id === 'kpi-gar') {
-            if (dNum < 0) { dClass = 'diff-plus'; dSign = '▼ '; labelText = ' 改善'; }
-            else if (dNum > 0) { dClass = 'diff-minus'; dSign = '▲ +'; labelText = ' 硬直化・増加'; }
+
+        if (def.dir === 'neutral') {
+            if (dNum > 0) { dSign = '▲ +'; labelText = ''; }
+            else if (dNum < 0) { dSign = '▼ '; labelText = ''; }
+            dClass = 'diff-zero';
         } else {
-            if (dNum > 0) { dClass = 'diff-plus'; dSign = '▲ +'; labelText = ' 増加'; }
-            else if (dNum < 0) { dClass = 'diff-minus'; dSign = '▼ '; labelText = ' 減少'; }
+            const isGood = (def.dir === 'good') ? dNum > 0 : dNum < 0;
+            const isBad = (def.dir === 'good') ? dNum < 0 : dNum > 0;
+            if (isGood) { dClass = 'diff-good'; labelText = ' 改善方向'; }
+            else if (isBad) { dClass = 'diff-bad'; labelText = ' 注意方向'; }
+            dSign = dNum > 0 ? '▲ +' : (dNum < 0 ? '▼ ' : '± ');
         }
-        
-        card.querySelector('.kpi-value-box').innerHTML = `<span class="kpi-value">${val}</span><span class="kpi-unit">${unit}</span>`;
-        card.querySelector('.kpi-diff-box').innerHTML = `<span class="kpi-diff ${dClass}">${dSign}${Math.abs(dNum).toFixed(id==='kpi-pop'||id==='kpi-gar'||id==='kpi-fin'?2:0)}${labelText}</span><span class="kpi-prev-text">(${prevText})</span>`;
-        card.querySelector('.kpi-subtext-dynamic').innerText = subtext;
+
+        card.querySelector('.kpi-value').textContent = val;
+        card.querySelector('.kpi-diff-box').innerHTML =
+            `<span class="kpi-diff ${dClass}">${dSign}${Math.abs(dNum).toFixed(dec)}${labelText}</span>` +
+            `<span class="kpi-prev-text">(${prevText})</span>` +
+            `<span class="kpi-direction">${def.explain.dirText}</span>`;
+        card.querySelector('.kpi-subtext-dynamic').textContent = subtext;
+        drawSparkline(`${id}-spark`, series, def.dir);
     }
 
-    function handleRoute() { const hash = window.location.hash.substring(1); if (hash && dashConfig[hash]) showDashboard(hash); else { stopRotation(); showHome(); } }
-    function showHome() { document.getElementById('view-home').style.display = 'block'; document.getElementById('view-dashboard').style.display = 'none'; activeCharts.forEach(c => c.destroy()); }
-    
+    function drawSparkline(canvasId, series, dir) {
+        const el = document.getElementById(canvasId); if (!el || !series || series.length < 2) return;
+        if (sparkCharts[canvasId]) { sparkCharts[canvasId].destroy(); }
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        sparkCharts[canvasId] = new Chart(el, {
+            type: 'line',
+            data: { labels: series.map((_, i) => i), datasets: [{ data: series, borderColor: COLORS.primary, borderWidth: 2, pointRadius: 0, tension: 0.3,
+                backgroundColor: 'rgba(29,78,137,0.08)', fill: true }] },
+            options: { responsive: true, maintainAspectRatio: false, animation: !reduce, plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                scales: { x: { display: false }, y: { display: false } }, layout: { padding: 0 }, elements: { line: { capBezierPoints: true } } }
+        });
+    }
+
+    function handleRoute() {
+        const hash = window.location.hash.substring(1);
+        if (hash && dashConfig[hash]) showDashboard(hash);
+        else { stopRotation(); showHome(); }
+    }
+    let kpiLoaded = false;
+    function showHome() {
+        document.getElementById('view-home').style.display = 'block';
+        document.getElementById('view-dashboard').style.display = 'none';
+        destroyCharts();
+        if (!kpiLoaded) { loadKPIData(); kpiLoaded = true; }
+    }
     function showDashboard(key) {
-        document.getElementById('view-home').style.display = 'none'; document.getElementById('view-dashboard').style.display = 'block';
+        document.getElementById('view-home').style.display = 'none';
+        document.getElementById('view-dashboard').style.display = 'block';
         const conf = dashConfig[key];
-        document.getElementById('dashTitle').innerText = conf.icon + ' ' + conf.title; document.getElementById('dashDesc').innerText = conf.desc;
-        document.getElementById('dashSelector').value = key; document.getElementById('downloadBtn').href = `data/${conf.file}`;
-        Papa.parse(`data/${conf.file}`, { download: true, header: true, skipEmptyLines: true, complete: function(results) { conf.render(results.data); }});
+        document.getElementById('dashTitle').innerText = conf.icon + ' ' + conf.title;
+        document.getElementById('dashDesc').innerText = conf.desc;
+        document.getElementById('dashSelector').value = key;
+        document.getElementById('downloadBtn').href = `data/${conf.file}`;
+        Papa.parse(`data/${conf.file}`, { download: true, header: true, skipEmptyLines: true, complete: r => conf.render(r.data) });
     }
 
-    // Chart.jsのDOMタイミング・描画不具合を完全にクリアする新設計
+    function destroyCharts() { activeCharts.forEach(c => c.destroy()); activeCharts = []; }
     function resetCanvases(count) {
-        activeCharts.forEach(c => c.destroy()); activeCharts = [];
+        destroyCharts();
         const area = document.getElementById('chartArea'); area.innerHTML = ''; const canvases = [];
-        for(let i=0; i<count; i++){
+        for (let i = 0; i < count; i++) {
             const div = document.createElement('div'); div.className = count === 1 ? 'chart-box single' : 'chart-box';
             const canvas = document.createElement('canvas'); div.appendChild(canvas); area.appendChild(div); canvases.push(canvas);
         }
         return canvases;
     }
+    // 自動巡回中、グラフ上のクリックでも停止
+    document.getElementById('chartArea').addEventListener('click', stopRotation);
 
-    function getBaseOptions(title, scales) { return { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { title: { display: true, text: title, color: '#333' } }, scales: Object.assign({ x: { grid: { display: false } }, y: { grid: { color: '#e0e0e0' }, min: 0 } }, scales) }; }
+    function getBaseOptions(title, scales) {
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        return { responsive: true, maintainAspectRatio: false, animation: !reduce, interaction: { mode: 'index', intersect: false },
+            plugins: { title: { display: true, text: title, color: '#333', font: { size: 14 } }, legend: { labels: { usePointStyle: true } } },
+            scales: Object.assign({ x: { grid: { display: false } }, y: { grid: { color: '#e0e0e0' }, min: 0 } }, scales) };
+    }
 
-    /* --- 各種グラフ描画処理（安定化拡張版） --- */
+    /* --- 各種グラフ描画 --- */
     function renderLandArea(data) {
         const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '林山', data: data.map(r=>r['林山']), backgroundColor: '#447c59' }, { label: '田', data: data.map(r=>r['田']), backgroundColor: '#98b46b' }, { label: '畑', data: data.map(r=>r['畑']), backgroundColor: '#e2d37c' }, { label: '宅地', data: data.map(r=>r['宅地']), backgroundColor: '#c76b6b' } ] }, options: getBaseOptions('地目別面積推移', { x: { stacked: true }, y: { stacked: true } }) }));
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [
+            { label: '林山', data: data.map(r=>r['林山']), backgroundColor: '#447c59' },
+            { label: '田', data: data.map(r=>r['田']), backgroundColor: '#98b46b' },
+            { label: '畑', data: data.map(r=>r['畑']), backgroundColor: '#e2d37c' },
+            { label: '宅地', data: data.map(r=>r['宅地']), backgroundColor: '#c76b6b' } ] },
+            options: getBaseOptions('地目別面積推移 (ha)', { x: { stacked: true }, y: { stacked: true } }) }));
     }
     function renderWeather(data) {
         const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['月']), datasets: [{ label: '平均気温 (℃)', data: data.map(r=>r['平均気温']), borderColor: '#e74c3c', backgroundColor: '#e74c3c' }] }, options: getBaseOptions('月別平均気温 (令和6年)') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'bar', data: { labels: data.map(r=>r['月']), datasets: [{ label: '降水量 (mm)', data: data.map(r=>r['降水量']), backgroundColor: '#3498db' }] }, options: getBaseOptions('月別降水量 (令和6年)') }));
+        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['月']), datasets: [{ label: '平均気温 (℃)', data: data.map(r=>r['平均気温']), borderColor: COLORS.red, backgroundColor: COLORS.red, tension: 0.3 }] }, options: getBaseOptions('月別平均気温 (令和6年)') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'bar', data: { labels: data.map(r=>r['月']), datasets: [{ label: '降水量 (mm)', data: data.map(r=>r['降水量']), backgroundColor: COLORS.teal }] }, options: getBaseOptions('月別降水量 (令和6年)') }));
     }
     function renderPopulation(data) {
         const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '男', data: data.map(r=>r['男']), backgroundColor: '#1d4e89' }, { label: '女', data: data.map(r=>r['女']), backgroundColor: '#d45d00' } ] }, options: getBaseOptions('人口推移', { x: { stacked: true }, y: { stacked: true } }) }));
-        activeCharts.push(new Chart(cvs[1], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '世帯数', data: data.map(r=>r['世帯数']), backgroundColor: '#007a5e' }] }, options: getBaseOptions('世帯数推移') }));
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [
+            { label: '男', data: data.map(r=>r['男']), backgroundColor: COLORS.primary },
+            { label: '女', data: data.map(r=>r['女']), backgroundColor: COLORS.accent } ] },
+            options: getBaseOptions('人口推移', { x: { stacked: true }, y: { stacked: true } }) }));
+        activeCharts.push(new Chart(cvs[1], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '世帯数', data: data.map(r=>r['世帯数']), backgroundColor: COLORS.secondary }] }, options: getBaseOptions('世帯数推移') }));
+    }
+    function renderAge(data) {
+        const cvs = resetCanvases(2);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [
+            { label: '年少人口', data: data.map(r=>r['年少人口']), backgroundColor: '#4a90e2' },
+            { label: '生産年齢人口', data: data.map(r=>r['生産年齢人口']), backgroundColor: COLORS.green },
+            { label: '老年人口', data: data.map(r=>r['老年人口']), backgroundColor: COLORS.red } ] },
+            options: getBaseOptions('年齢3区分別人口', { x: { stacked: true }, y: { stacked: true } }) }));
+        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [{ label: '高齢化率 (%)', data: data.map(r=>r['高齢化率']), borderColor: COLORS.accent, backgroundColor: 'rgba(212,93,0,0.1)', fill: true, borderWidth: 3, tension: 0.3 }] }, options: getBaseOptions('高齢化率の推移') }));
     }
     function renderVitalStats(data) {
         const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年次']), datasets: [ { label: '出生数', data: data.map(r=>r['出生数']), borderColor: '#2ecc71', backgroundColor: '#2ecc71' }, { label: '死亡数', data: data.map(r=>r['死亡数']), borderColor: '#e74c3c', backgroundColor: '#e74c3c' } ] }, options: getBaseOptions('自然動態（出生・死亡）') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年次']), datasets: [ { label: '転入', data: data.map(r=>r['転入']), borderColor: '#3498db', backgroundColor: '#3498db' }, { label: '転出', data: data.map(r=>r['転出']), borderColor: '#f39c12', backgroundColor: '#f39c12' } ] }, options: getBaseOptions('社会動態（転入・転出）') }));
+        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年次']), datasets: [
+            { label: '出生数', data: data.map(r=>r['出生数']), borderColor: COLORS.green, backgroundColor: COLORS.green, tension: 0.3 },
+            { label: '死亡数', data: data.map(r=>r['死亡数']), borderColor: COLORS.red, backgroundColor: COLORS.red, tension: 0.3 } ] }, options: getBaseOptions('自然動態（出生・死亡）') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年次']), datasets: [
+            { label: '転入', data: data.map(r=>r['転入']), borderColor: COLORS.primary, backgroundColor: COLORS.primary, tension: 0.3 },
+            { label: '転出', data: data.map(r=>r['転出']), borderColor: COLORS.amber, backgroundColor: COLORS.amber, tension: 0.3 } ] }, options: getBaseOptions('社会動態（転入・転出）') }));
     }
     function renderForeigners(data) {
         const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: 'ブラジル', data: data.map(r=>r['ブラジル']), backgroundColor: '#2ecc71' }, { label: 'フィリピン', data: data.map(r=>r['フィリピン']), backgroundColor: '#f1c40f' }, { label: '中国', data: data.map(r=>r['中国']), backgroundColor: '#3498db' }, { label: '韓国・朝鮮', data: data.map(r=>r['韓国・朝鮮']), backgroundColor: '#e74c3c' }, { label: 'ペルー', data: data.map(r=>r['ペルー']), backgroundColor: '#9b59b6' }, { label: 'その他', data: data.map(r=>r['その他']), backgroundColor: '#95a5a6' } ] }, options: getBaseOptions('国籍別外国人登録者数の推移', { x: { stacked: true }, y: { stacked: true } }) }));
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [
+            { label: 'ブラジル', data: data.map(r=>r['ブラジル']), backgroundColor: COLORS.green },
+            { label: 'フィリピン', data: data.map(r=>r['フィリピン']), backgroundColor: '#f1c40f' },
+            { label: '中国', data: data.map(r=>r['中国']), backgroundColor: COLORS.primary },
+            { label: '韓国・朝鮮', data: data.map(r=>r['韓国・朝鮮']), backgroundColor: COLORS.red },
+            { label: 'ペルー', data: data.map(r=>r['ペルー']), backgroundColor: COLORS.purple },
+            { label: 'その他', data: data.map(r=>r['その他']), backgroundColor: COLORS.grey } ] },
+            options: getBaseOptions('国籍別外国人登録者数の推移', { x: { stacked: true }, y: { stacked: true } }) }));
     }
     function renderIndustry(data) {
         const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '第一次産業', data: data.map(r=>r['第一次産業']), backgroundColor: '#8d6e63' }, { label: '第二次産業', data: data.map(r=>r['第二次産業']), backgroundColor: '#78909c' }, { label: '第三次産業', data: data.map(r=>r['第三次産業']), backgroundColor: '#5c6bc0' } ] }, options: getBaseOptions('産業区分別就業者数', { x: { stacked: true }, y: { stacked: true } }) }));
-    }
-    function renderAge(data) {
-        const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '年少人口', data: data.map(r=>r['年少人口']), backgroundColor: '#4a90e2' }, { label: '生産年齢人口', data: data.map(r=>r['生産年齢人口']), backgroundColor: '#2ecc71' }, { label: '老年人口', data: data.map(r=>r['老年人口']), backgroundColor: '#e74c3c' } ] }, options: getBaseOptions('年齢3区分別人口の推移', { x: { stacked: true }, y: { stacked: true } }) }));
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [
+            { label: '第一次産業', data: data.map(r=>r['第一次産業']), backgroundColor: '#8d6e63' },
+            { label: '第二次産業', data: data.map(r=>r['第二次産業']), backgroundColor: '#78909c' },
+            { label: '第三次産業', data: data.map(r=>r['第三次産業']), backgroundColor: '#5c6bc0' } ] },
+            options: getBaseOptions('産業区分別就業者数', { x: { stacked: true }, y: { stacked: true } }) }));
     }
     function renderTourism(data) {
         const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '日帰り', data: data.map(r=>r['日帰り']), backgroundColor: '#008eb0' }, { label: '宿泊', data: data.map(r=>r['宿泊']), backgroundColor: '#e69f00' } ] }, options: getBaseOptions('観光客入込数', { x: { stacked: true }, y: { stacked: true } }) }));
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [
+            { label: '日帰り', data: data.map(r=>r['日帰り']), backgroundColor: COLORS.teal },
+            { label: '宿泊', data: data.map(r=>r['宿泊']), backgroundColor: COLORS.amber } ] },
+            options: getBaseOptions('観光客入込数', { x: { stacked: true }, y: { stacked: true } }) }));
     }
     function renderIndustryTrend(data) {
         const cvs = resetCanvases(2);
         activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '事業所数', data: data.map(r=>r['事業所数']), backgroundColor: '#5c6bc0' }] }, options: getBaseOptions('工業事業所数') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [{ label: '従業者数', data: data.map(r=>r['従業者数']), borderColor: '#8e44ad', backgroundColor: '#8e44ad' }] }, options: getBaseOptions('工業従業者数') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [{ label: '従業者数', data: data.map(r=>r['従業者数']), borderColor: COLORS.purple, backgroundColor: COLORS.purple, tension: 0.3 }] }, options: getBaseOptions('工業従業者数') }));
     }
     function renderFarmingArea(data) {
         const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '田 (a)', data: data.map(r=>r['田']), backgroundColor: '#98b46b' }, { label: '畑 (a)', data: data.map(r=>r['畑']), backgroundColor: '#e2d37c' }, { label: '樹園地 (a)', data: data.map(r=>r['樹園地']), backgroundColor: '#e67e22' } ] }, options: getBaseOptions('経営耕地面積', { x: { stacked: true }, y: { stacked: true } }) }));
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [
+            { label: '田 (a)', data: data.map(r=>r['田']), backgroundColor: '#98b46b' },
+            { label: '畑 (a)', data: data.map(r=>r['畑']), backgroundColor: '#e2d37c' },
+            { label: '樹園地 (a)', data: data.map(r=>r['樹園地']), backgroundColor: '#e67e22' } ] },
+            options: getBaseOptions('経営耕地面積', { x: { stacked: true }, y: { stacked: true } }) }));
     }
     function renderFarmlandConversion(data) {
         const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [ { label: '住宅用地 (㎡)', data: data.map(r=>r['住宅用地']), backgroundColor: '#e74c3c' }, { label: '駐車場 (㎡)', data: data.map(r=>r['駐車場']), backgroundColor: '#34495e' } ] }, options: getBaseOptions('農地転用面積の推移', { x: { stacked: true }, y: { stacked: true } }) }));
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [
+            { label: '住宅用地 (㎡)', data: data.map(r=>r['住宅用地']), backgroundColor: COLORS.red },
+            { label: '駐車場 (㎡)', data: data.map(r=>r['駐車場']), backgroundColor: '#34495e' } ] },
+            options: getBaseOptions('農地転用面積の推移', { x: { stacked: true }, y: { stacked: true } }) }));
     }
     function renderRailway(data) {
         const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '年間乗降客数 (人)', data: data.map(r=>r['乗降客数']), borderColor: '#2980b9', backgroundColor: 'rgba(41, 128, 185, 0.1)', borderWidth: 3, fill: true }] }, options: getBaseOptions('近江鉄道日野駅 年間乗降客数') }));
+        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '年間乗降客数 (人)', data: data.map(r=>r['乗降客数']), borderColor: COLORS.primary, backgroundColor: 'rgba(29,78,137,0.1)', borderWidth: 3, fill: true, tension: 0.3 }] }, options: getBaseOptions('近江鉄道日野駅 年間乗降客数') }));
     }
     function renderBus(data) {
         const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '定期利用', data: data.map(r=>r['定期']), backgroundColor: '#3498db' }, { label: '定期外利用', data: data.map(r=>r['定期外']), backgroundColor: '#9b59b6' } ] }, options: getBaseOptions('町営バス利用者数', { x: { stacked: true }, y: { stacked: true } }) }));
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [
+            { label: '定期利用', data: data.map(r=>r['定期']), backgroundColor: COLORS.primary },
+            { label: '定期外利用', data: data.map(r=>r['定期外']), backgroundColor: COLORS.purple } ] },
+            options: getBaseOptions('町営バス利用者数', { x: { stacked: true }, y: { stacked: true } }) }));
     }
     function renderTraffic(data) {
         const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '事故件数', data: data.map(r=>r['事故件数']), borderColor: '#c0392b', backgroundColor: 'rgba(192, 57, 43, 0.1)', borderWidth: 3, fill: true }] }, options: getBaseOptions('交通事故発生件数') }));
+        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '事故件数', data: data.map(r=>r['事故件数']), borderColor: COLORS.red, backgroundColor: 'rgba(192,57,43,0.1)', borderWidth: 3, fill: true, tension: 0.3 }] }, options: getBaseOptions('交通事故発生件数') }));
     }
     function renderWaterSupply(data) {
         const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '給水人口 (人)', data: data.map(r=>r['給水人口']), borderColor: '#3498db', backgroundColor: '#3498db' }] }, options: getBaseOptions('給水人口') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '年間総配水量 (千m3)', data: data.map(r=>r['年間総配水量']), backgroundColor: '#008eb0' }] }, options: getBaseOptions('年間総配水量') }));
+        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '給水人口 (人)', data: data.map(r=>r['給水人口']), borderColor: COLORS.primary, backgroundColor: COLORS.primary, tension: 0.3 }] }, options: getBaseOptions('給水人口') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '年間総配水量 (千m3)', data: data.map(r=>r['年間総配水量']), backgroundColor: COLORS.teal }] }, options: getBaseOptions('年間総配水量') }));
     }
     function renderSewerage(data) {
         const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '普及率 (%)', data: data.map(r=>r['普及率']), borderColor: '#1abc9c', backgroundColor: '#1abc9c' }] }, options: getBaseOptions('下水道普及率') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '水洗化率 (%)', data: data.map(r=>r['水洗化率']), borderColor: '#2980b9', backgroundColor: '#2980b9' }] }, options: getBaseOptions('水洗化率') }));
+        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '普及率 (%)', data: data.map(r=>r['普及率']), borderColor: '#1abc9c', backgroundColor: '#1abc9c', tension: 0.3 }] }, options: getBaseOptions('下水道普及率') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '水洗化率 (%)', data: data.map(r=>r['水洗化率']), borderColor: COLORS.primary, backgroundColor: COLORS.primary, tension: 0.3 }] }, options: getBaseOptions('水洗化率') }));
     }
     function renderGarbage(data) {
         const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '可燃物 (t)', data: data.map(r=>r['可燃物']), backgroundColor: '#e67e22' }] }, options: getBaseOptions('可燃物排出量') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '不燃物 (t)', data: data.map(r=>r['不燃物']), backgroundColor: '#95a5a6' }] }, options: getBaseOptions('不燃物排出量') }));
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [
+            { label: '可燃物 投入量 (kl)', data: data.map(r=>r['可燃物投入量']), backgroundColor: '#e67e22' },
+            { label: '不燃物 投入量 (t)', data: data.map(r=>r['不燃物投入量']), backgroundColor: COLORS.grey } ] }, options: getBaseOptions('ごみ投入量') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '可燃物 1人当り (kg)', data: data.map(r=>r['可燃物1人当り']), borderColor: COLORS.accent, backgroundColor: 'rgba(212,93,0,0.1)', fill: true, borderWidth: 3, tension: 0.3 }] }, options: getBaseOptions('1人あたり可燃ごみ排出量') }));
+    }
+    function renderTobacco(data) {
+        const cvs = resetCanvases(1);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '消費量 (千本)', data: data.map(r=>r['消費量']), backgroundColor: '#8d6e63' }] }, options: getBaseOptions('たばこ年間消費量') }));
     }
     function renderNhis(data) {
         const cvs = resetCanvases(2);
         activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '被保険者数', data: data.map(r=>r['被保険者数']), backgroundColor: '#1abc9c' }] }, options: getBaseOptions('国保被保険者数') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [{ label: '加入率 (%)', data: data.map(r=>r['加入率']), borderColor: '#16a085', backgroundColor: '#16a085' }] }, options: getBaseOptions('国保加入率') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [{ label: '加入率 (%)', data: data.map(r=>r['加入率']), borderColor: '#16a085', backgroundColor: '#16a085', tension: 0.3 }] }, options: getBaseOptions('国保加入率') }));
+    }
+    function renderLatterElderly(data) {
+        const cvs = resetCanvases(2);
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '受給者数 (人)', data: data.map(r=>r['受給者数']), backgroundColor: COLORS.accent }] }, options: getBaseOptions('後期高齢者医療 受給者数') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '1人当り費用額 (円)', data: data.map(r=>r['1人当り費用額']), borderColor: COLORS.red, backgroundColor: 'rgba(192,57,43,0.1)', fill: true, tension: 0.3 }] }, options: getBaseOptions('1人当りの費用額') }));
     }
     function renderNursingCare(data) {
         const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [ { label: '前期高齢者', data: data.map(r=>r['前期高齢者']), backgroundColor: '#f1c40f' }, { label: '後期高齢者', data: data.map(r=>r['後期高齢者']), backgroundColor: '#e67e22' } ] }, options: getBaseOptions('介護保険1号被保険者数', { x: { stacked: true }, y: { stacked: true } }) }));
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [
+            { label: '前期高齢者(65-74)', data: data.map(r=>r['前期高齢者']), backgroundColor: '#f1c40f' },
+            { label: '後期高齢者(75-)', data: data.map(r=>r['後期高齢者']), backgroundColor: '#e67e22' } ] },
+            options: getBaseOptions('介護保険1号被保険者数', { x: { stacked: true }, y: { stacked: true } }) }));
+    }
+    function renderCareCertification(data) {
+        const cvs = resetCanvases(1);
+        const cats = ['要支援1','要支援2','要介護1','要介護2','要介護3','要介護4','要介護5'];
+        const palette = ['#a3d5c0','#7bbfa3','#f4d35e','#ee964b','#e07a5f','#c1502e','#8c2f1e'];
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']),
+            datasets: cats.map((c, i) => ({ label: c, data: data.map(r=>r[c]), backgroundColor: palette[i] })) },
+            options: getBaseOptions('要支援・要介護認定者数', { x: { stacked: true }, y: { stacked: true } }) }));
     }
     function renderChildcare(data) {
         const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [ { label: '定員', data: data.map(r=>r['定員']), borderColor: '#8e44ad', backgroundColor: 'transparent', borderWidth: 2 }, { label: '在籍人員', data: data.map(r=>r['在籍人員']), type: 'bar', backgroundColor: '#9b59b6' } ] }, options: getBaseOptions('保育所・認定こども園の状況') }));
+        activeCharts.push(new Chart(cvs[0], { data: { labels: data.map(r=>r['年']), datasets: [
+            { type: 'line', label: '定員', data: data.map(r=>r['定員']), borderColor: COLORS.purple, backgroundColor: 'transparent', borderWidth: 2, tension: 0.3 },
+            { type: 'bar', label: '在籍人員', data: data.map(r=>r['在籍人員']), backgroundColor: '#9b59b6' } ] }, options: getBaseOptions('保育所・認定こども園の状況') }));
     }
     function renderDiseases(data) {
         const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年次']), datasets: [ { label: '悪性新生物', data: data.map(r=>r['悪性新生物']), backgroundColor: '#34495e' }, { label: '心疾患', data: data.map(r=>r['心疾患']), backgroundColor: '#e74c3c' }, { label: '脳血管疾患', data: data.map(r=>r['脳血管疾患']), backgroundColor: '#95a5a6' } ] }, options: getBaseOptions('三大疾病別死亡数の推移', { x: { stacked: true }, y: { stacked: true } }) }));
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年次']), datasets: [
+            { label: '悪性新生物', data: data.map(r=>r['悪性新生物']), backgroundColor: '#34495e' },
+            { label: '心疾患', data: data.map(r=>r['心疾患']), backgroundColor: COLORS.red },
+            { label: '脳血管疾患', data: data.map(r=>r['脳血管疾患']), backgroundColor: COLORS.grey } ] },
+            options: getBaseOptions('三大疾病別死亡数の推移', { x: { stacked: true }, y: { stacked: true } }) }));
     }
     function renderLibrary(data) {
         const cvs = resetCanvases(2);
         activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '来館者数 (人)', data: data.map(r=>r['来館者数']), backgroundColor: '#16a085' }] }, options: getBaseOptions('図書館 来館者数') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '利用冊数 (冊)', data: data.map(r=>r['利用冊数']), borderColor: '#27ae60', backgroundColor: '#27ae60' }] }, options: getBaseOptions('図書館 利用(貸出)冊数') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '利用冊数 (冊)', data: data.map(r=>r['利用冊数']), borderColor: '#27ae60', backgroundColor: '#27ae60', tension: 0.3 }] }, options: getBaseOptions('図書館 利用(貸出)冊数') }));
     }
     function renderCulturalFacilities(data) {
         const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [ { label: '近江日野商人館', data: data.map(r=>r['近江日野商人館']), borderColor: '#2980b9', backgroundColor: 'transparent', borderWidth: 2 }, { label: '近江日野ふるさと館', data: data.map(r=>r['近江日野ふるさと館']), borderColor: '#27ae60', backgroundColor: 'transparent', borderWidth: 2 }, { label: '日野まちかど感応館', data: data.map(r=>r['日野まちかど感応館']), borderColor: '#e67e22', backgroundColor: 'transparent', borderWidth: 2 } ] }, options: getBaseOptions('町内主要文化施設 年間入館者数') }));
+        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [
+            { label: '近江日野商人館', data: data.map(r=>r['近江日野商人館']), borderColor: COLORS.primary, backgroundColor: 'transparent', borderWidth: 2, tension: 0.3 },
+            { label: '近江日野ふるさと館', data: data.map(r=>r['近江日野ふるさと館']), borderColor: '#27ae60', backgroundColor: 'transparent', borderWidth: 2, tension: 0.3 },
+            { label: '日野まちかど感応館', data: data.map(r=>r['日野まちかど感応館']), borderColor: '#e67e22', backgroundColor: 'transparent', borderWidth: 2, tension: 0.3 } ] }, options: getBaseOptions('町内主要文化施設 年間入館者数') }));
     }
     function renderFinanceIndex(data) {
         const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '経常収支比率 (%)', data: data.map(r=>r['経常収支比率']), backgroundColor: '#f1c40f' }] }, options: getBaseOptions('経常収支比率') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '将来負担比率 (%)', data: data.map(r=>r['将来負担比率']), borderColor: '#d35400', backgroundColor: 'rgba(211, 84, 0, 0.1)', fill: true }] }, options: getBaseOptions('将来負担比率') }));
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '経常収支比率 (%)', data: data.map(r=>r['経常収支比率']), backgroundColor: '#f1c40f' }] }, options: getBaseOptions('経常収支比率（低いほど弾力的）', { y: { min: 80 } }) }));
+        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '将来負担比率 (%)', data: data.map(r=>r['将来負担比率']), borderColor: '#d35400', backgroundColor: 'rgba(211,84,0,0.1)', fill: true, tension: 0.3 }] }, options: getBaseOptions('将来負担比率') }));
     }
     function renderFireAmbulance(data) {
         const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '火災発生件数', data: data.map(r=>r['火災発生件数']), backgroundColor: '#e74c3c' }] }, options: getBaseOptions('火災発生件数') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [{ label: '救急車出動件数', data: data.map(r=>r['救急車出動件数']), borderColor: '#e67e22', backgroundColor: '#e67e22' }] }, options: getBaseOptions('救急車出動件数') }));
+        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '火災発生件数', data: data.map(r=>r['火災発生件数']), backgroundColor: COLORS.red }] }, options: getBaseOptions('火災発生件数') }));
+        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [{ label: '救急車出動件数', data: data.map(r=>r['救急車出動件数']), borderColor: '#e67e22', backgroundColor: '#e67e22', tension: 0.3 }] }, options: getBaseOptions('救急車出動件数') }));
     }
 
     window.onload = init;
