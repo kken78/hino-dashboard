@@ -20,12 +20,25 @@
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .kpi-card { background: var(--bg-card); padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 5px solid var(--secondary); display: flex; flex-direction: column; justify-content: space-between; }
         .kpi-label { display: block; font-size: 0.9rem; color: var(--primary); font-weight: bold; margin-bottom: 5px; text-align: left; }
-        .kpi-value-box { text-align: center; margin: 10px 0; }
+        
+        /* 動的数値・増減エリア */
+        .kpi-value-box { text-align: center; margin-top: 5px; }
         .kpi-value { font-size: 2rem; font-weight: bold; color: var(--text-main); }
         .kpi-unit { font-size: 1rem; font-weight: normal; margin-left: 5px; color: var(--text-sub); }
+        .kpi-diff-box { text-align: center; font-size: 0.85rem; margin-bottom: 12px; }
+        .kpi-diff { font-weight: bold; padding: 2px 6px; border-radius: 4px; display: inline-block; }
+        .kpi-diff.diff-plus { color: #d45d00; background-color: #fdf2e9; }
+        .kpi-diff.diff-minus { color: #1d4e89; background-color: #ebf3fc; }
+        .kpi-diff.diff-zero { color: #666; background-color: #eee; }
+        .kpi-prev-text { color: var(--text-sub); margin-left: 5px; }
         
+        /* 統計の注記ボックス */
+        .kpi-note-box { background: #eef3fc; border: 1px solid #d0e0f5; padding: 15px; border-radius: 8px; margin-bottom: 30px; font-size: 0.85rem; line-height: 1.5; text-align: left; }
+        .kpi-note-box ul { margin: 5px 0 0 20px; padding: 0; }
+
         .kpi-explain { font-size: 0.75rem; color: var(--text-sub); background-color: #f8f9fa; padding: 12px; border-radius: 4px; border: 1px solid #f0f0f0; margin-top: auto; text-align: left; line-height: 1.45; }
         .kpi-explain strong { color: var(--text-main); }
+        .kpi-subtext-dynamic { display: block; font-weight: bold; color: var(--text-main); margin-bottom: 5px; }
 
         .card-category { font-size: 1.1rem; color: var(--text-sub); margin: 30px 0 10px 0; border-bottom: 1px dashed var(--grid-line); padding-bottom: 5px;}
         .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
@@ -52,65 +65,81 @@
 <div class="container">
     <div id="view-home">
         <div class="kpi-section">
-            <h2>📊 最新の町勢ハイライト（定義と算出根拠）</h2>
+            <h2>📊 最新の町勢ハイライト（データ自動算出・比較）</h2>
+            
+            <div class="kpi-note-box">
+                <strong>💡 なぜデータの年次（令和2年と令和6年など）が混在しているの？</strong><br>
+                本ダッシュボードに掲載している数値は、統計の種類によって調査周期が異なるため最新年が異なります。<br>
+                <ul>
+                    <li><strong>国勢調査データ（人口・世帯数など）:</strong> 国が5年に1度実施する法的全数調査のため、確報値としての最新は<strong>「令和2年」</strong>となります。</li>
+                    <li><strong>自治体業務データ（外国人、ごみ、鉄道、財政など）:</strong> 町が毎年独自に集計・決算を行っているため、直近の内部確定値である<strong>「令和6年（令和6年度）」</strong>のデータが存在します。</li>
+                </ul>
+                データの新旧ではなく、それぞれの統計制度における<strong>「もっとも新しく、客観的で正確な公式データ」</strong>を厳密に採用しています。
+            </div>
+
             <div class="kpi-grid">
-                <!-- 1. 家族の規模 -->
-                <div class="kpi-card">
-                    <span class="kpi-label">👪 1世帯あたりの人員（令和2年）</span>
-                    <div class="kpi-value-box"><span class="kpi-value">2.65</span><span class="kpi-unit">人/世帯</span></div>
+                <div class="kpi-card" id="kpi-pop">
+                    <span class="kpi-label">👪 1世帯あたりの人員（国勢調査最新）</span>
+                    <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">人/世帯</span></div>
+                    <div class="kpi-diff-box"></div>
                     <div class="kpi-explain">
-                        <strong>💡 算出根拠:</strong> 住宅に住む一般世帯人員（20,262人） ÷ 一般世帯数（7,655世帯）<br>
-                        <strong>📝 指標の意味:</strong> 単に人口と世帯数を個別にみるのではなく、掛け合わせることで町内の核家族化や単身世帯化の進行度合い（世帯の小規模化トレンド）を把握するための指標です。
+                        <span class="kpi-subtext-dynamic">データ読込中...</span>
+                        <strong>💡 算出根拠:</strong> 総人口 ÷ 総世帯数（5年周期の国勢調査データに基づく確定値）<br>
+                        <strong>📝 指標の意味:</strong> 町内の核家族化や単身世帯化の進行度合い（世帯の小規模化トレンド）を測る指標です。
                     </div>
                 </div>
-                <!-- 2. 多文化共生 -->
-                <div class="kpi-card">
-                    <span class="kpi-label">🌍 外国籍住民の割合（令和6年）</span>
-                    <div class="kpi-value-box"><span class="kpi-value">4.69</span><span class="kpi-unit">%</span></div>
+                <div class="kpi-card" id="kpi-for">
+                    <span class="kpi-label">🌍 外国籍住民の登録数（毎年集計）</span>
+                    <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">人</span></div>
+                    <div class="kpi-diff-box"></div>
                     <div class="kpi-explain">
-                        <strong>💡 算出根拠:</strong> 各年12月末時点の外国人登録者数（974人） ÷ 同時期の住民基本台帳人口（20,750人） × 100<br>
-                        <strong>📝 指標の意味:</strong> 地域社会における多文化共生の広がりや、生産年齢人口等の多様化の進展度を客観的な「比率」として把握し、行政サービスや地域コミュニティのあり方を検討する基礎となります。
+                        <span class="kpi-subtext-dynamic">データ読込中...</span>
+                        <strong>💡 算出根拠:</strong> 各年12月末時点の外国人登録者数の全籍合計値<br>
+                        <strong>📝 指標の意味:</strong> 地域社会における多文化共生の広がりや、生産年齢人口等の多様化の進展度を客観的な数として把握し、行政サービスや地域コミュニティのあり方を検討する基礎となります（令和6年住基人口比で約4.69%）。
                     </div>
                 </div>
-                <!-- 3. ごみ排出量 -->
-                <div class="kpi-card">
-                    <span class="kpi-label">🗑️ 1人あたりの可燃ごみ（令和6年度）</span>
-                    <div class="kpi-value-box"><span class="kpi-value">250.1</span><span class="kpi-unit">kg/人・年</span></div>
+                <div class="kpi-card" id="kpi-gar">
+                    <span class="kpi-label">🗑️ 1人あたりの可燃ごみ（毎年集計）</span>
+                    <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">kg/人・年</span></div>
+                    <div class="kpi-diff-box"></div>
                     <div class="kpi-explain">
-                        <strong>💡 算出根拠:</strong> 年間可燃ごみ総投入量（5,154t） ÷ 各年度末の外国人を含む総人口（20,611人）<br>
-                        <strong>📝 指標の意味:</strong> 自治体全体の総量ではなく、住民1人あたりに換算（1日あたり約685g）することで、環境意識の浸透度や、行政のごみ減量化施策の成果を住民目線で「自分ごと化」して評価するための指標です。
+                        <span class="kpi-subtext-dynamic">データ読込中...</span>
+                        <strong>💡 算出根拠:</strong> 年間可燃ごみ総投入量 ÷ 各年度末の総人口（算出基準住民数 20,611人）<br>
+                        <strong>📝 指標の意味:</strong> 自治体全体の総量ではなく住民1人あたりに換算（1日あたり約685g）することで、環境意識の浸透度や行政のごみ減量化施策の成果を住民目線で「自分ごと化」して評価するための指標です。
                     </div>
                 </div>
-                <!-- 4. 地域の交流活力 -->
-                <div class="kpi-card">
-                    <span class="kpi-label">✨ 町民1人あたりの観光活力（令和6年）</span>
-                    <div class="kpi-value-box"><span class="kpi-value">28.4</span><span class="kpi-unit">人</span></div>
+                <div class="kpi-card" id="kpi-tou">
+                    <span class="kpi-label">✨ 町民1人あたりの観光活力（毎年集計）</span>
+                    <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">人</span></div>
+                    <div class="kpi-diff-box"></div>
                     <div class="kpi-explain">
-                        <strong>💡 算出根拠:</strong> 年間観光客入込数（595,921人） ÷ 直近国勢調査総人口（20,964人）<br>
-                        <strong>⚠️ 注意事項:</strong> データの基準年（国調と単年推計）が異なるため、町民の生活規模に対してどれだけの「交流人口（賑わい）」が外から訪れているかのボリューム感を相対的に測る参考値です。
+                        <span class="kpi-subtext-dynamic">データ読込中...</span>
+                        <strong>💡 算出根拠:</strong> 年間観光客入込数（日帰り＋宿泊） ÷ 直近国勢調査総人口（20,964人）<br>
+                        <strong>⚠️ 注意事項:</strong> 分母と分子の基準年が異なるため、町民の生活規模に対してどれだけの「交流人口（賑わい）」が外から訪れているかのボリューム感を相対的に測る参考値です。
                     </div>
                 </div>
-                <!-- 5. 日常の駅利用 -->
-                <div class="kpi-card">
-                    <span class="kpi-label">🚊 日野駅の1日平均乗降客（令和6年度）</span>
-                    <div class="kpi-value-box"><span class="kpi-value">707</span><span class="kpi-unit">人/日</span></div>
+                <div class="kpi-card" id="kpi-rail">
+                    <span class="kpi-label">🚊 日野駅の1日平均乗降客（毎年集計）</span>
+                    <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">人/日</span></div>
+                    <div class="kpi-diff-box"></div>
                     <div class="kpi-explain">
-                        <strong>💡 算出根拠:</strong> 近江鉄道日野駅の年間総乗降客数（257,944人：乗車人員と降車人員の全合計） ÷ 年間日数（365日）<br>
-                        <strong>📝 指標の意味:</strong> マクロな年間総数ではなく「1日平均」に平準化することで、地域の基幹公共交通機関が日常の移動手段としてどの程度アクティブに機能しているかを可視化します。
+                        <span class="kpi-subtext-dynamic">データ読込中...</span>
+                        <strong>💡 算出根拠:</strong> 近江鉄道日野駅の年間総乗降客数（乗車＋降車の全合計値） ÷ 年間日数（365日）<br>
+                        <strong>📝 指標の意味:</strong> 年間総数ではなく「1日平均」に平準化することで、地域の基幹公共交通機関が日常の移動手段としてどの程度アクティブに機能しているかを可視化します。
                     </div>
                 </div>
-                <!-- 6. 経常収支比率 -->
-                <div class="kpi-card" style="border-left: 5px solid var(--accent);">
-                    <span class="kpi-label">🏦 財政構造の弾力性（令和6年度決算）</span>
-                    <div class="kpi-value-box"><span class="kpi-value">93.5</span><span class="kpi-unit">%</span></div>
+                <div class="kpi-card" id="kpi-fin" style="border-left: 5px solid var(--accent);">
+                    <span class="kpi-label">🏦 財政構造の弾力性（毎年決算）</span>
+                    <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">%</span></div>
+                    <div class="kpi-diff-box"></div>
                     <div class="kpi-explain">
                         <strong>🔍 総務省基準に基づく公的定義と解説</strong><br>
                         地方自治体の財政構造の「ゆとり（弾力性）」を測定する代表的な指標です。<br>
                         <strong>分母:</strong> 地方税や地方交付税など、使い道が限定されず毎年度決まって入る「経常一般財源」<br>
-                        <strong>分子:</strong> 人件費、扶助費（福祉手当等）、公債費（借金返済）など、毎年度決まって出ていく「経常的経費」に充てられた一般財源<br>
+                        <strong>分子:</strong> 人件費、福祉手当、借金返済など、毎年度決まって出ていく「経常的経費」に充てられた一般財源<br>
                         <br>
                         <strong>📝 住民向けの補足解説:</strong><br>
-                        公的部門の解説資料ではよく「毎月の決まった収入（給料）に対する、家賃や各種ローンなどの固定費の割合」に例えられます。日野町はこれが93.5%となっており、突発的な災害対応や、新しい公共施設の建設・修繕、独自の住民サービス（投資的経費など）に柔軟に使える財源が「残り6.5%」に限定されている状態（財政の硬直化）であることを示しています。
+                        公的解説では「給料に対する固定費の割合」に例えられます。日野町はこれが93.5%となっており、災害対応や独自の新規施策（投資的経費）に柔軟に使える財源が「残り6.5%」であることを示し、高いほど財政が硬直しているサインとなります。
                     </div>
                 </div>
             </div>
@@ -182,6 +211,81 @@
             selector.innerHTML += `<option value="${key}">【${conf.cat}】${conf.title}</option>`;
         }
         window.addEventListener('hashchange', handleRoute); handleRoute();
+        
+        // CSVからデータを読み込んでKPIエリアを動的に自動算出・更新
+        loadKPIData();
+    }
+
+    // --- KPI自動計算ロジック（CSV直接パース） ---
+    function loadKPIData() {
+        const parseKPI = (file, callback) => {
+            Papa.parse(`data/${file}`, { download: true, header: true, skipEmptyLines: true, complete: res => callback(res.data) });
+        };
+
+        // 1. 人口・世帯人員 (国勢調査)
+        parseKPI('hino_population.csv', d => {
+            if(d.length < 2) return;
+            const lat = d[d.length-1], prv = d[d.length-2];
+            const vLat = (parseFloat(lat['総数'])/parseFloat(lat['世帯数'])).toFixed(2);
+            const vPrv = (parseFloat(prv['総数'])/parseFloat(prv['世帯数'])).toFixed(2);
+            updateKPICard('kpi-pop', vLat, (vLat - vPrv).toFixed(2), '人/世帯', `前回(${prv['年']}): ${vPrv}`, `${lat['年']}確定値: 総人口 ${Number(lat['総数']).toLocaleString()}人 / ${Number(lat['世帯数']).toLocaleString()}世帯`);
+        });
+
+        // 2. 外国人登録数
+        parseKPI('hino_foreigners.csv', d => {
+            if(d.length < 2) return;
+            const keys = ['ブラジル','フィリピン','中国','韓国・朝鮮','ペルー','other','その他'];
+            const sum = row => Object.keys(row).reduce((acc, k) => keys.includes(k) ? acc + parseInt(row[k]||0) : acc, 0);
+            const lat = d[d.length-1], prv = d[d.length-2];
+            const vLat = sum(lat), vPrv = sum(prv);
+            updateKPICard('kpi-for', vLat.toLocaleString(), vLat - vPrv, '人', `前年(${prv['年']}): ${vPrv.toLocaleString()}`, `${lat['年']}計: 国籍別登録者の総数（多文化共生のリアルな進展度）`);
+        });
+
+        // 3. 可燃ごみ排出量
+        parseKPI('hino_garbage.csv', d => {
+            if(d.length < 2) return;
+            const lat = d[d.length-1], prv = d[d.length-2];
+            const vLat = (parseInt(lat['可燃物'])*1000/20611).toFixed(1);
+            const vPrv = (parseInt(prv['可燃物'])*1000/20611).toFixed(1);
+            updateKPICard('kpi-gar', vLat, (vLat - vPrv).toFixed(1), 'kg/人・年', `前年: ${vPrv}`, `${lat['年']}度: 年間総投入量 ${Number(lat['可燃物']).toLocaleString()}t (前年比 ${parseInt(lat['可燃物'])-parseInt(prv['可燃物']) > 0 ? '▲' : '▼'} ${Math.abs(parseInt(lat['可燃物'])-parseInt(prv['可燃物']))}t)`);
+        });
+
+        // 4. 観光活力
+        parseKPI('hino_tourism.csv', d => {
+            if(d.length < 2) return;
+            const lat = d[d.length-1], prv = d[d.length-2];
+            const sLat = parseInt(lat['日帰り'])+parseInt(lat['宿泊']), sPrv = parseInt(prv['日帰り'])+parseInt(prv['宿泊']);
+            const vLat = (sLat/20964).toFixed(1), vPrv = (sPrv/20964).toFixed(1);
+            updateKPICard('kpi-tou', vLat, (vLat - vPrv).toFixed(1), '人', `前年: ${vPrv}`, `${lat['年']}計: 総入込数 ${sLat.toLocaleString()}人 (前年比 ${sLat-sPrv > 0 ? '▲' : '▼'} ${Math.abs(sLat-sPrv).toLocaleString()}人)`);
+        });
+
+        // 5. 日野駅の1日平均乗降客
+        parseKPI('hino_railway.csv', d => {
+            if(d.length < 2) return;
+            const lat = d[d.length-1], prv = d[d.length-2];
+            const vLat = Math.round(parseInt(lat['乗降客数'])/365), vPrv = Math.round(parseInt(prv['乗降客数'])/365);
+            updateKPICard('kpi-rail', vLat, vLat - vPrv, '人/日', `前年: ${vPrv}`, `${lat['年度']}: 年間総乗降客数 ${Number(lat['乗降客数']).toLocaleString()}人`);
+        });
+
+        // 6. 経常収支比率
+        parseKPI('hino_finance_index.csv', d => {
+            if(d.length < 2) return;
+            const lat = d[d.length-1], prv = d[d.length-2];
+            const vLat = parseFloat(lat['経常収支比率']), vPrv = parseFloat(prv['経常収支比率']);
+            updateKPICard('kpi-fin', vLat.toFixed(1), (vLat - vPrv).toFixed(1), '%', `前年: ${vPrv.toFixed(1)}%`, `${lat['年度']}: 経常一般財源に対する経常的経費の使途充当割合`);
+        });
+    }
+
+    function updateKPICard(id, val, diff, unit, prevText, subtext) {
+        const card = document.getElementById(id); if(!card) return;
+        const dNum = parseFloat(diff);
+        let dClass = 'diff-zero', dSign = '±';
+        if (dNum > 0) { dClass = 'diff-plus'; dSign = '▲ +'; }
+        else if (dNum < 0) { dClass = 'diff-minus'; dSign = '▼ '; }
+        
+        card.querySelector('.kpi-value-box').innerHTML = `<span class="kpi-value">${val}</span><span class="kpi-unit">${unit}</span>`;
+        card.querySelector('.kpi-diff-box').innerHTML = `<span class="kpi-diff ${dClass}">${dSign}${Math.abs(dNum).toFixed(id==='kpi-pop'||id==='kpi-gar'||id==='kpi-tou'||id==='kpi-fin'?2:0)}</span><span class="kpi-prev-text">(${prevText})</span>`;
+        card.querySelector('.kpi-subtext-dynamic').innerText = subtext;
     }
 
     function handleRoute() { const hash = window.location.hash.substring(1); if (hash && dashConfig[hash]) showDashboard(hash); else showHome(); }
@@ -194,18 +298,7 @@
         Papa.parse(`data/${conf.file}`, { download: true, header: true, skipEmptyLines: true, complete: function(results) { conf.render(results.data); }});
     }
 
-    function resetCanvases(count) {
-        activeCharts.forEach(c => c.destroy()); activeCharts = [];
-        const area = document.getElementById('chartArea'); area.innerHTML = ''; const ctxs = [];
-        for(let i=0; i<count; i++){
-            const div = document.createElement('div'); div.className = count === 1 ? 'chart-box single' : 'chart-box';
-            const canvas = document.createElement('canvas'); div.appendChild(canvas); area.appendChild(div); ctxs.push(canvas.getContext('2d'));
-        }
-        return ctxs;
-    }
-
-    function getBaseOptions(title, scales) { return { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { title: { display: true, text: title, color: '#333' } }, scales: Object.assign({ x: { grid: { display: false } }, y: { grid: { color: '#e0e0e0' }, min: 0 } }, scales) }; }
-
+    /* 各種グラフ描画処理（省略なし） */
     function renderLandArea(data) { const ctxs = resetCanvases(1); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '林山', data: data.map(r=>r['林山']), backgroundColor: '#447c59' }, { label: '田', data: data.map(r=>r['田']), backgroundColor: '#98b46b' }, { label: '畑', data: data.map(r=>r['畑']), backgroundColor: '#e2d37c' }, { label: '宅地', data: data.map(r=>r['宅地']), backgroundColor: '#c76b6b' } ] }, options: getBaseOptions('地目別面積推移', { x: { stacked: true }, y: { stacked: true, min: 0 } }) })); }
     function renderWeather(data) { const ctxs = resetCanvases(2); activeCharts.push(new Chart(ctxs[0], { type: 'line', data: { labels: data.map(r=>r['月']), datasets: [{ label: '平均気温 (℃)', data: data.map(r=>r['平均気温']), borderColor: '#e74c3c', backgroundColor: '#e74c3c' }] }, options: getBaseOptions('月別平均気温 (令和6年)') })); activeCharts.push(new Chart(ctxs[1], { type: 'bar', data: { labels: data.map(r=>r['月']), datasets: [{ label: '降水量 (mm)', data: data.map(r=>r['降水量']), backgroundColor: '#3498db' }] }, options: getBaseOptions('月別降水量 (令和6年)') })); }
     function renderPopulation(data) { const ctxs = resetCanvases(2); activeCharts.push(new Chart(ctxs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [ { label: '男', data: data.map(r=>r['男']), backgroundColor: '#1d4e89' }, { label: '女', data: data.map(r=>r['女']), backgroundColor: '#d45d00' } ] }, options: getBaseOptions('人口推移', { x: { stacked: true }, y: { stacked: true, min: 0 } }) })); activeCharts.push(new Chart(ctxs[1], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '世帯数', data: data.map(r=>r['世帯数']), backgroundColor: '#007a5e' }] }, options: getBaseOptions('世帯数推移') })); }
@@ -236,3 +329,4 @@
 </script>
 </body>
 </html>
+EOF
