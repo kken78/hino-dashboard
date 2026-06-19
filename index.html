@@ -26,8 +26,10 @@
         .kpi-card { background: var(--bg-card); padding: 18px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 5px solid var(--secondary); display: flex; flex-direction: column; }
         .kpi-card.is-pop { border-left-color: var(--primary); }
         .kpi-card.is-fiscal { border-left-color: var(--accent); }
-        .kpi-label { display: block; font-size: 0.9rem; color: var(--primary); font-weight: bold; margin-bottom: 4px; }
-        .kpi-source-tag { font-size: 0.68rem; color: #fff; background: var(--text-sub); padding: 1px 6px; border-radius: 3px; margin-left: 6px; vertical-align: middle; font-weight: normal; white-space: nowrap; display: inline-block; }
+        .kpi-label { display: block; font-size: 0.9rem; color: var(--primary); font-weight: bold; margin-bottom: 2px; }
+        .kpi-asof { display: block; font-size: 0.72rem; color: var(--text-sub); margin-bottom: 4px; }
+        .kpi-asof-year { font-weight: bold; color: var(--text-main); }
+        .kpi-source-tag { font-size: 0.64rem; color: #fff; background: var(--text-sub); padding: 1px 5px; border-radius: 3px; margin-left: 6px; vertical-align: middle; font-weight: normal; white-space: nowrap; display: inline-block; }
         .kpi-source-tag.census { background: #6a5acd; }
         .kpi-source-tag.gyomu { background: #2e8b57; }
 
@@ -108,15 +110,15 @@
     <div id="view-home">
         <div class="kpi-section">
             <h2>📊 まちの今を読み解く 9つの指標</h2>
-            <p class="section-lead">人口の動きを中心に、暮らし・行財政の健康状態をまとめました。各カードの数値はCSVから自動算出しています。「上がると良い／悪い」を指標ごとに明記しています。</p>
+            <p class="section-lead">人口の動きを中心に、暮らし・行財政の状況をまとめました。各カードの数値はCSVから自動算出しています。指標ごとに、数値の増減が何を意味するかを併記しています。</p>
             <div class="kpi-grid" id="kpiGrid"></div>
 
             <div class="kpi-note-box">
                 <strong>💡 データの年次（令和2年と令和6年など）が混在している理由</strong><br>
                 統計制度によって調査周期が異なるため、指標ごとに「もっとも新しい確定値」を採用しています。
                 <ul>
-                    <li><strong>国勢調査（人口・世帯・年齢など）：</strong>国が5年に1度行う全数調査のため、最新確定値は<strong>令和2年（2020年）</strong>です。<span class="kpi-source-tag census">国勢</span>タグの指標が該当します。次回令和7年調査の結果が公表され次第、差し替えます。</li>
-                    <li><strong>町の業務・決算統計（出生・社会増減・ごみ・財政など）：</strong>毎年集計されるため、<strong>令和6年（度）</strong>の値を採用しています。<span class="kpi-source-tag gyomu">業務</span>タグが該当します。</li>
+                    <li><strong>国勢調査（人口・世帯・年齢など）：</strong>国が5年に1度行う全数調査のため、最新確定値は<strong>令和2年（2020年）</strong>です。<span class="kpi-source-tag census">国勢調査</span>タグの指標が該当します。次回令和7年調査の結果が公表され次第、差し替えます。</li>
+                    <li><strong>町の業務・決算統計（出生・社会増減・ごみ・財政など）：</strong>毎年集計されるため、<strong>令和6年（度）</strong>の値を採用しています。<span class="kpi-source-tag gyomu">日野町データ</span>タグが該当します。</li>
                 </ul>
                 出典：「統計でわかる！日野のすがた2025」（日野町）
             </div>
@@ -187,23 +189,23 @@
 
     // --- KPIカード定義（向き：good=増加が良い / bad=増加が悪い / neutral=方向を出さない） ---
     const kpiDefs = [
-        { id: 'kpi-birth', cls: 'is-pop', tag: ['業務','gyomu'], label: '👶 年間出生数', unit: '人', dir: 'good',
+        { id: 'kpi-birth', cls: 'is-pop', tag: ['日野町データ','gyomu'], label: '👶 年間出生数', unit: '人', dir: 'good',
           explain: { sub: '', root: 'hino_vital_stats.csv の最新年「出生数」。', meaning: 'まちの将来世代の規模を映す最重要指標。少子化の進行を直接示します。', dirText: '増えるほど良い指標' } },
-        { id: 'kpi-aging', cls: 'is-pop', tag: ['国勢','census'], label: '🎂 高齢化率（65歳以上）', unit: '%', dir: 'neutral',
+        { id: 'kpi-aging', cls: 'is-pop', tag: ['国勢調査','census'], label: '🎂 高齢化率（65歳以上）', unit: '%', dir: 'neutral',
           explain: { sub: '', root: '老年人口 ÷ 総数（令和2年国勢調査）。', meaning: '人口に占める高齢者の割合。社会保障や地域支え合いの負荷を測ります。', dirText: '高低だけで良し悪しは判断しません' } },
-        { id: 'kpi-social', cls: 'is-pop', tag: ['業務','gyomu'], label: '↔️ 社会増減（転入−転出）', unit: '人', dir: 'good',
+        { id: 'kpi-social', cls: 'is-pop', tag: ['日野町データ','gyomu'], label: '↔️ 社会増減（転入−転出）', unit: '人', dir: 'good',
           explain: { sub: '', root: '転入 − 転出（住民基本台帳、最新年）。', meaning: '政策で動かしやすい人口の出入り。プラスなら転入超過＝定住促進が効いている状態。', dirText: 'プラス（転入超過）が良い指標' } },
-        { id: 'kpi-pop', cls: 'is-pop', tag: ['国勢','census'], label: '👪 1世帯あたりの人員', unit: '人/世帯', dir: 'neutral',
+        { id: 'kpi-pop', cls: 'is-pop', tag: ['国勢調査','census'], label: '👪 1世帯あたりの人員', unit: '人/世帯', dir: 'neutral',
           explain: { sub: '', root: '総人口 ÷ 総世帯数（令和2年国勢調査）。', meaning: '核家族化・単身世帯化の進行度。低下は世帯の小規模化を意味します。', dirText: '高低だけで良し悪しは判断しません' } },
-        { id: 'kpi-for', cls: '', tag: ['業務','gyomu'], label: '🌍 外国籍住民の登録数', unit: '人', dir: 'neutral',
+        { id: 'kpi-for', cls: '', tag: ['日野町データ','gyomu'], label: '🌍 外国籍住民の登録数', unit: '人', dir: 'neutral',
           explain: { sub: '', root: '各年末の国籍別登録者の総数（住民課）。', meaning: '多文化共生や担い手の多様化の進展を客観的な数で追跡します。', dirText: '高低だけで良し悪しは判断しません' } },
-        { id: 'kpi-tou', cls: '', tag: ['業務','gyomu'], label: '🚌 1日平均の観光客入込数', unit: '人/日', dir: 'good',
+        { id: 'kpi-tou', cls: '', tag: ['日野町データ','gyomu'], label: '🚌 1日平均の観光客入込数', unit: '人/日', dir: 'good',
           explain: { sub: '', root: '年間観光客入込総数（日帰り＋宿泊）÷ その年の総日数（閏年を自動判定）。', meaning: '人口減少の影響を受けない交流人口の指標。まちの賑わいを示します。', dirText: '増えるほど良い指標' } },
-        { id: 'kpi-gar', cls: '', tag: ['業務','gyomu'], label: '🗑️ 1人あたりの可燃ごみ', unit: 'kg/人・年', dir: 'bad',
+        { id: 'kpi-gar', cls: '', tag: ['日野町データ','gyomu'], label: '🗑️ 1人あたりの可燃ごみ', unit: 'kg/人・年', dir: 'bad',
           explain: { sub: '', root: '公式統計の「1人当り（kg）」をそのまま採用（令和6年度）。', meaning: 'ごみ減量や環境意識の浸透度。減るほど望ましい指標です。', dirText: '減るほど良い指標' } },
-        { id: 'kpi-rail', cls: '', tag: ['業務','gyomu'], label: '🚊 日野駅の1日平均乗降客', unit: '人/日', dir: 'good',
+        { id: 'kpi-rail', cls: '', tag: ['日野町データ','gyomu'], label: '🚊 日野駅の1日平均乗降客', unit: '人/日', dir: 'good',
           explain: { sub: '', root: '年間総乗降客数 ÷ その年度の総日数（会計年度の閏日を考慮）。', meaning: '基幹公共交通が日常の移動手段としてどの程度機能しているかを示します。', dirText: '増えるほど良い指標' } },
-        { id: 'kpi-fin', cls: 'is-fiscal', tag: ['業務','gyomu'], label: '🏦 財政構造の弾力性（経常収支比率）', unit: '%', dir: 'bad',
+        { id: 'kpi-fin', cls: 'is-fiscal', tag: ['日野町データ','gyomu'], label: '🏦 財政構造の弾力性（経常収支比率）', unit: '%', dir: 'bad',
           explain: { sub: '', root: '経常的経費に充てた一般財源 ÷ 経常一般財源（令和6年度・総務省基準）。', meaning: '財政の「ゆとり」。低いほど新しい施策に使える財源が多く、下がる＝改善です。', dirText: '下がるほど良い（改善）指標' } }
     ];
 
@@ -238,6 +240,7 @@
         grid.innerHTML = kpiDefs.map(d => `
             <div class="kpi-card ${d.cls}" id="${d.id}">
                 <span class="kpi-label">${d.label}<span class="kpi-source-tag ${d.tag[1]}">${d.tag[0]}</span></span>
+                <span class="kpi-asof">データ時点：<span class="kpi-asof-year">—</span></span>
                 <div class="kpi-main-row">
                     <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">${d.unit}</span></div>
                     <div class="kpi-spark-box"><canvas class="kpi-spark" id="${d.id}-spark" aria-hidden="true"></canvas></div>
@@ -294,19 +297,25 @@
             const series = d.map(r => parseInt(r['出生数']));
             const lat = d[d.length-1], prv = d[d.length-2];
             const vLat = parseInt(lat['出生数']), vPrv = parseInt(prv['出生数']);
-            updateKPICard('kpi-birth', vLat.toLocaleString(), vLat - vPrv, `前年(${prv['年次']}): ${vPrv}人`, `${lat['年次']}: 死亡数 ${lat['死亡数']}人を大きく下回り自然減が続く`, series);
+            updateKPICard('kpi-birth', vLat.toLocaleString(), vLat - vPrv, {
+                latestYear: lat['年次'], prevYear: prv['年次'], prevVal: `${vPrv}人`,
+                subtext: `${lat['年次']}: 死亡数 ${lat['死亡数']}人を大きく下回り自然減が続く`, series });
             // 社会増減
             const soc = d.map(r => parseInt(r['社会増加']));
             const sLat = parseInt(lat['社会増加']), sPrv = parseInt(prv['社会増加']);
-            updateKPICard('kpi-social', (sLat>0?'+':'') + sLat.toLocaleString(), sLat - sPrv, `前年: ${sPrv>0?'+':''}${sPrv}人`, `${lat['年次']}: 転入${lat['転入']}人 − 転出${lat['転出']}人`, soc);
+            updateKPICard('kpi-social', (sLat>0?'+':'') + sLat.toLocaleString(), sLat - sPrv, {
+                latestYear: lat['年次'], prevYear: prv['年次'], prevVal: `${sPrv>0?'+':''}${sPrv}人`,
+                subtext: `${lat['年次']}: 転入${lat['転入']}人 − 転出${lat['転出']}人`, series: soc });
         });
 
         parseKPI('hino_age.csv', d => {
-            if (d.length < 1) return;
+            if (d.length < 2) return;
             const series = d.map(r => parseFloat(r['高齢化率']));
             const lat = d[d.length-1], prv = d[d.length-2];
             const vLat = parseFloat(lat['高齢化率']), vPrv = parseFloat(prv['高齢化率']);
-            updateKPICard('kpi-aging', vLat.toFixed(1), (vLat - vPrv).toFixed(1), `前回(${prv['年']}): ${vPrv.toFixed(1)}%`, `${lat['年']}: 老年人口 ${Number(lat['老年人口']).toLocaleString()}人`, series, 1);
+            updateKPICard('kpi-aging', vLat.toFixed(1), (vLat - vPrv).toFixed(1), {
+                latestYear: `${lat['年']}（国勢調査）`, prevYear: prv['年'], prevVal: `${vPrv.toFixed(1)}%`,
+                subtext: `${lat['年']}: 老年人口 ${Number(lat['老年人口']).toLocaleString()}人`, series, decimals: 1 });
         });
 
         parseKPI('hino_population.csv', d => {
@@ -315,7 +324,9 @@
             const lat = d[d.length-1], prv = d[d.length-2];
             const vLat = (parseFloat(lat['総数'])/parseFloat(lat['世帯数']));
             const vPrv = (parseFloat(prv['総数'])/parseFloat(prv['世帯数']));
-            updateKPICard('kpi-pop', vLat.toFixed(2), (vLat - vPrv), `前回(${prv['年']}): ${vPrv.toFixed(2)}`, `${lat['年']}: 総人口 ${Number(lat['総数']).toLocaleString()}人 / ${Number(lat['世帯数']).toLocaleString()}世帯`, series, 2);
+            updateKPICard('kpi-pop', vLat.toFixed(2), (vLat - vPrv), {
+                latestYear: `${lat['年']}（国勢調査）`, prevYear: prv['年'], prevVal: vPrv.toFixed(2),
+                subtext: `${lat['年']}: 総人口 ${Number(lat['総数']).toLocaleString()}人 / ${Number(lat['世帯数']).toLocaleString()}世帯`, series, decimals: 2 });
         });
 
         parseKPI('hino_foreigners.csv', d => {
@@ -325,7 +336,9 @@
             const series = d.map(sum);
             const lat = d[d.length-1], prv = d[d.length-2];
             const vLat = sum(lat), vPrv = sum(prv);
-            updateKPICard('kpi-for', vLat.toLocaleString(), vLat - vPrv, `前年(${prv['年']}): ${vPrv.toLocaleString()}`, `${lat['年']}: 国籍別登録者の総数`, series);
+            updateKPICard('kpi-for', vLat.toLocaleString(), vLat - vPrv, {
+                latestYear: `${lat['年']}末`, prevYear: prv['年'], prevVal: `${vPrv.toLocaleString()}人`,
+                subtext: `${lat['年']}末: 国籍別登録者の総数`, series });
         });
 
         parseKPI('hino_tourism.csv', d => {
@@ -334,7 +347,9 @@
             const series = d.map(perDay);
             const lat = d[d.length-1], prv = d[d.length-2];
             const sLat = parseInt(lat['日帰り'])+parseInt(lat['宿泊']);
-            updateKPICard('kpi-tou', perDay(lat).toLocaleString(), perDay(lat) - perDay(prv), `前年: ${perDay(prv).toLocaleString()}`, `${lat['年']}: 年間総入込数 ${sLat.toLocaleString()}人`, series);
+            updateKPICard('kpi-tou', perDay(lat).toLocaleString(), perDay(lat) - perDay(prv), {
+                latestYear: lat['年'], prevYear: prv['年'], prevVal: `${perDay(prv).toLocaleString()}人/日`,
+                subtext: `${lat['年']}: 年間総入込数 ${sLat.toLocaleString()}人`, series });
         });
 
         parseKPI('hino_garbage.csv', d => {
@@ -342,7 +357,9 @@
             const series = d.map(r => parseFloat(r['可燃物1人当り']));
             const lat = d[d.length-1], prv = d[d.length-2];
             const vLat = parseFloat(lat['可燃物1人当り']), vPrv = parseFloat(prv['可燃物1人当り']);
-            updateKPICard('kpi-gar', vLat.toFixed(1), (vLat - vPrv), `前年: ${vPrv.toFixed(1)}`, `${lat['年度']}: 公式統計の1人当り排出量`, series, 1);
+            updateKPICard('kpi-gar', vLat.toFixed(1), (vLat - vPrv), {
+                latestYear: lat['年度'], prevYear: prv['年度'], prevVal: `${vPrv.toFixed(1)}kg`,
+                subtext: `${lat['年度']}: 公式統計の1人当り排出量`, series, decimals: 1 });
         });
 
         parseKPI('hino_railway.csv', d => {
@@ -350,7 +367,9 @@
             const perDay = r => Math.round(parseInt(r['乗降客数']) / getDaysInYearOrFiscalYear(r['年度']));
             const series = d.map(perDay);
             const lat = d[d.length-1], prv = d[d.length-2];
-            updateKPICard('kpi-rail', perDay(lat).toLocaleString(), perDay(lat) - perDay(prv), `前年: ${perDay(prv).toLocaleString()}`, `${lat['年度']}: 年間総乗降客数 ${Number(lat['乗降客数']).toLocaleString()}人`, series);
+            updateKPICard('kpi-rail', perDay(lat).toLocaleString(), perDay(lat) - perDay(prv), {
+                latestYear: lat['年度'], prevYear: prv['年度'], prevVal: `${perDay(prv).toLocaleString()}人/日`,
+                subtext: `${lat['年度']}: 年間総乗降客数 ${Number(lat['乗降客数']).toLocaleString()}人`, series });
         });
 
         parseKPI('hino_finance_index.csv', d => {
@@ -358,37 +377,46 @@
             const series = d.map(r => parseFloat(r['経常収支比率']));
             const lat = d[d.length-1], prv = d[d.length-2];
             const vLat = parseFloat(lat['経常収支比率']), vPrv = parseFloat(prv['経常収支比率']);
-            updateKPICard('kpi-fin', vLat.toFixed(1), (vLat - vPrv), `前年: ${vPrv.toFixed(1)}%`, `${lat['年度']}: 経常一般財源に対する経常的経費の割合`, series, 1);
+            updateKPICard('kpi-fin', vLat.toFixed(1), (vLat - vPrv), {
+                latestYear: lat['年度'], prevYear: prv['年度'], prevVal: `${vPrv.toFixed(1)}%`,
+                subtext: `${lat['年度']}: 経常一般財源に対する経常的経費の割合`, series, decimals: 1 });
         });
     }
 
-    function updateKPICard(id, val, diff, prevText, subtext, series, decimals) {
+    function updateKPICard(id, val, diff, opts) {
         const card = document.getElementById(id); if (!card) return;
         const def = kpiDefs.find(k => k.id === id);
         const dNum = parseFloat(diff);
-        const dec = decimals || 0;
-        let dClass = 'diff-zero', dSign = '±', labelText = ' 変動なし';
+        const dec = opts.decimals || 0;
+        let dClass = 'diff-zero', dSign = '±';
 
         if (def.dir === 'neutral') {
-            if (dNum > 0) { dSign = '▲ +'; labelText = ''; }
-            else if (dNum < 0) { dSign = '▼ '; labelText = ''; }
+            if (dNum > 0) dSign = '▲ +';
+            else if (dNum < 0) dSign = '▼ ';
             dClass = 'diff-zero';
         } else {
             const isGood = (def.dir === 'good') ? dNum > 0 : dNum < 0;
             const isBad = (def.dir === 'good') ? dNum < 0 : dNum > 0;
-            if (isGood) { dClass = 'diff-good'; labelText = ' 改善方向'; }
-            else if (isBad) { dClass = 'diff-bad'; labelText = ' 注意方向'; }
+            if (isGood) dClass = 'diff-good';
+            else if (isBad) dClass = 'diff-bad';
             dSign = dNum > 0 ? '▲ +' : (dNum < 0 ? '▼ ' : '± ');
         }
 
+        // 前年比較ラベルは「前年（令和5年）: 値」で統一（国勢調査は「前回」）
+        const compareWord = (def.tag[1] === 'census') ? '前回調査' : '前年';
+        const prevLabel = `${compareWord}（${opts.prevYear}）: ${opts.prevVal}`;
+
+        card.querySelector('.kpi-asof-year').textContent = opts.latestYear;
         card.querySelector('.kpi-value').textContent = val;
         card.querySelector('.kpi-diff-box').innerHTML =
-            `<span class="kpi-diff ${dClass}">${dSign}${Math.abs(dNum).toFixed(dec)}${labelText}</span>` +
-            `<span class="kpi-prev-text">(${prevText})</span>` +
+            `<span class="kpi-diff ${dClass}">${dSign}${Math.abs(dNum).toFixed(dec)}</span>` +
+            `<span class="kpi-prev-text">${prevLabel}</span>` +
             `<span class="kpi-direction">${def.explain.dirText}</span>`;
-        card.querySelector('.kpi-subtext-dynamic').textContent = subtext;
-        drawSparkline(`${id}-spark`, series, def.dir);
+        card.querySelector('.kpi-subtext-dynamic').textContent = opts.subtext;
+        drawSparkline(`${id}-spark`, series_safe(opts.series), def.dir);
     }
+    function series_safe(s){ return Array.isArray(s) ? s : []; }
+
 
     function drawSparkline(canvasId, series, dir) {
         const el = document.getElementById(canvasId); if (!el || !series || series.length < 2) return;
