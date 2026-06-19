@@ -56,6 +56,8 @@
 
         .kpi-note-box { background: #eef3fc; border: 1px solid #d0e0f5; padding: 14px 16px; border-radius: 8px; margin-top: 28px; font-size: 0.82rem; line-height: 1.55; }
         .kpi-note-box ul { margin: 6px 0 0 18px; padding: 0; }
+        .source-link { color: var(--primary); text-decoration: underline; }
+        .source-link:hover { color: var(--accent); }
 
         .card-category { font-size: 1.05rem; color: var(--text-sub); margin: 28px 0 10px; border-bottom: 1px dashed var(--grid-line); padding-bottom: 4px; }
         .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
@@ -120,7 +122,7 @@
                     <li><strong>国勢調査（人口・世帯・年齢など）：</strong>国が5年に1度行う全数調査のため、最新確定値は<strong>令和2年（2020年）</strong>です。<span class="kpi-source-tag census">国勢調査</span>タグの指標が該当します。次回令和7年調査の結果が公表され次第、差し替えます。</li>
                     <li><strong>町の業務・決算統計（出生・社会増減・ごみ・財政など）：</strong>毎年集計されるため、<strong>令和6年（度）</strong>の値を採用しています。<span class="kpi-source-tag gyomu">日野町データ</span>タグが該当します。</li>
                 </ul>
-                出典：「統計でわかる！日野のすがた2025」（日野町）
+                出典：<a href="https://www.town.shiga-hino.lg.jp/0000007518.html" target="_blank" rel="noopener" class="source-link">「統計でわかる！日野のすがた2025」（日野町）</a>
             </div>
         </div>
         <div class="card-section">
@@ -149,7 +151,7 @@
             <div id="chartArea"></div>
             <div class="footer-box">
                 <a id="downloadBtn" href="#" class="download-link" download>CSVデータをダウンロード</a>
-                <span style="font-size: 0.82rem; color: var(--text-sub);">出典：「統計でわかる！日野のすがた2025」</span>
+                <span style="font-size: 0.82rem; color: var(--text-sub);">出典：<a href="https://www.town.shiga-hino.lg.jp/0000007518.html" target="_blank" rel="noopener" class="source-link">「統計でわかる！日野のすがた2025」（日野町）</a></span>
             </div>
         </div>
     </div>
