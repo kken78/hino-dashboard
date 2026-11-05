@@ -24,7 +24,7 @@
     <meta name="twitter:description" content="滋賀県日野町の公式統計を、グラフでひと目で確認できるオープンデータ・ダッシュボードです。">
     <meta name="twitter:image" content="https://kken78.github.io/hino-dashboard/assets/ogp.png">
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.6.1/dist/chart.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         :root {
@@ -38,6 +38,14 @@
         header h1 { margin: 0; font-size: 1.4rem; }
         header p { margin: 4px 0 0; font-size: 0.8rem; opacity: 0.85; font-weight: normal; }
         .container { max-width: 1040px; margin: 30px auto; padding: 0 16px; }
+        /* ポータルへの戻りリンク */
+        .portal-back { background: var(--bg-card); border-bottom: 1px solid var(--grid-line); font-size: 0.8rem; line-height: 1.5; }
+        .portal-back .inner { max-width: 1040px; margin: 0 auto; padding: 6px 16px; }
+        .portal-back a { color: var(--primary); text-decoration: none; }
+        .portal-back a:hover { text-decoration: underline; }
+        .site-footer { max-width: 1040px; margin: 0 auto 30px; padding: 14px 16px 0; border-top: 1px solid var(--grid-line); font-size: 0.78rem; color: var(--text-sub); }
+        .site-footer p { margin: 0 0 4px; }
+        .site-footer a { color: var(--primary); }
 
         .kpi-section { margin-bottom: 40px; }
         .kpi-section h2, .card-section h2 { color: var(--primary); font-size: 1.25rem; border-bottom: 2px solid var(--primary); padding-bottom: 6px; margin-bottom: 8px; }
@@ -110,7 +118,7 @@
         .download-link:hover { background: var(--text-main); color: #fff; }
 
         /* embed mode */
-        body.embed header, body.embed .card-section, body.embed .kpi-section, body.embed .dashboard-nav .btn-home { display: none; }
+        body.embed header, body.embed .portal-back, body.embed .card-section, body.embed .kpi-section, body.embed .dashboard-nav .btn-home { display: none; }
         body.embed .container { margin: 8px auto; }
 
         @media (max-width: 600px) {
@@ -131,6 +139,7 @@
     <h1>日野のすがた｜ダッシュボード</h1>
     <p>滋賀県日野町の公式統計をひと目で（実証実験プロトタイプ）</p>
 </header>
+<div class="portal-back"><div class="inner"><a href="https://kken78.github.io/hino-portal/">← 日野町データポータル</a></div></div>
 <div class="container">
     <div id="view-home">
         <div class="kpi-section">
@@ -179,6 +188,10 @@
         </div>
     </div>
 </div>
+<footer class="site-footer">
+    <p>このページは、滋賀県日野町 政策参与の東健二郎が、個人として作成した試作です。日野町の公式のサイトではなく、町の見解を示すものでもありません。</p>
+    <p>ほかのダッシュボード：<a href="https://kken78.github.io/hino-portal/">日野町データポータル（非公式）</a></p>
+</footer>
 
 <script>
     const dashConfig = {
