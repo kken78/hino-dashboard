@@ -216,7 +216,6 @@
         'nhis': { cat: '社会保障', title: '国民健康保険', icon: '🏥', desc: '国保被保険者数と加入率の推移です。', file: 'hino_nhis.csv', render: renderNhis },
         'latter_elderly': { cat: '社会保障', title: '後期高齢者医療', icon: '🧑‍⚕️', desc: '後期高齢者医療の受給者数と1人あたり費用額の推移です。', file: 'hino_latter_elderly.csv', render: renderLatterElderly },
         'nursing_care': { cat: '社会保障', title: '介護保険（被保険者）', icon: '🧓', desc: '介護保険の第1号被保険者数（前期・後期別）の推移です。', file: 'hino_nursing_care.csv', render: renderNursingCare },
-        'care_certification': { cat: '社会保障', title: '要介護認定者数', icon: '♿', desc: '要支援・要介護の認定者数の推移（段階別）です。', file: 'hino_care_certification.csv', render: renderCareCertification },
         'childcare': { cat: '社会保障', title: '保育所・こども園', icon: '👶', desc: '保育所等の定員および在籍人員の推移です。', file: 'hino_childcare.csv', render: renderChildcare },
         'diseases': { cat: '保健衛生', title: '三大疾病別死亡数', icon: '🩺', desc: '悪性新生物・心疾患・脳血管疾患による死亡数の推移です。', file: 'hino_diseases.csv', render: renderDiseases },
         'library': { cat: '教育・文化', title: '図書館の利用状況', icon: '📚', desc: '図書館の来館者数と利用（貸出）冊数の推移です。', file: 'hino_library.csv', render: renderLibrary },
@@ -653,6 +652,7 @@
             { label: '後期高齢者(75-)', data: data.map(r=>r['後期高齢者']), backgroundColor: '#e67e22' } ] },
             options: getBaseOptions('介護保険1号被保険者数', { x: { stacked: true }, y: { stacked: true } }) }));
     }
+    // 要介護認定者数：data/hino_care_certification.csv を原典から転記したあと、dashConfig に戻す
     function renderCareCertification(data) {
         const cvs = resetCanvases(1);
         const cats = ['要支援1','要支援2','要介護1','要介護2','要介護3','要介護4','要介護5'];
