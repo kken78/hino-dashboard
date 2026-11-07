@@ -111,6 +111,10 @@
 * **データの正確性:** 本リポジトリのCSVデータは、公開されているPDFから独自にテキスト抽出して作成したものです。読み取り誤差や変換ミスが含まれる可能性があるため、正確な数値が必要な公的用途等においては、必ず日野町公式ホームページの元データ（PDF）をご確認ください。
 * **位置づけ:** 本プロジェクトは日野町の公式システムではなく、オープンデータ推進に向けた参与による実証実験（プロトタイプ）です。予告なく仕様変更や公開停止を行う場合があります。
 
+## 共通の部品
+
+`index.html` の共通の見出し・分野のナビ・ページの一覧・フッター（`<!-- portal-shared:… -->` で囲んだ部分）は、[hino-portal](https://github.com/kken78/hino-portal) の `shared/` の正本の写しです（DESIGN.md ADR-1）。正本と同じかは、GitHub Actions（`.github/workflows/check-shared.yml`）が `python3 hino-portal/shared/check.py index.html` で確かめます。
+
 ## 町のページの巡回
 
 毎月1日の朝（JST）に、GitHub Actions（`.github/workflows/watch.yml`）が町の「統計でわかる！日野のすがた」のページを巡回し、見つけたものを Issue にします。道具は `tools/watch.py`（標準ライブラリだけ。取得は1秒に1件以内）、見るページは `data/watch.json`、知っている資料とページの更新日は `data/watch.tsv` です。

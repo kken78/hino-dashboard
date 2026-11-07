@@ -7,3 +7,4 @@
 5. 数値は、原典（README の出典「統計でわかる！日野のすがた」）で確かめられるものだけを書く。推定で埋めない。
 6. 画面は `data/` の CSV をそのまま読む。作り直しや検算の手順は無い。表示を確かめるときは、このフォルダで `python3 -m http.server 8000` を起動して http://localhost:8000/ を開く（ファイルを直接開くと CSV を読めない）。
 7. 町のページの巡回は `tools/watch.py` と `.github/workflows/watch.yml`（README「町のページの巡回」）。巡回は見つけるだけで、データと画面は変えない。資料を足したり使う版を替えたりしたら、`data/watch.tsv` の行と status を直す。
+8. `index.html` の `<!-- portal-shared:… -->` で囲んだ共通の部品は手で変えない。hino-portal の `shared/` の正本を先に変えてから写す（DESIGN.md ADR-1）。
