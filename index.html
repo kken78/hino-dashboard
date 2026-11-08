@@ -604,13 +604,15 @@
             scales: Object.assign({ x: { grid: { display: false }, ticks: { color: INK } }, y: { grid: { color: LINE }, ticks: { color: INK }, min: 0 } }, scales) };
     }
     const STACK = { x: { stacked: true }, y: { stacked: true } };
-    // 系列の色は区別の色（--portal-cat1〜5）を、1つの画面の中で順に当てる（違う系列に同じ色を当てない）。
+    // 系列が2つ以上のグラフは、区別の色（--portal-cat1〜5）を1つの画面の中で順に当てる（違う系列に同じ色を当てない）。
+    // 系列が1つだけのグラフは、区別の色でなくポータルの藍（--portal-ai）にする（DESIGN.md ADR-2）。
     // 色だけで区別しないよう、折れ線は点の形を系列ごとに変え、凡例に名前を書く（hino-portal DESIGN.md 3.4）
     const POINT = ['circle', 'rect', 'triangle', 'rectRot', 'crossRot'];
     function barSet(label, data, i) { return { label, data, backgroundColor: CAT[i], borderColor: CAT[i] }; }
     function lineSet(label, data, i) { return { type: 'line', label, data, borderColor: CAT[i], backgroundColor: CAT[i], pointStyle: POINT[i], pointRadius: 4, pointHoverRadius: 5, borderWidth: 2, tension: 0.3, fill: false }; }
     const pick = (data, k) => data.map(r => r[k]);
     function chart(cv, type, labels, datasets, title, scales) {
+        if (datasets.length === 1) Object.assign(datasets[0], { backgroundColor: AI, borderColor: AI });
         activeCharts.push(new Chart(cv, { type, data: { labels, datasets }, options: getBaseOptions(title, scales) }));
     }
 
