@@ -188,7 +188,7 @@
     <div id="view-home">
         <div class="kpi-section">
             <h2>主な指標</h2>
-            <p class="section-lead">各指標の値は data/ の CSV から計算しています。比べる相手として、前年（国勢調査の指標は前回の調査）の値と、町の計画・財政状況資料集に載っている値を、資料の名前とページを添えて並べています。増減は ▲（増）・▼（減）・＝（同じ）と文言で示します。</p>
+            <p class="section-lead">各指標の値は data/ の CSV から計算しています。比べる相手として、前年（国勢調査の指標は前回の調査）の値と、町の計画・財政状況資料集に載っている値を、資料の名前とページを添えて並べています。増減は「増」「減」の文言で示し、減のときは数の前に △ を付けます。増減が無いときは「0 増減なし」と書きます。</p>
             <div class="kpi-grid" id="kpiGrid"></div>
 
             <div class="kpi-note-box">
@@ -373,12 +373,12 @@
     }
     const signed = (v, dec) => (Number(v) > 0 ? '+' : '') + fmt(v, dec);
     const num = (text, unit) => `<span class="num">${text}${unit || ''}</span>`;
-    // 増減は矢印と文言だけ（▲ 増・▼ 減・＝ 同じ）。色は付けない
+    // 増減は、負の値に △ を付け、向きを文言で示す。正の値に印は付けない。色は付けない（hino-portal DESIGN.md 3.3。DESIGN.md ADR-4）
     function change(latestLabel, latest, prev, unit, dec) {
         const p = Math.pow(10, dec || 0);
         const d = Math.round((Number(latest) - Number(prev)) * p) / p;
-        if (d === 0) return `${latestLabel}は ＝ 同じ`;
-        return `${latestLabel}は ${d > 0 ? '▲' : '▼'} ${num(fmt(Math.abs(d), dec), unit)} ${d > 0 ? '増' : '減'}`;
+        if (d === 0) return `${latestLabel}は ${num('0')} 増減なし`;
+        return `${latestLabel}は ${num((d < 0 ? '△' : '') + fmt(Math.abs(d), dec), unit)} ${d > 0 ? '増' : '減'}`;
     }
     const row = (h, hs, v, vs) => ({ h, hs, v, vs });
 
