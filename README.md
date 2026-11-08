@@ -131,7 +131,7 @@
 
 ## 共通の部品
 
-`index.html` の共通の見出し・分野のナビ・ページの一覧・フッター（`<!-- portal-shared:… -->` で囲んだ部分）は、[hino-portal](https://github.com/kken78/hino-portal) の `shared/` の正本の写しです（DESIGN.md ADR-1）。正本と同じかは、GitHub Actions（`.github/workflows/check-shared.yml`）が `python3 hino-portal/shared/check.py index.html` で確かめます。
+`index.html` の共通の見出し・分野のナビ・ページの一覧・フッター（`<!-- portal-shared:… -->` で囲んだ部分）は、[hino-portal](https://github.com/kken78/hino-portal) の `shared/` の正本の写しです（DESIGN.md ADR-1）。正本と同じかと文字の大きさ（hino-portal DESIGN.md 5.2、DESIGN.md ADR-3）は、GitHub Actions（`.github/workflows/check-shared.yml`）が `python3 hino-portal/shared/check.py --fonts index.html` で確かめ、幅 360px と 1024px での文字の実寸と横のはみ出しを `node hino-portal/shared/check_mobile.mjs index.html`（Playwright が要る。置き方は hino-portal の shared/README.md）で確かめます。
 
 ## 町のページの巡回
 
