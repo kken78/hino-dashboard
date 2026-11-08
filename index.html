@@ -188,7 +188,7 @@
     <div id="view-home">
         <div class="kpi-section">
             <h2>主な指標</h2>
-            <p class="section-lead">各指標の値は data/ の CSV から計算しています。比べる相手として、前年（国勢調査の指標は前回の調査）の値と、町の計画・財政状況資料集に載っている値を、資料の名前とページを添えて並べています。増減は「増」「減」の文言で示し、減のときは数の前に △ を付けます。増減が無いときは「0 増減なし」と書きます。</p>
+            <p class="section-lead">各指標の値は data/ の CSV から計算しています。比べる相手として、前年（国勢調査の指標は前回の調査）の値と、町の計画・財政状況資料集に載っている値を、資料の名前とページを添えて並べています。増減は「増」「減」の文言で示し、減のときは数の前に △ を付けます。増減が無いときは「0 増減なし」と書きます。社会増減・自然増減の値が負のときも、数の前に △ を付けます（原典の凡例の「（△）減少しているもの」と同じ）。</p>
             <div class="kpi-grid" id="kpiGrid"></div>
 
             <div class="kpi-note-box">
@@ -371,7 +371,8 @@
         const t = Math.abs(n).toLocaleString('ja-JP', dec ? { minimumFractionDigits: dec, maximumFractionDigits: dec } : { maximumFractionDigits: 0 });
         return (n < 0 ? MINUS : '') + t;
     }
-    const signed = (v, dec) => (Number(v) > 0 ? '+' : '') + fmt(v, dec);
+    // 値そのものの負の値（社会増減・自然増減）も △＋絶対値。正の値に + は付けない（hino-portal DESIGN.md 3.3・6.4。DESIGN.md ADR-5）
+    const signed = (v, dec) => (Number(v) < 0 ? '△' : '') + fmt(Math.abs(Number(v)), dec);
     const num = (text, unit) => `<span class="num">${text}${unit || ''}</span>`;
     // 増減は、負の値に △ を付け、向きを文言で示す。正の値に印は付けない。色は付けない（hino-portal DESIGN.md 3.3。DESIGN.md ADR-4）
     function change(latestLabel, latest, prev, unit, dec) {
