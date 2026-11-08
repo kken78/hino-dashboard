@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>日野のすがた｜日野町データポータル（非公式）</title>
-    <meta name="description" content="滋賀県日野町の公式統計（人口・産業・財政など）を、グラフでひと目で確認できるオープンデータ・ダッシュボードです。">
+    <meta name="description" content="滋賀県日野町の統計資料「統計でわかる！日野のすがた」の数値（人口・産業・財政など）を、指標の札とグラフで示す試作のページです。">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="日野のすがた｜統計ダッシュボード">
     <meta property="og:title" content="日野のすがた｜統計ダッシュボード">
-    <meta property="og:description" content="滋賀県日野町の公式統計（人口・産業・財政など）を、グラフでひと目で確認できるオープンデータ・ダッシュボードです。">
+    <meta property="og:description" content="滋賀県日野町の統計資料「統計でわかる！日野のすがた」の数値（人口・産業・財政など）を、指標の札とグラフで示す試作のページです。">
     <meta property="og:url" content="https://kken78.github.io/hino-dashboard/">
     <meta property="og:image" content="https://kken78.github.io/hino-dashboard/og.png">
     <meta property="og:image:width" content="1200">
@@ -21,7 +21,7 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="日野のすがた｜統計ダッシュボード">
-    <meta name="twitter:description" content="滋賀県日野町の公式統計を、グラフでひと目で確認できるオープンデータ・ダッシュボードです。">
+    <meta name="twitter:description" content="滋賀県日野町の統計資料「統計でわかる！日野のすがた」の数値を、指標の札とグラフで示す試作のページです。">
     <meta name="twitter:image" content="https://kken78.github.io/hino-dashboard/og.png">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.6.1/dist/chart.umd.min.js"></script>
@@ -38,39 +38,42 @@
 
         .kpi-section { margin-bottom: 40px; }
         .kpi-section h2, .card-section h2 { color: var(--primary); font-size: 1.25rem; border-bottom: 2px solid var(--primary); padding-bottom: 6px; margin-bottom: 8px; }
-        .section-lead { color: var(--text-sub); font-size: 0.85rem; margin: 0 0 20px; }
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 16px; }
-        .kpi-card { background: var(--bg-card); padding: 18px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 5px solid var(--secondary); display: flex; flex-direction: column; }
-        .kpi-card.is-pop { border-left-color: var(--primary); }
-        .kpi-card.is-fiscal { border-left-color: var(--accent); }
-        .kpi-label { display: block; font-size: 0.9rem; color: var(--primary); font-weight: bold; margin-bottom: 2px; }
-        .kpi-asof { display: block; font-size: 0.72rem; color: var(--text-sub); margin-bottom: 4px; }
-        .kpi-asof-year { font-weight: bold; color: var(--text-main); }
-        .kpi-source-tag { font-size: 0.64rem; color: #fff; background: var(--text-sub); padding: 1px 5px; border-radius: 3px; margin-left: 6px; vertical-align: middle; font-weight: normal; white-space: nowrap; display: inline-block; }
-        .kpi-source-tag.census { background: #6a5acd; }
-        .kpi-source-tag.gyomu { background: #2e8b57; }
-
-        .kpi-main-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
-        .kpi-value-box { text-align: left; }
-        .kpi-value { font-size: 2rem; font-weight: bold; color: var(--text-main); }
-        .kpi-unit { font-size: 0.95rem; font-weight: normal; margin-left: 4px; color: var(--text-sub); }
-        .kpi-spark-box { width: 120px; height: 40px; flex-shrink: 0; position: relative; }
+        .section-lead { color: var(--text-sub); font-size: 0.875rem; margin: 0 0 20px; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+        /* 指標の札（hino-portal DESIGN.md 4.1・6.2・6.4）。色の帯・絵文字・色つきの札は使わない */
+        .kpi-card { background: var(--bg-card); padding: 18px; border-radius: 10px; border: 1px solid var(--portal-line); display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; font-size: 0.9375rem; }
+        .kpi-label { display: block; font-size: 1rem; color: var(--primary); font-weight: bold; margin: 0 0 2px; line-height: 1.4; }
+        .kpi-src { display: block; font-size: 0.875rem; color: var(--text-sub); margin-bottom: 4px; }
+        .kpi-value-box { margin-top: 2px; white-space: nowrap; }
+        .kpi-value { font-size: 2rem; font-weight: bold; color: var(--text-main); line-height: 1.3; }
+        .kpi-unit { font-size: 1rem; font-weight: normal; margin-left: 4px; color: var(--text-main); }
+        .num { white-space: nowrap; }
+        .kpi-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .kpi-table th, .kpi-table td { border-top: 1px solid var(--portal-line); padding: 6px 0; vertical-align: top; font-weight: normal; line-height: 1.45; }
+        .kpi-table th { text-align: left; padding-right: 10px; }
+        .kpi-table td { text-align: right; }
+        .kpi-table .sub, .kpi-trend .sub { display: block; font-size: 0.875rem; color: var(--text-sub); }
+        .kpi-trend { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 10px; border-top: 1px solid var(--portal-line); border-bottom: 1px solid var(--portal-line); padding: 6px 0; line-height: 1.45; }
+        .kpi-spark-box { width: 120px; height: 32px; position: relative; }
         .kpi-spark { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
-
-        .kpi-diff-box { font-size: 0.82rem; margin: 8px 0 4px; }
-        .kpi-diff { font-weight: bold; padding: 2px 8px; border-radius: 4px; display: inline-block; color: var(--text-main); background-color: var(--neutral-bg); }
-        .kpi-prev-text { color: var(--text-sub); margin-left: 4px; }
-
-        .kpi-explain { font-size: 0.74rem; color: var(--text-sub); margin-top: 10px; }
-        .kpi-explain summary { cursor: pointer; color: var(--primary); font-weight: bold; outline-offset: 2px; }
-        .kpi-explain summary:focus-visible { outline: 2px solid var(--accent); }
-        .kpi-explain .body { background-color: #f8f9fa; padding: 10px; border-radius: 4px; border: 1px solid #f0f0f0; margin-top: 6px; line-height: 1.45; }
-        .kpi-detail-link { display: inline-block; margin-top: auto; padding-top: 12px; font-size: 0.82rem; font-weight: bold; color: var(--secondary); text-decoration: none; }
+        .kpi-notes { font-size: 0.875rem; color: var(--text-sub); margin: 8px 0 0; line-height: 1.5; }
+        .kpi-notes p { margin: 0 0 4px; }
+        .kpi-detail-link { display: inline-block; padding-top: 12px; font-size: 0.875rem; font-weight: bold; color: var(--secondary); text-decoration: none; }
         .kpi-detail-link:hover { text-decoration: underline; }
         .kpi-detail-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-        .kpi-subtext-dynamic { display: block; font-weight: bold; color: var(--text-main); margin-bottom: 4px; }
+        /* 幅 900px 以上：小さな折れ線を主の値の右に置く。900px 未満：表の最後の行「推移」に置く（同じ要素を切り替える） */
+        @media (min-width: 900px) {
+            .kpi-card { grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; }
+            .kpi-label, .kpi-src, .kpi-table, .kpi-notes, .kpi-detail-link { grid-column: 1 / -1; }
+            .kpi-value-box { grid-column: 1; grid-row: 3; }
+            .kpi-trend { display: contents; }
+            .kpi-trend-head { display: none; }
+            .kpi-spark-box { grid-column: 2; grid-row: 3; align-self: center; }
+            .kpi-table tr:last-child th, .kpi-table tr:last-child td { border-bottom: 1px solid var(--portal-line); }
+        }
 
-        .kpi-note-box { background: #eef3fc; border: 1px solid #d0e0f5; padding: 14px 16px; border-radius: 8px; margin-top: 28px; font-size: 0.82rem; line-height: 1.55; }
+        .kpi-note-box { background: #eef3fc; border: 1px solid #d0e0f5; padding: 14px 16px; border-radius: 8px; margin-top: 28px; font-size: 0.875rem; line-height: 1.6; }
+        .kpi-note-box p { margin: 0 0 6px; }
         .kpi-note-box ul { margin: 6px 0 0 18px; padding: 0; }
         .source-link { color: var(--primary); text-decoration: underline; }
         .source-link:hover { color: var(--accent); }
@@ -82,7 +85,6 @@
         .card:focus-visible { box-shadow: 0 0 0 3px var(--accent); }
         .card h3 { margin: 0 0 8px; color: var(--primary); font-size: 1.05rem; }
         .card p { margin: 0; color: var(--text-sub); font-size: 0.82rem; line-height: 1.5; }
-        .card-icon { font-size: 1.7rem; margin-bottom: 8px; }
 
         .dashboard-nav { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 18px; background: var(--bg-card); padding: 12px 14px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .nav-cluster { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -98,6 +100,9 @@
         .chart-panel { background: var(--bg-card); padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .chart-box { position: relative; height: 35vh; min-height: 240px; width: 100%; margin-bottom: 20px; }
         .chart-box.single { height: 48vh; min-height: 300px; }
+        .chart-small-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+        .chart-box.small { height: 220px; min-height: 0; margin-bottom: 0; }
+        @media (max-width: 600px) { .chart-small-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
         .footer-box { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--grid-line); }
         .download-link { padding: 6px 12px; border: 1px solid var(--text-sub); color: var(--text-main); text-decoration: none; border-radius: 4px; font-size: 0.82rem; }
         .download-link:hover { background: var(--text-main); color: #fff; }
@@ -108,7 +113,6 @@
 
         @media (max-width: 600px) {
             .kpi-grid { grid-template-columns: 1fr; }
-            .kpi-value { font-size: 1.8rem; }
             .dashboard-nav { justify-content: center; }
             .nav-cluster { justify-content: center; width: 100%; }
             select.dash-selector { flex: 1; }
@@ -120,8 +124,9 @@
 <!-- portal-shared:css start --><style>
 /* 日野町データポータル 共通の部品（見出し・ナビ・ページの見出し・フッター）。
    正本は hino-portal/shared/shell.css。各ページはこれを <style> に写し、CI で同じであることを確かめる（DESIGN.md 9.1）。
-   文字の大きさは 14px 以上（DESIGN.md 5.2）。色は 3章の藍と朱。書体は端末のもの（5.1）。 */
-:root{--portal-ai:#1E4E9C;--portal-ai-ink:#0C2547;--portal-shu:#C33D2E;--portal-bg:#EFF3F9;--portal-card:#FFFFFF;--portal-ink:#1A2333;--portal-muted:#5B6B85;--portal-line:#DCE4F0;--portal-foot-bg:#0C2547;--portal-foot-ink:#C9D6EA;--portal-fs:16px;--portal-fs-sub:14px;--portal-fs-h1:18px;--portal-fs-h2:24px;--portal-sp1:8px;--portal-sp2:16px;--portal-sp3:24px;--portal-sp4:40px;--portal-font:"Hiragino Sans","Hiragino Kaku Gothic ProN","BIZ UDPGothic","Yu Gothic Medium","Yu Gothic","Noto Sans CJK JP","Noto Sans JP",Meiryo,system-ui,sans-serif}
+   文字の大きさは 14px 以上（DESIGN.md 5.2）。色は 3章の藍と朱。書体は端末のもの（5.1）。
+   --portal-cat1〜5 はグラフの区別の色（3.4）、--portal-pillar1〜5（面）と --portal-pillar1-ink〜5-ink（文字）は第6次総合計画の政策の柱の色（3.6）。 */
+:root{--portal-ai:#1E4E9C;--portal-ai-ink:#0C2547;--portal-shu:#C33D2E;--portal-bg:#EFF3F9;--portal-card:#FFFFFF;--portal-ink:#1A2333;--portal-muted:#5B6B85;--portal-line:#DCE4F0;--portal-foot-bg:#0C2547;--portal-foot-ink:#C9D6EA;--portal-cat1:#3460FB;--portal-cat2:#AC3E00;--portal-cat3:#197A4B;--portal-cat4:#008299;--portal-cat5:#767676;--portal-pillar1:#E72F5C;--portal-pillar2:#E36800;--portal-pillar3:#639B22;--portal-pillar4:#009AB4;--portal-pillar5:#3F51A2;--portal-pillar1-ink:#D91948;--portal-pillar2-ink:#B45300;--portal-pillar3-ink:#4F7B1B;--portal-pillar4-ink:#007A8F;--portal-pillar5-ink:#3F51A2;--portal-fs:16px;--portal-fs-sub:14px;--portal-fs-h1:18px;--portal-fs-h2:24px;--portal-sp1:8px;--portal-sp2:16px;--portal-sp3:24px;--portal-sp4:40px;--portal-font:"Hiragino Sans","Hiragino Kaku Gothic ProN","BIZ UDPGothic","Yu Gothic Medium","Yu Gothic","Noto Sans CJK JP","Noto Sans JP",Meiryo,system-ui,sans-serif}
 .portal-wrap{max-width:1080px;margin:0 auto;padding:0 var(--portal-sp2);box-sizing:border-box}
 .portal-head,.portal-page,.portal-foot{font-family:var(--portal-font);font-size:var(--portal-fs);line-height:1.7;letter-spacing:.02em}
 .portal-head *,.portal-page *,.portal-foot *{box-sizing:border-box}
@@ -179,22 +184,21 @@
 <div class="container">
     <div id="view-home">
         <div class="kpi-section">
-            <h2>📊 まちの今を読み解く 9つの指標</h2>
-            <p class="section-lead">人口の動きを中心に、暮らし・行財政の状況をまとめました。各カードの数値はCSVから自動算出しています。各カードには、前年（国勢調査の指標は前回調査）の値と、そこからの増減を示しています。</p>
+            <h2>主な指標</h2>
+            <p class="section-lead">各指標の値は data/ の CSV から計算しています。比べる相手として、前年（国勢調査の指標は前回の調査）の値と、町の計画・財政状況資料集に載っている値を、資料の名前とページを添えて並べています。増減は ▲（増）・▼（減）・＝（同じ）と文言で示します。</p>
             <div class="kpi-grid" id="kpiGrid"></div>
 
             <div class="kpi-note-box">
-                <strong>💡 データの年次（令和2年と令和6年など）が混在している理由</strong><br>
-                統計制度によって調査周期が異なるため、指標ごとに「もっとも新しい確定値」を採用しています。
+                <p>指標によって資料の時点が違います。統計の調べ方によって、調べる間隔が違うためです。</p>
                 <ul>
-                    <li><strong>国勢調査（人口・世帯・年齢など）：</strong>国が5年に1度行う全数調査のため、最新確定値は<strong>令和2年（2020年）</strong>です。<span class="kpi-source-tag census">国勢調査</span>タグの指標が該当します。次回令和7年調査の結果が公表され次第、差し替えます。</li>
-                    <li><strong>町の業務・決算統計（出生・社会増減・ごみ・財政など）：</strong>毎年集計されるため、<strong>令和6年（度）</strong>の値を採用しています。<span class="kpi-source-tag gyomu">日野町データ</span>タグが該当します。</li>
+                    <li>国勢調査の指標（高齢化率・1世帯あたりの人員）：5年ごとの調査で、いちばん新しい値は令和2年（2020年）です。令和7年の調査の結果が公表されたら差し替えます。</li>
+                    <li>町の業務・決算の統計（出生数・社会増減・外国籍住民・観光・ごみ・鉄道・財政）：毎年の値で、いちばん新しい値は令和6年・令和6年度です。</li>
                 </ul>
-                出典：<a href="https://www.town.shiga-hino.lg.jp/0000007518.html" target="_blank" rel="noopener" class="source-link">「統計でわかる！日野のすがた2025」（日野町）</a>
+                <p>出典：<a href="https://www.town.shiga-hino.lg.jp/0000007518.html" target="_blank" rel="noopener" class="source-link">「統計でわかる！日野のすがた2025」（日野町）</a>。比べる相手の出典は各札に書いています。</p>
             </div>
         </div>
         <div class="card-section">
-            <h2>📈 分野別 統計ダッシュボード</h2>
+            <h2>分野別のグラフ</h2>
             <div id="cardGrid"></div>
         </div>
     </div>
@@ -202,7 +206,7 @@
     <div id="view-dashboard" style="display: none;">
         <div class="dashboard-nav">
             <div class="nav-cluster">
-                <a href="#" class="btn-home">🏠 ホーム</a>
+                <a href="#" class="btn-home">ホームへ戻る</a>
             </div>
             <div class="nav-cluster">
                 <button class="btn-action" onclick="stopRotation(); navigateDashboard(-1)">◀ 前の統計</button>
@@ -210,7 +214,7 @@
                 <button class="btn-action" onclick="stopRotation(); navigateDashboard(1)">次の統計 ▶</button>
             </div>
             <div class="nav-cluster">
-                <button id="btnPlay" class="btn-action btn-play" onclick="toggleRotation()">🔄 自動巡回</button>
+                <button id="btnPlay" class="btn-action btn-play" onclick="toggleRotation()">自動巡回</button>
             </div>
         </div>
         <div class="chart-panel">
@@ -227,7 +231,7 @@
 <!-- portal-shared:footer start -->
 <footer class="portal-foot"><div class="portal-wrap">
 <dl>
-<dt>このページについて</dt><dd><p>このページは、滋賀県日野町 政策参与の東健二郎が、個人として作成した試作です。日野町の公式のサイトではなく、町の見解を示すものでもありません。</p><p>町の統計資料（PDF）の統計表から数値を CSV に転記し、画面はその CSV を読んで指標のカードとグラフを描きます。指標の増減は前年（国勢調査の指標は前回の調査）の値との差で、良し悪しの向きは付けていません。</p></dd>
+<dt>このページについて</dt><dd><p>このページは、滋賀県日野町 政策参与の東健二郎が、個人として作成した試作です。日野町の公式のサイトではなく、町の見解を示すものでもありません。</p><p>町の統計資料（PDF）の統計表から数値を CSV に転記し、画面はその CSV を読んで指標の札とグラフを描きます。札には前年（国勢調査の指標は前回の調査）の値と、町の計画・財政状況資料集にある比べる相手の値を出典つきで並べ、良し悪しの向きは付けていません。</p></dd>
 <dt>出典</dt><dd><a href="https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000007/7518/tokeihino.2025.pdf">「統計でわかる！日野のすがた2025」（日野町。PDF：5.39MB）</a>。掲載ページは<a href="https://www.town.shiga-hino.lg.jp/0000007518.html">日野町ホームページ「統計でわかる！日野のすがた」</a></dd>
 <dt>資料の時点</dt><dd>「統計でわかる！日野のすがた2025」。町の業務・決算の統計は令和6年・令和6年度、国勢調査の指標は令和2年の値まで</dd>
 <dt>注意</dt><dd><p>内容の正確性を保証するものではありません。最新・正確な情報は日野町の公式ページでご確認ください。</p><p>CSV は公開されている PDF から文字を取り出して作ったもので、読み取りや転記の誤りを含むことがあります。正確な数値が要るときは、日野町ホームページの元の資料（PDF）をご確認ください。</p></dd>
@@ -240,78 +244,85 @@
 
 <script>
     const dashConfig = {
-        'land_area': { cat: '位置・地勢・気象', title: '地目別面積', icon: '🗺️', desc: '町内の田、畑、宅地、山林などの面積推移です。', file: 'hino_land_area.csv', render: renderLandArea },
-        'weather': { cat: '位置・地勢・気象', title: '気象概況', icon: '🌤️', desc: '令和6年の月別平均気温と降水量です。', file: 'hino_weather.csv', render: renderWeather },
-        'population': { cat: '人口', title: '人口・世帯数', icon: '👥', desc: '総人口（男女別）および世帯数の推移です。', file: 'hino_population.csv', render: renderPopulation },
-        'age': { cat: '人口', title: '年齢3区分別人口', icon: '🎂', desc: '年少・生産年齢・老年人口の構成と高齢化率の推移です。', file: 'hino_age.csv', render: renderAge },
-        'vital_stats': { cat: '人口', title: '人口動態', icon: '📈', desc: '出生・死亡（自然動態）と転入・転出（社会動態）の推移です。', file: 'hino_vital_stats.csv', render: renderVitalStats },
-        'foreigners': { cat: '人口', title: '外国人登録者数', icon: '🌍', desc: '町内の国籍別外国人登録者数の推移（積み上げ表示）です。', file: 'hino_foreigners.csv', render: renderForeigners },
-        'industry': { cat: '人口', title: '産業別就業者数', icon: '🧑‍🌾', desc: '第一次〜第三次産業における就業者数の推移です。', file: 'hino_industry.csv', render: renderIndustry },
-        'tourism': { cat: '産業', title: '観光客入込数', icon: '🚌', desc: '日帰り・宿泊別の観光客数の動向です。', file: 'hino_tourism.csv', render: renderTourism },
-        'industry_trend': { cat: '産業', title: '工業の推移', icon: '⚙️', desc: '工業事業所数および従業者数の推移です。', file: 'hino_industry_trend.csv', render: renderIndustryTrend },
-        'farming_area': { cat: '農林業', title: '経営耕地面積', icon: '🌾', desc: '田、畑、樹園地の面積推移です。', file: 'hino_farming_area.csv', render: renderFarmingArea },
-        'farmland_conversion': { cat: '農林業', title: '農地転用状況', icon: '🏗️', desc: '住宅用地や駐車場などへの農地転用面積（㎡）の推移です。', file: 'hino_farmland_conversion.csv', render: renderFarmlandConversion },
-        'railway': { cat: '運輸・交通', title: '近江鉄道日野駅乗降客数', icon: '🚃', desc: '日野駅の年間総乗降客数の推移です。', file: 'hino_railway.csv', render: renderRailway },
-        'bus': { cat: '運輸・交通', title: '町営バス利用状況', icon: '🚏', desc: '町営バスの定期・定期外利用者数の推移です。', file: 'hino_bus.csv', render: renderBus },
-        'traffic': { cat: '運輸・交通', title: '交通事故発生状況', icon: '🚗', desc: '町内における交通事故件数の推移です。', file: 'hino_traffic_accident.csv', render: renderTraffic },
-        'water_supply': { cat: '水道・通信・消費', title: '上水道給水状況', icon: '💧', desc: '給水人口と年間総配水量の推移です。', file: 'hino_water_supply.csv', render: renderWaterSupply },
-        'sewerage': { cat: '水道・通信・消費', title: '公共下水道整備状況', icon: '🚰', desc: '下水道の普及率と水洗化率の推移です。', file: 'hino_sewerage.csv', render: renderSewerage },
-        'garbage': { cat: '水道・通信・消費', title: 'ごみ投入量', icon: '♻️', desc: '可燃物・不燃物の投入量と1人あたり排出量の推移です。', file: 'hino_garbage.csv', render: renderGarbage },
-        'tobacco': { cat: '水道・通信・消費', title: 'たばこ消費量', icon: '🚬', desc: '町内のたばこ年間消費量（千本）の推移です。', file: 'hino_tobacco.csv', render: renderTobacco },
-        'nhis': { cat: '社会保障', title: '国民健康保険', icon: '🏥', desc: '国保被保険者数と加入率の推移です。', file: 'hino_nhis.csv', render: renderNhis },
-        'latter_elderly': { cat: '社会保障', title: '後期高齢者医療', icon: '🧑‍⚕️', desc: '後期高齢者医療の受給者数と1人あたり費用額の推移です。', file: 'hino_latter_elderly.csv', render: renderLatterElderly },
-        'nursing_care': { cat: '社会保障', title: '介護保険（被保険者）', icon: '🧓', desc: '介護保険の第1号被保険者数（前期・後期別）の推移です。', file: 'hino_nursing_care.csv', render: renderNursingCare },
-        'childcare': { cat: '社会保障', title: '保育所・こども園', icon: '👶', desc: '保育所等の定員および在籍人員の推移です。', file: 'hino_childcare.csv', render: renderChildcare },
-        'diseases': { cat: '保健衛生', title: '三大疾病別死亡数', icon: '🩺', desc: '悪性新生物・心疾患・脳血管疾患による死亡数の推移です。', file: 'hino_diseases.csv', render: renderDiseases },
-        'library': { cat: '教育・文化', title: '図書館の利用状況', icon: '📚', desc: '図書館の来館者数と利用（貸出）冊数の推移です。', file: 'hino_library.csv', render: renderLibrary },
-        'cultural_facilities': { cat: '教育・文化', title: '文化施設入館者数', icon: '🏛️', desc: '町内主要文化・観光施設の年間入館者数推移です。', file: 'hino_cultural_facilities.csv', render: renderCulturalFacilities },
-        'finance_index': { cat: '財政', title: '決算分析指数', icon: '📊', desc: '経常収支比率・将来負担比率などの財政健全化指標です。', file: 'hino_finance_index.csv', render: renderFinanceIndex },
-        'fire_ambulance': { cat: '治安・消防', title: '火災・救急出動', icon: '🚒', desc: '火災発生件数と救急車出動件数の推移です。', file: 'hino_fire_ambulance.csv', render: renderFireAmbulance }
+        'land_area': { cat: '位置・地勢・気象', title: '地目別面積', desc: '町内の田、畑、宅地、山林などの面積推移です。', file: 'hino_land_area.csv', render: renderLandArea },
+        'weather': { cat: '位置・地勢・気象', title: '気象概況', desc: '令和6年の月別平均気温と降水量です。', file: 'hino_weather.csv', render: renderWeather },
+        'population': { cat: '人口', title: '人口・世帯数', desc: '総人口（男女別）および世帯数の推移です。', file: 'hino_population.csv', render: renderPopulation },
+        'age': { cat: '人口', title: '年齢3区分別人口', desc: '年少・生産年齢・老年人口の構成と高齢化率の推移です。', file: 'hino_age.csv', render: renderAge },
+        'vital_stats': { cat: '人口', title: '人口動態', desc: '出生・死亡（自然動態）と転入・転出（社会動態）の推移です。', file: 'hino_vital_stats.csv', render: renderVitalStats },
+        'foreigners': { cat: '人口', title: '外国人登録者数', desc: '町内の国籍別外国人登録者数の推移です。国籍ごとに同じ目盛りのグラフで示します。', file: 'hino_foreigners.csv', render: renderForeigners },
+        'industry': { cat: '人口', title: '産業別就業者数', desc: '第一次〜第三次産業における就業者数の推移です。', file: 'hino_industry.csv', render: renderIndustry },
+        'tourism': { cat: '産業', title: '観光客入込数', desc: '日帰り・宿泊別の観光客数の動向です。', file: 'hino_tourism.csv', render: renderTourism },
+        'industry_trend': { cat: '産業', title: '工業の推移', desc: '工業事業所数および従業者数の推移です。', file: 'hino_industry_trend.csv', render: renderIndustryTrend },
+        'farming_area': { cat: '農林業', title: '経営耕地面積', desc: '田、畑、樹園地の面積推移です。', file: 'hino_farming_area.csv', render: renderFarmingArea },
+        'farmland_conversion': { cat: '農林業', title: '農地転用状況', desc: '住宅用地や駐車場などへの農地転用面積（㎡）の推移です。', file: 'hino_farmland_conversion.csv', render: renderFarmlandConversion },
+        'railway': { cat: '運輸・交通', title: '近江鉄道日野駅乗降客数', desc: '日野駅の年間総乗降客数の推移です。', file: 'hino_railway.csv', render: renderRailway },
+        'bus': { cat: '運輸・交通', title: '町営バス利用状況', desc: '町営バスの定期・定期外利用者数の推移です。', file: 'hino_bus.csv', render: renderBus },
+        'traffic': { cat: '運輸・交通', title: '交通事故発生状況', desc: '町内における交通事故件数の推移です。', file: 'hino_traffic_accident.csv', render: renderTraffic },
+        'water_supply': { cat: '水道・通信・消費', title: '上水道給水状況', desc: '給水人口と年間総配水量の推移です。', file: 'hino_water_supply.csv', render: renderWaterSupply },
+        'sewerage': { cat: '水道・通信・消費', title: '公共下水道整備状況', desc: '下水道の普及率と水洗化率の推移です。', file: 'hino_sewerage.csv', render: renderSewerage },
+        'garbage': { cat: '水道・通信・消費', title: 'ごみ投入量', desc: '可燃物・不燃物の投入量と1人あたり排出量の推移です。', file: 'hino_garbage.csv', render: renderGarbage },
+        'tobacco': { cat: '水道・通信・消費', title: 'たばこ消費量', desc: '町内のたばこ年間消費量（千本）の推移です。', file: 'hino_tobacco.csv', render: renderTobacco },
+        'nhis': { cat: '社会保障', title: '国民健康保険', desc: '国保被保険者数と加入率の推移です。', file: 'hino_nhis.csv', render: renderNhis },
+        'latter_elderly': { cat: '社会保障', title: '後期高齢者医療', desc: '後期高齢者医療の受給者数と1人あたり費用額の推移です。', file: 'hino_latter_elderly.csv', render: renderLatterElderly },
+        'nursing_care': { cat: '社会保障', title: '介護保険（被保険者）', desc: '介護保険の第1号被保険者数（前期・後期別）の推移です。', file: 'hino_nursing_care.csv', render: renderNursingCare },
+        'childcare': { cat: '社会保障', title: '保育所・こども園', desc: '保育所等の定員および在籍人員の推移です。', file: 'hino_childcare.csv', render: renderChildcare },
+        'diseases': { cat: '保健衛生', title: '三大疾病別死亡数', desc: '悪性新生物・心疾患・脳血管疾患による死亡数の推移です。', file: 'hino_diseases.csv', render: renderDiseases },
+        'library': { cat: '教育・文化', title: '図書館の利用状況', desc: '図書館の来館者数と利用（貸出）冊数の推移です。', file: 'hino_library.csv', render: renderLibrary },
+        'cultural_facilities': { cat: '教育・文化', title: '文化施設入館者数', desc: '町内主要文化・観光施設の年間入館者数推移です。', file: 'hino_cultural_facilities.csv', render: renderCulturalFacilities },
+        'finance_index': { cat: '財政', title: '決算分析指数', desc: '経常収支比率・将来負担比率などの財政健全化指標です。', file: 'hino_finance_index.csv', render: renderFinanceIndex },
+        'fire_ambulance': { cat: '治安・消防', title: '火災・救急出動', desc: '火災発生件数と救急車出動件数の推移です。', file: 'hino_fire_ambulance.csv', render: renderFireAmbulance }
     };
 
-    // --- KPIカード定義 ---
+    // --- 指標の札の定義（hino-portal DESIGN.md 4.1・6.2・6.4。DESIGN.md ADR-2） ---
     const kpiDefs = [
-        { id: 'kpi-birth', link: 'vital_stats', cls: 'is-pop', tag: ['日野町データ','gyomu'], label: '👶 年間出生数', unit: '人',
-          explain: { sub: '', root: 'hino_vital_stats.csv の最新年「出生数」。', meaning: 'まちの将来世代の規模を映す最重要指標。少子化の進行を直接示します。' } },
-        { id: 'kpi-aging', link: 'age', cls: 'is-pop', tag: ['国勢調査','census'], label: '🎂 高齢化率（65歳以上）', unit: '%',
-          explain: { sub: '', root: '老年人口 ÷ 総数（令和2年国勢調査）。', meaning: '人口に占める高齢者の割合。社会保障や地域支え合いの負荷を測ります。' } },
-        { id: 'kpi-social', link: 'vital_stats', cls: 'is-pop', tag: ['日野町データ','gyomu'], label: '↔️ 社会増減（転入−転出）', unit: '人',
-          explain: { sub: '', root: '転入 − 転出（住民基本台帳、最新年）。', meaning: '転入と転出の差。プラスは転入超過、マイナスは転出超過を示します。' } },
-        { id: 'kpi-pop', link: 'population', cls: 'is-pop', tag: ['国勢調査','census'], label: '👪 1世帯あたりの人員', unit: '人/世帯',
-          explain: { sub: '', root: '総人口 ÷ 総世帯数（令和2年国勢調査）。', meaning: '核家族化・単身世帯化の進行度。低下は世帯の小規模化を意味します。' } },
-        { id: 'kpi-for', link: 'foreigners', cls: '', tag: ['日野町データ','gyomu'], label: '🌍 外国籍住民の登録数', unit: '人',
-          explain: { sub: '', root: '各年末の国籍別登録者の総数（住民課）。', meaning: '多文化共生や担い手の多様化の進展を客観的な数で追跡します。' } },
-        { id: 'kpi-tou', link: 'tourism', cls: '', tag: ['日野町データ','gyomu'], label: '🚌 1日平均の観光客入込数', unit: '人/日',
-          explain: { sub: '', root: '年間観光客入込総数（日帰り＋宿泊）÷ その年の総日数（閏年を自動判定）。', meaning: '人口減少の影響を受けない交流人口の指標。まちの賑わいを示します。' } },
-        { id: 'kpi-gar', link: 'garbage', cls: '', tag: ['日野町データ','gyomu'], label: '🗑️ 1人あたりの可燃ごみ', unit: 'kg/人・年',
-          explain: { sub: '', root: '公式統計の「1人当り（kg）」をそのまま採用（令和6年度）。', meaning: '住民1人あたりの年間の可燃ごみの量です。' } },
-        { id: 'kpi-rail', link: 'railway', cls: '', tag: ['日野町データ','gyomu'], label: '🚊 日野駅の1日平均乗降客', unit: '人/日',
-          explain: { sub: '', root: '年間総乗降客数 ÷ その年度の総日数（会計年度の閏日を考慮）。', meaning: '基幹公共交通が日常の移動手段としてどの程度機能しているかを示します。' } },
-        { id: 'kpi-fin', link: 'finance_index', cls: 'is-fiscal', tag: ['日野町データ','gyomu'], label: '🏦 財政構造の弾力性（経常収支比率）', unit: '%',
-          explain: { sub: '', root: '経常的経費に充てた一般財源 ÷ 経常一般財源（令和6年度・総務省基準）。', meaning: '毎年度経常的に収入される一般財源のうち、経常的な経費に充てた割合です。' } }
+        { id: 'kpi-birth', link: 'vital_stats', label: '出生数（年間）', unit: '人' },
+        { id: 'kpi-aging', link: 'age', label: '高齢化率（65歳以上）', unit: '%' },
+        { id: 'kpi-social', link: 'vital_stats', label: '社会増減（転入 − 転出）', unit: '人' },
+        { id: 'kpi-pop', link: 'population', label: '1世帯あたりの人員', unit: '人/世帯' },
+        { id: 'kpi-for', link: 'foreigners', label: '外国籍住民の登録数', unit: '人' },
+        { id: 'kpi-tou', link: 'tourism', label: '観光入込客数（年間）', unit: '人' },
+        { id: 'kpi-gar', link: 'garbage', label: '可燃ごみの量（1人1日あたり）', unit: 'g' },
+        { id: 'kpi-rail', link: 'railway', label: '日野駅の乗降客数（年間）', unit: '人' },
+        { id: 'kpi-fin', link: 'finance_index', label: '経常収支比率', unit: '%' }
     ];
+
+    // 比べる相手の資料（町の公開資料。値は各資料の原典の文字で確かめた。README「比べる相手の出典」）
+    const REF = {
+        kaigo9: { name: '第9期日野町高齢者福祉計画・介護保険事業計画', url: 'https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000007/7687/honpen.pdf' },
+        sogo6: { name: '第6次日野町総合計画', url: 'https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000001/1791/04.pdf' },
+        koutsu: { name: '日野町地域公共交通計画（令和6年3月・令和8年3月改訂）', url: 'https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000007/7255/koutsu.pdf' },
+        zaisei: { name: '令和6年度財政状況資料集（日野町）', url: 'https://www.town.shiga-hino.lg.jp/0000000447.html' }
+    };
+    const refLink = (k, extra) => `<a class="source-link" href="${REF[k].url}" target="_blank" rel="noopener">${REF[k].name}</a>${extra || ''}`;
 
     let activeCharts = [];
     let sparkCharts = {};
     let rotateInterval = null;
-    const COLORS = { primary:'#1d4e89', secondary:'#007a5e', accent:'#d45d00', red:'#c0392b', amber:'#e69f00', teal:'#008eb0', purple:'#7b5ea7', grey:'#95a5a6', green:'#1f7a3d' };
+    // 区別の色は共通の部品のトークン --portal-cat1〜5 を順に当てる（hino-portal DESIGN.md 3.4）
+    const cssVar = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    let CAT = [], INK = '#1A2333', AI = '#1E4E9C', LINE = '#DCE4F0';
+    function loadTokens() {
+        CAT = [1, 2, 3, 4, 5].map(i => cssVar(`--portal-cat${i}`));
+        INK = cssVar('--portal-ink') || INK; AI = cssVar('--portal-ai') || AI; LINE = cssVar('--portal-line') || LINE;
+    }
 
     function isEmbed() { return new URLSearchParams(location.search).get('embed') === 'true'; }
 
     function init() {
         if (isEmbed()) document.body.classList.add('embed');
+        loadTokens();
         buildKpiCards();
         const grid = document.getElementById('cardGrid');
         const selector = document.getElementById('dashSelector');
         let currentCat = ''; let catDiv = null;
         for (const [key, conf] of Object.entries(dashConfig)) {
             if (conf.cat !== currentCat) {
-                grid.innerHTML += `<div class="card-category">【${conf.cat}】</div>`;
+                grid.innerHTML += `<div class="card-category">${conf.cat}</div>`;
                 catDiv = document.createElement('div'); catDiv.className = 'card-grid'; grid.appendChild(catDiv);
                 currentCat = conf.cat;
             }
-            catDiv.innerHTML += `<a href="#${key}" class="card"><div class="card-icon" aria-hidden="true">${conf.icon}</div><h3>${conf.title}</h3><p>${conf.desc}</p></a>`;
-            selector.innerHTML += `<option value="${key}">【${conf.cat}】${conf.title}</option>`;
+            catDiv.innerHTML += `<a href="#${key}" class="card"><h3>${conf.title}</h3><p>${conf.desc}</p></a>`;
+            selector.innerHTML += `<option value="${key}">${conf.cat}：${conf.title}</option>`;
         }
         window.addEventListener('hashchange', handleRoute); handleRoute();
         loadKPIData(); kpiLoaded = true;
@@ -320,25 +331,37 @@
     function buildKpiCards() {
         const grid = document.getElementById('kpiGrid');
         grid.innerHTML = kpiDefs.map(d => `
-            <div class="kpi-card ${d.cls}" id="${d.id}">
-                <span class="kpi-label">${d.label}<span class="kpi-source-tag ${d.tag[1]}">${d.tag[0]}</span></span>
-                <span class="kpi-asof">データ時点：<span class="kpi-asof-year">—</span></span>
-                <div class="kpi-main-row">
-                    <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">${d.unit}</span></div>
+            <section class="kpi-card" id="${d.id}" aria-labelledby="${d.id}-label">
+                <h3 class="kpi-label" id="${d.id}-label">${d.label}</h3>
+                <span class="kpi-src">データ確認中</span>
+                <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">${d.unit}</span></div>
+                <table class="kpi-table"><tbody></tbody></table>
+                <div class="kpi-trend">
+                    <div class="kpi-trend-head">推移<span class="sub"></span></div>
                     <div class="kpi-spark-box"><canvas class="kpi-spark" id="${d.id}-spark" aria-hidden="true"></canvas></div>
                 </div>
-                <div class="kpi-diff-box"></div>
-                <details class="kpi-explain">
-                    <summary>算出根拠と指標の意味</summary>
-                    <div class="body">
-                        <span class="kpi-subtext-dynamic">データ確認中...</span>
-                        <strong>💡 算出根拠:</strong> ${d.explain.root}<br>
-                        <strong>📝 指標の意味:</strong> ${d.explain.meaning}
-                    </div>
-                </details>
+                <div class="kpi-notes"></div>
                 ${d.link ? `<a class="kpi-detail-link" href="#${d.link}">詳しい推移グラフを見る →</a>` : ''}
-            </div>`).join('');
+            </section>`).join('');
     }
+
+    // --- 表記の道具（hino-portal DESIGN.md 6.4） ---
+    const MINUS = '−';
+    function fmt(v, dec) {
+        const n = Number(v);
+        const t = Math.abs(n).toLocaleString('ja-JP', dec ? { minimumFractionDigits: dec, maximumFractionDigits: dec } : { maximumFractionDigits: 0 });
+        return (n < 0 ? MINUS : '') + t;
+    }
+    const signed = (v, dec) => (Number(v) > 0 ? '+' : '') + fmt(v, dec);
+    const num = (text, unit) => `<span class="num">${text}${unit || ''}</span>`;
+    // 増減は矢印と文言だけ（▲ 増・▼ 減・＝ 同じ）。色は付けない
+    function change(latestLabel, latest, prev, unit, dec) {
+        const p = Math.pow(10, dec || 0);
+        const d = Math.round((Number(latest) - Number(prev)) * p) / p;
+        if (d === 0) return `${latestLabel}は ＝ 同じ`;
+        return `${latestLabel}は ${d > 0 ? '▲' : '▼'} ${num(fmt(Math.abs(d), dec), unit)} ${d > 0 ? '増' : '減'}`;
+    }
+    const row = (h, hs, v, vs) => ({ h, hs, v, vs });
 
     function getDaysInYearOrFiscalYear(yearStr) {
         const isFiscal = yearStr.includes('度');
@@ -363,13 +386,13 @@
     function toggleRotation() {
         const btn = document.getElementById('btnPlay');
         if (rotateInterval) { stopRotation(); }
-        else { btn.innerText = '⏸ 停止する'; btn.style.background = '#333';
+        else { btn.innerText = '自動巡回を止める'; btn.style.background = '#333';
             rotateInterval = setInterval(() => navigateDashboard(1), 5000); }
     }
     function stopRotation() {
         if (rotateInterval) { clearInterval(rotateInterval); rotateInterval = null;
             const btn = document.getElementById('btnPlay');
-            if (btn) { btn.innerText = '🔄 自動巡回'; btn.style.background = 'var(--accent)'; } }
+            if (btn) { btn.innerText = '自動巡回'; btn.style.background = 'var(--accent)'; } }
     }
 
     function loadKPIData() {
@@ -377,127 +400,163 @@
 
         parseKPI('hino_vital_stats.csv', d => {
             if (d.length < 2) return;
-            const series = d.map(r => parseInt(r['出生数']));
-            const lat = d[d.length-1], prv = d[d.length-2];
-            const vLat = parseInt(lat['出生数']), vPrv = parseInt(prv['出生数']);
-            updateKPICard('kpi-birth', vLat.toLocaleString(), vLat - vPrv, {
-                latestYear: lat['年次'], prevYear: prv['年次'], prevVal: `${vPrv}人`,
-                subtext: `${lat['年次']}: 死亡数 ${lat['死亡数']}人を大きく下回り自然減が続く`, series });
-            // 社会増減
-            const soc = d.map(r => parseInt(r['社会増加']));
-            const sLat = parseInt(lat['社会増加']), sPrv = parseInt(prv['社会増加']);
-            updateKPICard('kpi-social', (sLat>0?'+':'') + sLat.toLocaleString(), sLat - sPrv, {
-                latestYear: lat['年次'], prevYear: prv['年次'], prevVal: `${sPrv>0?'+':''}${sPrv}人`,
-                subtext: `${lat['年次']}: 転入${lat['転入']}人 − 転出${lat['転出']}人`, series: soc });
+            const lat = d[d.length-1], prv = d[d.length-2], first = d[0];
+            const period = `${first['年次']}〜${lat['年次']}`;
+            updateKPICard('kpi-birth', {
+                src: `「統計でわかる！日野のすがた2025」・${lat['年次']}`, value: fmt(lat['出生数']),
+                rows: [
+                    row('前年', prv['年次'], num(fmt(prv['出生数']), '人'), change(lat['年次'], lat['出生数'], prv['出生数'], '人')),
+                    row('死亡数', lat['年次'], num(fmt(lat['死亡数']), '人')),
+                    row('自然増減', `出生 ${MINUS} 死亡（${lat['年次']}）`, num(signed(lat['自然増加']), '人'))
+                ],
+                period, series: d.map(r => parseInt(r['出生数'])) });
+            updateKPICard('kpi-social', {
+                src: `「統計でわかる！日野のすがた2025」・${lat['年次']}`, value: signed(lat['社会増加']),
+                rows: [
+                    row('転入', lat['年次'], num(fmt(lat['転入']), '人')),
+                    row('転出', lat['年次'], num(fmt(lat['転出']), '人')),
+                    row('前年', `${prv['年次']}。転入 ${fmt(prv['転入'])}人・転出 ${fmt(prv['転出'])}人`, num(signed(prv['社会増加']), '人'), change(lat['年次'], lat['社会増加'], prv['社会増加'], '人'))
+                ],
+                period, series: d.map(r => parseInt(r['社会増加'])) });
         });
 
         parseKPI('hino_age.csv', d => {
             if (d.length < 2) return;
-            const series = d.map(r => parseFloat(r['高齢化率']));
             const lat = d[d.length-1], prv = d[d.length-2];
-            const vLat = parseFloat(lat['高齢化率']), vPrv = parseFloat(prv['高齢化率']);
-            updateKPICard('kpi-aging', vLat.toFixed(1), (vLat - vPrv).toFixed(1), {
-                latestYear: `${lat['年']}（国勢調査）`, prevYear: prv['年'], prevVal: `${vPrv.toFixed(1)}%`,
-                subtext: `${lat['年']}: 老年人口 ${Number(lat['老年人口']).toLocaleString()}人`, series, decimals: 1 });
+            const census = '令和2年国勢調査';
+            const rows = [row('前回調査', prv['年'], num(fmt(prv['高齢化率'], 1), '%'), change(lat['年'], lat['高齢化率'], prv['高齢化率'], 'ポイント', 1))];
+            let notes = '';
+            // 全国・滋賀県・県内の順位は、令和2年国勢調査の値（第9期日野町高齢者福祉計画・介護保険事業計画 p.9）。CSV の最新の年が令和2年のときだけ並べる
+            if (lat['年'] === '令和2年') {
+                rows.push(row('全国', census, num('28.0', '%')));
+                rows.push(row('滋賀県', census, num('25.8', '%')));
+                rows.push(row('県内19市町の中の順位', census, '4番目に高い'));
+                notes = `<p>全国・滋賀県・県内の順位の出典：${refLink('kaigo9', ' p.9「高齢化率の県内比較（令和２年）」')}</p>`;
+            }
+            updateKPICard('kpi-aging', {
+                src: `「統計でわかる！日野のすがた2025」・${lat['年']}（国勢調査）`, value: fmt(lat['高齢化率'], 1),
+                rows, notes, period: `${d[0]['年']}〜${lat['年']}`, series: d.map(r => parseFloat(r['高齢化率'])) });
         });
 
         parseKPI('hino_population.csv', d => {
             if (d.length < 2) return;
-            const series = d.map(r => parseFloat(r['総数'])/parseFloat(r['世帯数']));
-            const lat = d[d.length-1], prv = d[d.length-2];
-            const vLat = (parseFloat(lat['総数'])/parseFloat(lat['世帯数']));
-            const vPrv = (parseFloat(prv['総数'])/parseFloat(prv['世帯数']));
-            updateKPICard('kpi-pop', vLat.toFixed(2), (vLat - vPrv), {
-                latestYear: `${lat['年']}（国勢調査）`, prevYear: prv['年'], prevVal: vPrv.toFixed(2),
-                subtext: `${lat['年']}: 総人口 ${Number(lat['総数']).toLocaleString()}人 / ${Number(lat['世帯数']).toLocaleString()}世帯`, series, decimals: 2 });
+            const per = r => Number(r['総数']) / Number(r['世帯数']);
+            const lat = d[d.length-1], prv = d[d.length-2], first = d[0];
+            updateKPICard('kpi-pop', {
+                src: `「統計でわかる！日野のすがた2025」・${lat['年']}（国勢調査）`, value: per(lat).toFixed(2),
+                rows: [
+                    row('前回調査', prv['年'], num(per(prv).toFixed(2), '人/世帯'), change(lat['年'], per(lat).toFixed(2), per(prv).toFixed(2), '人/世帯', 2)),
+                    row('人口', lat['年'], num(fmt(lat['総数']), '人')),
+                    row('世帯数', lat['年'], num(fmt(lat['世帯数']), '世帯')),
+                    row(first['年'], `国勢調査。人口 ${fmt(first['総数'])}人・世帯数 ${fmt(first['世帯数'])}世帯`, num(per(first).toFixed(2), '人/世帯'))
+                ],
+                notes: '<p>1世帯あたりの人員は、人口 ÷ 世帯数で計算した値（小数第3位を四捨五入）。</p>',
+                period: `${first['年']}〜${lat['年']}`, series: d.map(per) });
         });
 
         parseKPI('hino_foreigners.csv', d => {
             if (d.length < 2) return;
             const keys = ['ブラジル','フィリピン','中国','韓国・朝鮮','ペルー','その他'];
-            const sum = row => keys.reduce((a, k) => a + (parseInt(row[k]) || 0), 0);
-            const series = d.map(sum);
+            const sum = r => keys.reduce((a, k) => a + (parseInt(r[k]) || 0), 0);
             const lat = d[d.length-1], prv = d[d.length-2];
-            const vLat = sum(lat), vPrv = sum(prv);
-            updateKPICard('kpi-for', vLat.toLocaleString(), vLat - vPrv, {
-                latestYear: `${lat['年']}末`, prevYear: prv['年'], prevVal: `${vPrv.toLocaleString()}人`,
-                subtext: `${lat['年']}末: 国籍別登録者の総数`, series });
+            updateKPICard('kpi-for', {
+                src: `「統計でわかる！日野のすがた2025」・${lat['年']}。国籍別の登録者数の合計`, value: fmt(sum(lat)),
+                rows: [row('前年', prv['年'], num(fmt(sum(prv)), '人'), change(lat['年'], sum(lat), sum(prv), '人'))]
+                    .concat(keys.map(k => row(k, lat['年'], num(fmt(lat[k]), '人')))),
+                period: `${d[0]['年']}〜${lat['年']}`, series: d.map(sum) });
         });
 
         parseKPI('hino_tourism.csv', d => {
             if (d.length < 2) return;
-            const perDay = r => Math.round((parseInt(r['日帰り'])+parseInt(r['宿泊'])) / getDaysInYearOrFiscalYear(r['年']));
-            const series = d.map(perDay);
+            const total = r => parseInt(r['日帰り']) + parseInt(r['宿泊']);
             const lat = d[d.length-1], prv = d[d.length-2];
-            const sLat = parseInt(lat['日帰り'])+parseInt(lat['宿泊']);
-            updateKPICard('kpi-tou', perDay(lat).toLocaleString(), perDay(lat) - perDay(prv), {
-                latestYear: lat['年'], prevYear: prv['年'], prevVal: `${perDay(prv).toLocaleString()}人/日`,
-                subtext: `${lat['年']}: 年間総入込数 ${sLat.toLocaleString()}人`, series });
+            const days = getDaysInYearOrFiscalYear(lat['年']);
+            updateKPICard('kpi-tou', {
+                src: `「統計でわかる！日野のすがた2025」・${lat['年']}。日帰り＋宿泊（${fmt(lat['日帰り'])}＋${fmt(lat['宿泊'])}＝${fmt(total(lat))}人）`, value: fmt(total(lat)),
+                rows: [
+                    row('前年', prv['年'], num(fmt(total(prv)), '人'), change(lat['年'], total(lat), total(prv), '人')),
+                    row('第6次総合計画の目標', '令和7年度', num('777,000', '人')),
+                    row('第6次総合計画の目標', '令和12年度', num('815,000', '人')),
+                    row('第6次総合計画の基準値', '令和元年度', num('740,100', '人')),
+                    row('1日平均', `${fmt(total(lat))}人 ÷ ${days}日（${lat['年']}の日数）`, num(fmt(Math.round(total(lat) / days)), '人/日'))
+                ],
+                notes: `<p>目標・基準値の出典：${refLink('sogo6', ' 本編 第3部 基本計画 分野⑨〜㉑（04.pdf）p.12、分野⑭ 観光振興の指標「観光入込客数(人)」')}。日野のすがたの値は年（暦年）、総合計画の基準値・目標は年度で書かれている。</p>`,
+                period: `${d[0]['年']}〜${lat['年']}`, series: d.map(total) });
         });
 
         parseKPI('hino_garbage.csv', d => {
             if (d.length < 2) return;
-            const series = d.map(r => parseFloat(r['可燃物1人当り']));
             const lat = d[d.length-1], prv = d[d.length-2];
-            const vLat = parseFloat(lat['可燃物1人当り']), vPrv = parseFloat(prv['可燃物1人当り']);
-            updateKPICard('kpi-gar', vLat.toFixed(1), (vLat - vPrv), {
-                latestYear: lat['年度'], prevYear: prv['年度'], prevVal: `${vPrv.toFixed(1)}kg`,
-                subtext: `${lat['年度']}: 公式統計の1人当り排出量`, series, decimals: 1 });
+            const days = getDaysInYearOrFiscalYear(lat['年度']);
+            const perDayG = r => Number(r['可燃物1人当り']) / getDaysInYearOrFiscalYear(r['年度']) * 1000;
+            updateKPICard('kpi-gar', {
+                src: `「統計でわかる！日野のすがた2025」・${lat['年度']}。年間の1人当り（kg）から計算`, value: fmt(Math.round(perDayG(lat))),
+                rows: [
+                    row('年間の1人当り', lat['年度'], num(fmt(lat['可燃物1人当り'], 1), 'kg'), `${num(fmt(lat['可燃物1人当り'], 1), 'kg')} ÷ ${days}日 × 1,000 ≒ ${num(fmt(Math.round(perDayG(lat))), 'g')}`),
+                    row('前年度（年間の1人当り）', prv['年度'], num(fmt(prv['可燃物1人当り'], 1), 'kg'), change(lat['年度'], lat['可燃物1人当り'], prv['可燃物1人当り'], 'kg', 1)),
+                    row('第6次総合計画の目標', '令和7年度', num('474', 'g')),
+                    row('第6次総合計画の目標', '令和12年度', num('457', 'g')),
+                    row('第6次総合計画の基準値', '令和元年度', num('495', 'g'))
+                ],
+                notes: `<p>目標・基準値の出典：${refLink('sogo6', ' 本編 第3部 基本計画 分野⑨〜㉑（04.pdf）p.24、分野⑳ 循環型社会の指標「一日一人あたり可燃ごみ量(g)」')}。総合計画の注では、可燃ごみは「家庭ごみの委託分、資源ごみを除く」。</p><p>日野のすがたの「可燃物1人当り」と総合計画の「一日一人あたり可燃ごみ量」で、可燃ごみの範囲など定義が同じかは資料で確かめられない。</p>`,
+                period: `${d[0]['年度']}〜${lat['年度']}`, series: d.map(r => parseFloat(r['可燃物1人当り'])) });
         });
 
         parseKPI('hino_railway.csv', d => {
             if (d.length < 2) return;
-            const perDay = r => Math.round(parseInt(r['乗降客数']) / getDaysInYearOrFiscalYear(r['年度']));
-            const series = d.map(perDay);
             const lat = d[d.length-1], prv = d[d.length-2];
-            updateKPICard('kpi-rail', perDay(lat).toLocaleString(), perDay(lat) - perDay(prv), {
-                latestYear: lat['年度'], prevYear: prv['年度'], prevVal: `${perDay(prv).toLocaleString()}人/日`,
-                subtext: `${lat['年度']}: 年間総乗降客数 ${Number(lat['乗降客数']).toLocaleString()}人`, series });
+            const days = getDaysInYearOrFiscalYear(lat['年度']);
+            updateKPICard('kpi-rail', {
+                src: `「統計でわかる！日野のすがた2025」・${lat['年度']}。近江鉄道日野駅`, value: fmt(lat['乗降客数']),
+                rows: [
+                    row('前年度', prv['年度'], num(fmt(prv['乗降客数']), '人'), change(lat['年度'], lat['乗降客数'], prv['乗降客数'], '人')),
+                    row('日野町地域公共交通計画の目標', '令和10年度', num('328,000', '人/年')),
+                    row('同じ計画の現状値', '令和4年度', num('312,948', '人/年')),
+                    row('1日平均', `${fmt(lat['乗降客数'])}人 ÷ ${days}日（${lat['年度']}の日数）`, num(fmt(Math.round(Number(lat['乗降客数']) / days)), '人/日'))
+                ],
+                notes: `<p>目標・現状値の出典：${refLink('koutsu', ' p.42「表15 計画の評価指標と目標値」の「近江鉄道線日野駅利用者数」')}。計画の現状値（令和4年度 312,948人/年）は、日野のすがたの令和4年度の乗降客数と同じ値。</p>`,
+                period: `${d[0]['年度']}〜${lat['年度']}`, series: d.map(r => parseInt(r['乗降客数'])) });
         });
 
         parseKPI('hino_finance_index.csv', d => {
             if (d.length < 2) return;
-            const series = d.map(r => parseFloat(r['経常収支比率']));
             const lat = d[d.length-1], prv = d[d.length-2];
-            const vLat = parseFloat(lat['経常収支比率']), vPrv = parseFloat(prv['経常収支比率']);
-            updateKPICard('kpi-fin', vLat.toFixed(1), (vLat - vPrv), {
-                latestYear: lat['年度'], prevYear: prv['年度'], prevVal: `${vPrv.toFixed(1)}%`,
-                subtext: `${lat['年度']}: 経常一般財源に対する経常的経費の割合`, series, decimals: 1 });
+            const rows = [row('前年度', prv['年度'], num(fmt(prv['経常収支比率'], 1), '%'), change(lat['年度'], lat['経常収支比率'], prv['経常収支比率'], 'ポイント', 1))];
+            let notes = '';
+            // 全国平均・滋賀県平均・類似団体内順位は、令和6年度財政状況資料集「財政比較分析表」の値。CSV の最新の年度が令和6年度のときだけ並べる
+            if (lat['年度'] === '令和6年度') {
+                rows.push(row('全国平均', '令和6年度', num('93.8', '%')));
+                rows.push(row('滋賀県平均', '令和6年度', num('92.5', '%')));
+                rows.push(row('類似団体内順位', '令和6年度', num('30位/37団体')));
+                notes = `<p>全国平均・滋賀県平均・類似団体内順位の出典：${refLink('zaisei', '「財政比較分析表」（財政構造の弾力性）')}。</p>`;
+            }
+            updateKPICard('kpi-fin', {
+                src: `「統計でわかる！日野のすがた2025」・${lat['年度']}`, value: fmt(lat['経常収支比率'], 1),
+                rows, notes, period: `${d[0]['年度']}〜${lat['年度']}`, series: d.map(r => parseFloat(r['経常収支比率'])) });
         });
     }
 
-    function updateKPICard(id, val, diff, opts) {
+    function updateKPICard(id, o) {
         const card = document.getElementById(id); if (!card) return;
-        const def = kpiDefs.find(k => k.id === id);
-        const dNum = parseFloat(diff);
-        const dec = opts.decimals || 0;
-        const dSign = dNum > 0 ? '▲ +' : (dNum < 0 ? '▼ ' : '± ');
-
-        // 前年比較ラベルは「前年（令和5年）: 値」で統一（国勢調査は「前回」）
-        const compareWord = (def.tag[1] === 'census') ? '前回調査' : '前年';
-        const prevLabel = `${compareWord}（${opts.prevYear}）: ${opts.prevVal}`;
-
-        card.querySelector('.kpi-asof-year').textContent = opts.latestYear;
-        card.querySelector('.kpi-value').textContent = val;
-        card.querySelector('.kpi-diff-box').innerHTML =
-            `<span class="kpi-diff">${dSign}${Math.abs(dNum).toFixed(dec)}</span>` +
-            `<span class="kpi-prev-text">${prevLabel}</span>`;
-        card.querySelector('.kpi-subtext-dynamic').textContent = opts.subtext;
-        drawSparkline(`${id}-spark`, series_safe(opts.series));
+        card.querySelector('.kpi-src').textContent = o.src;
+        card.querySelector('.kpi-value').textContent = o.value;
+        card.querySelector('.kpi-table tbody').innerHTML = o.rows.map(r =>
+            `<tr><th scope="row">${r.h}${r.hs ? `<span class="sub">${r.hs}</span>` : ''}</th><td>${r.v}${r.vs ? `<span class="sub">${r.vs}</span>` : ''}</td></tr>`).join('');
+        card.querySelector('.kpi-trend-head .sub').textContent = o.period;
+        card.querySelector('.kpi-notes').innerHTML = o.notes || '';
+        drawSparkline(`${id}-spark`, Array.isArray(o.series) ? o.series : []);
     }
-    function series_safe(s){ return Array.isArray(s) ? s : []; }
 
-
+    // 小さな折れ線（札の値の系列）。目盛りと値は出さない。線の色は --portal-ai
     function drawSparkline(canvasId, series) {
         const el = document.getElementById(canvasId); if (!el || !series || series.length < 2) return;
         if (sparkCharts[canvasId]) { sparkCharts[canvasId].destroy(); }
         const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         sparkCharts[canvasId] = new Chart(el, {
             type: 'line',
-            data: { labels: series.map((_, i) => i), datasets: [{ data: series, borderColor: COLORS.primary, borderWidth: 2, pointRadius: 0, tension: 0.3,
-                backgroundColor: 'rgba(29,78,137,0.08)', fill: true }] },
+            data: { labels: series.map((_, i) => i), datasets: [{ data: series, borderColor: AI, borderWidth: 2, pointRadius: 0, tension: 0.3, fill: false }] },
             options: { responsive: true, maintainAspectRatio: false, animation: !reduce, plugins: { legend: { display: false }, tooltip: { enabled: false } },
-                scales: { x: { display: false }, y: { display: false } }, layout: { padding: 0 }, elements: { line: { capBezierPoints: true } } }
+                scales: { x: { display: false }, y: { display: false } }, layout: { padding: 2 }, elements: { line: { capBezierPoints: true } } }
         });
     }
 
@@ -517,7 +576,7 @@
         document.getElementById('view-home').style.display = 'none';
         document.getElementById('view-dashboard').style.display = 'block';
         const conf = dashConfig[key];
-        document.getElementById('dashTitle').innerText = conf.icon + ' ' + conf.title;
+        document.getElementById('dashTitle').innerText = conf.title;
         document.getElementById('dashDesc').innerText = conf.desc;
         document.getElementById('dashSelector').value = key;
         document.getElementById('downloadBtn').href = `data/${conf.file}`;
@@ -525,11 +584,12 @@
     }
 
     function destroyCharts() { activeCharts.forEach(c => c.destroy()); activeCharts = []; }
-    function resetCanvases(count) {
+    function resetCanvases(count, kind) {
         destroyCharts();
         const area = document.getElementById('chartArea'); area.innerHTML = ''; const canvases = [];
+        area.className = kind === 'small' ? 'chart-small-grid' : '';
         for (let i = 0; i < count; i++) {
-            const div = document.createElement('div'); div.className = count === 1 ? 'chart-box single' : 'chart-box';
+            const div = document.createElement('div'); div.className = kind === 'small' ? 'chart-box small' : (count === 1 ? 'chart-box single' : 'chart-box');
             const canvas = document.createElement('canvas'); div.appendChild(canvas); area.appendChild(div); canvases.push(canvas);
         }
         return canvases;
@@ -540,151 +600,129 @@
     function getBaseOptions(title, scales) {
         const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         return { responsive: true, maintainAspectRatio: false, animation: !reduce, interaction: { mode: 'index', intersect: false },
-            plugins: { title: { display: true, text: title, color: '#333', font: { size: 14 } }, legend: { labels: { usePointStyle: true } } },
-            scales: Object.assign({ x: { grid: { display: false } }, y: { grid: { color: '#e0e0e0' }, min: 0 } }, scales) };
+            plugins: { title: { display: true, text: title, color: INK, font: { size: 14 } }, legend: { labels: { usePointStyle: true, color: INK } } },
+            scales: Object.assign({ x: { grid: { display: false }, ticks: { color: INK } }, y: { grid: { color: LINE }, ticks: { color: INK }, min: 0 } }, scales) };
+    }
+    const STACK = { x: { stacked: true }, y: { stacked: true } };
+    // 系列の色は区別の色（--portal-cat1〜5）を、1つの画面の中で順に当てる（違う系列に同じ色を当てない）。
+    // 色だけで区別しないよう、折れ線は点の形を系列ごとに変え、凡例に名前を書く（hino-portal DESIGN.md 3.4）
+    const POINT = ['circle', 'rect', 'triangle', 'rectRot', 'crossRot'];
+    function barSet(label, data, i) { return { label, data, backgroundColor: CAT[i], borderColor: CAT[i] }; }
+    function lineSet(label, data, i) { return { type: 'line', label, data, borderColor: CAT[i], backgroundColor: CAT[i], pointStyle: POINT[i], pointRadius: 4, pointHoverRadius: 5, borderWidth: 2, tension: 0.3, fill: false }; }
+    const pick = (data, k) => data.map(r => r[k]);
+    function chart(cv, type, labels, datasets, title, scales) {
+        activeCharts.push(new Chart(cv, { type, data: { labels, datasets }, options: getBaseOptions(title, scales) }));
     }
 
     /* --- 各種グラフ描画 --- */
     function renderLandArea(data) {
-        const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [
-            { label: '林山', data: data.map(r=>r['林山']), backgroundColor: '#447c59' },
-            { label: '田', data: data.map(r=>r['田']), backgroundColor: '#98b46b' },
-            { label: '畑', data: data.map(r=>r['畑']), backgroundColor: '#e2d37c' },
-            { label: '宅地', data: data.map(r=>r['宅地']), backgroundColor: '#c76b6b' } ] },
-            options: getBaseOptions('地目別面積推移 (ha)', { x: { stacked: true }, y: { stacked: true } }) }));
+        const cvs = resetCanvases(1), x = pick(data, '年');
+        chart(cvs[0], 'bar', x, ['林山', '田', '畑', '宅地'].map((k, i) => barSet(k, pick(data, k), i)), '地目別面積推移 (ha)', STACK);
     }
     function renderWeather(data) {
-        const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['月']), datasets: [{ label: '平均気温 (℃)', data: data.map(r=>r['平均気温']), borderColor: COLORS.red, backgroundColor: COLORS.red, tension: 0.3 }] }, options: getBaseOptions('月別平均気温 (令和6年)') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'bar', data: { labels: data.map(r=>r['月']), datasets: [{ label: '降水量 (mm)', data: data.map(r=>r['降水量']), backgroundColor: COLORS.teal }] }, options: getBaseOptions('月別降水量 (令和6年)') }));
+        const cvs = resetCanvases(2), x = pick(data, '月');
+        chart(cvs[0], 'line', x, [lineSet('平均気温 (℃)', pick(data, '平均気温'), 0)], '月別平均気温 (令和6年)');
+        chart(cvs[1], 'bar', x, [barSet('降水量 (mm)', pick(data, '降水量'), 1)], '月別降水量 (令和6年)');
     }
     function renderPopulation(data) {
-        const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [
-            { label: '男', data: data.map(r=>r['男']), backgroundColor: COLORS.primary },
-            { label: '女', data: data.map(r=>r['女']), backgroundColor: COLORS.accent } ] },
-            options: getBaseOptions('人口推移', { x: { stacked: true }, y: { stacked: true } }) }));
-        activeCharts.push(new Chart(cvs[1], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '世帯数', data: data.map(r=>r['世帯数']), backgroundColor: COLORS.secondary }] }, options: getBaseOptions('世帯数推移') }));
+        const cvs = resetCanvases(2), x = pick(data, '年');
+        chart(cvs[0], 'bar', x, [barSet('男', pick(data, '男'), 0), barSet('女', pick(data, '女'), 1)], '人口推移', STACK);
+        chart(cvs[1], 'bar', x, [barSet('世帯数', pick(data, '世帯数'), 2)], '世帯数推移');
     }
     function renderAge(data) {
-        const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [
-            { label: '年少人口', data: data.map(r=>r['年少人口']), backgroundColor: '#4a90e2' },
-            { label: '生産年齢人口', data: data.map(r=>r['生産年齢人口']), backgroundColor: COLORS.green },
-            { label: '老年人口', data: data.map(r=>r['老年人口']), backgroundColor: COLORS.red } ] },
-            options: getBaseOptions('年齢3区分別人口', { x: { stacked: true }, y: { stacked: true } }) }));
-        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [{ label: '高齢化率 (%)', data: data.map(r=>r['高齢化率']), borderColor: COLORS.accent, backgroundColor: 'rgba(212,93,0,0.1)', fill: true, borderWidth: 3, tension: 0.3 }] }, options: getBaseOptions('高齢化率の推移') }));
+        const cvs = resetCanvases(2), x = pick(data, '年');
+        chart(cvs[0], 'bar', x, ['年少人口', '生産年齢人口', '老年人口'].map((k, i) => barSet(k, pick(data, k), i)), '年齢3区分別人口', STACK);
+        chart(cvs[1], 'line', x, [lineSet('高齢化率 (%)', pick(data, '高齢化率'), 3)], '高齢化率の推移');
     }
     function renderVitalStats(data) {
-        const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年次']), datasets: [
-            { label: '出生数', data: data.map(r=>r['出生数']), borderColor: COLORS.green, backgroundColor: COLORS.green, tension: 0.3 },
-            { label: '死亡数', data: data.map(r=>r['死亡数']), borderColor: COLORS.red, backgroundColor: COLORS.red, tension: 0.3 } ] }, options: getBaseOptions('自然動態（出生・死亡）') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年次']), datasets: [
-            { label: '転入', data: data.map(r=>r['転入']), borderColor: COLORS.primary, backgroundColor: COLORS.primary, tension: 0.3 },
-            { label: '転出', data: data.map(r=>r['転出']), borderColor: COLORS.amber, backgroundColor: COLORS.amber, tension: 0.3 } ] }, options: getBaseOptions('社会動態（転入・転出）') }));
+        const cvs = resetCanvases(2), x = pick(data, '年次');
+        chart(cvs[0], 'line', x, [lineSet('出生数', pick(data, '出生数'), 0), lineSet('死亡数', pick(data, '死亡数'), 1)], '自然動態（出生・死亡）');
+        chart(cvs[1], 'line', x, [lineSet('転入', pick(data, '転入'), 2), lineSet('転出', pick(data, '転出'), 3)], '社会動態（転入・転出）');
     }
+    // 国籍は6つで区別の色の5色を超えるので、国籍ごとの小さなグラフに分け、目盛りをそろえる（hino-portal DESIGN.md 3.4・4.1）
     function renderForeigners(data) {
-        const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [
-            { label: 'ブラジル', data: data.map(r=>r['ブラジル']), backgroundColor: COLORS.green },
-            { label: 'フィリピン', data: data.map(r=>r['フィリピン']), backgroundColor: '#f1c40f' },
-            { label: '中国', data: data.map(r=>r['中国']), backgroundColor: COLORS.primary },
-            { label: '韓国・朝鮮', data: data.map(r=>r['韓国・朝鮮']), backgroundColor: COLORS.red },
-            { label: 'ペルー', data: data.map(r=>r['ペルー']), backgroundColor: COLORS.purple },
-            { label: 'その他', data: data.map(r=>r['その他']), backgroundColor: COLORS.grey } ] },
-            options: getBaseOptions('国籍別外国人登録者数の推移', { x: { stacked: true }, y: { stacked: true } }) }));
+        const keys = ['ブラジル', 'フィリピン', '中国', '韓国・朝鮮', 'ペルー', 'その他'];
+        const x = pick(data, '年');
+        const max = Math.max(...data.flatMap(r => keys.map(k => Number(r[k]) || 0)));
+        const yMax = Math.ceil(max / 100) * 100;
+        const cvs = resetCanvases(keys.length, 'small');
+        keys.forEach((k, i) => {
+            const last = data[data.length - 1];
+            cvs[i].setAttribute('role', 'img');
+            cvs[i].setAttribute('aria-label', `外国人登録者数の推移（${k}。${x[0]}〜${x[x.length - 1]}）`);
+            activeCharts.push(new Chart(cvs[i], { type: 'bar', data: { labels: x, datasets: [{ label: k, data: pick(data, k), backgroundColor: AI, borderColor: AI }] },
+                options: Object.assign(getBaseOptions(`${k}（${last['年']} ${Number(last[k]).toLocaleString('ja-JP')}人）`, { y: { min: 0, max: yMax, grid: { color: LINE }, ticks: { color: INK } } }),
+                    { plugins: { title: { display: true, text: `${k}（${last['年']} ${Number(last[k]).toLocaleString('ja-JP')}人）`, color: INK, font: { size: 14 } }, legend: { display: false } } }) }));
+        });
     }
     function renderIndustry(data) {
-        const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [
-            { label: '第一次産業', data: data.map(r=>r['第一次産業']), backgroundColor: '#8d6e63' },
-            { label: '第二次産業', data: data.map(r=>r['第二次産業']), backgroundColor: '#78909c' },
-            { label: '第三次産業', data: data.map(r=>r['第三次産業']), backgroundColor: '#5c6bc0' } ] },
-            options: getBaseOptions('産業区分別就業者数', { x: { stacked: true }, y: { stacked: true } }) }));
+        const cvs = resetCanvases(1), x = pick(data, '年');
+        chart(cvs[0], 'bar', x, ['第一次産業', '第二次産業', '第三次産業'].map((k, i) => barSet(k, pick(data, k), i)), '産業区分別就業者数', STACK);
     }
     function renderTourism(data) {
-        const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [
-            { label: '日帰り', data: data.map(r=>r['日帰り']), backgroundColor: COLORS.teal },
-            { label: '宿泊', data: data.map(r=>r['宿泊']), backgroundColor: COLORS.amber } ] },
-            options: getBaseOptions('観光客入込数', { x: { stacked: true }, y: { stacked: true } }) }));
+        const cvs = resetCanvases(1), x = pick(data, '年');
+        chart(cvs[0], 'bar', x, [barSet('日帰り', pick(data, '日帰り'), 0), barSet('宿泊', pick(data, '宿泊'), 1)], '観光客入込数', STACK);
     }
     function renderIndustryTrend(data) {
-        const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '事業所数', data: data.map(r=>r['事業所数']), backgroundColor: '#5c6bc0' }] }, options: getBaseOptions('工業事業所数') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [{ label: '従業者数', data: data.map(r=>r['従業者数']), borderColor: COLORS.purple, backgroundColor: COLORS.purple, tension: 0.3 }] }, options: getBaseOptions('工業従業者数') }));
+        const cvs = resetCanvases(2), x = pick(data, '年');
+        chart(cvs[0], 'bar', x, [barSet('事業所数', pick(data, '事業所数'), 0)], '工業事業所数');
+        chart(cvs[1], 'line', x, [lineSet('従業者数', pick(data, '従業者数'), 1)], '工業従業者数');
     }
     function renderFarmingArea(data) {
-        const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [
-            { label: '田 (a)', data: data.map(r=>r['田']), backgroundColor: '#98b46b' },
-            { label: '畑 (a)', data: data.map(r=>r['畑']), backgroundColor: '#e2d37c' },
-            { label: '樹園地 (a)', data: data.map(r=>r['樹園地']), backgroundColor: '#e67e22' } ] },
-            options: getBaseOptions('経営耕地面積', { x: { stacked: true }, y: { stacked: true } }) }));
+        const cvs = resetCanvases(1), x = pick(data, '年');
+        chart(cvs[0], 'bar', x, [barSet('田 (a)', pick(data, '田'), 0), barSet('畑 (a)', pick(data, '畑'), 1), barSet('樹園地 (a)', pick(data, '樹園地'), 2)], '経営耕地面積', STACK);
     }
     function renderFarmlandConversion(data) {
-        const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [
-            { label: '住宅用地 (㎡)', data: data.map(r=>r['住宅用地']), backgroundColor: COLORS.red },
-            { label: '駐車場 (㎡)', data: data.map(r=>r['駐車場']), backgroundColor: '#34495e' } ] },
-            options: getBaseOptions('農地転用面積の推移', { x: { stacked: true }, y: { stacked: true } }) }));
+        const cvs = resetCanvases(1), x = pick(data, '年度');
+        chart(cvs[0], 'bar', x, [barSet('住宅用地 (㎡)', pick(data, '住宅用地'), 0), barSet('駐車場 (㎡)', pick(data, '駐車場'), 1)], '農地転用面積の推移', STACK);
     }
     function renderRailway(data) {
-        const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '年間乗降客数 (人)', data: data.map(r=>r['乗降客数']), borderColor: COLORS.primary, backgroundColor: 'rgba(29,78,137,0.1)', borderWidth: 3, fill: true, tension: 0.3 }] }, options: getBaseOptions('近江鉄道日野駅 年間乗降客数') }));
+        const cvs = resetCanvases(1), x = pick(data, '年度');
+        chart(cvs[0], 'line', x, [lineSet('年間乗降客数 (人)', pick(data, '乗降客数'), 0)], '近江鉄道日野駅 年間乗降客数');
     }
     function renderBus(data) {
-        const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [
-            { label: '定期利用', data: data.map(r=>r['定期']), backgroundColor: COLORS.primary },
-            { label: '定期外利用', data: data.map(r=>r['定期外']), backgroundColor: COLORS.purple } ] },
-            options: getBaseOptions('町営バス利用者数', { x: { stacked: true }, y: { stacked: true } }) }));
+        const cvs = resetCanvases(1), x = pick(data, '年');
+        chart(cvs[0], 'bar', x, [barSet('定期利用', pick(data, '定期'), 0), barSet('定期外利用', pick(data, '定期外'), 1)], '町営バス利用者数', STACK);
     }
     function renderTraffic(data) {
-        const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '事故件数', data: data.map(r=>r['事故件数']), borderColor: COLORS.red, backgroundColor: 'rgba(192,57,43,0.1)', borderWidth: 3, fill: true, tension: 0.3 }] }, options: getBaseOptions('交通事故発生件数') }));
+        const cvs = resetCanvases(1), x = pick(data, '年度');
+        chart(cvs[0], 'line', x, [lineSet('事故件数', pick(data, '事故件数'), 0)], '交通事故発生件数');
     }
     function renderWaterSupply(data) {
-        const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '給水人口 (人)', data: data.map(r=>r['給水人口']), borderColor: COLORS.primary, backgroundColor: COLORS.primary, tension: 0.3 }] }, options: getBaseOptions('給水人口') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '年間総配水量 (千m3)', data: data.map(r=>r['年間総配水量']), backgroundColor: COLORS.teal }] }, options: getBaseOptions('年間総配水量') }));
+        const cvs = resetCanvases(2), x = pick(data, '年度');
+        chart(cvs[0], 'line', x, [lineSet('給水人口 (人)', pick(data, '給水人口'), 0)], '給水人口');
+        chart(cvs[1], 'bar', x, [barSet('年間総配水量 (千m3)', pick(data, '年間総配水量'), 1)], '年間総配水量');
     }
     function renderSewerage(data) {
-        const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '普及率 (%)', data: data.map(r=>r['普及率']), borderColor: '#1abc9c', backgroundColor: '#1abc9c', tension: 0.3 }] }, options: getBaseOptions('下水道普及率') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '水洗化率 (%)', data: data.map(r=>r['水洗化率']), borderColor: COLORS.primary, backgroundColor: COLORS.primary, tension: 0.3 }] }, options: getBaseOptions('水洗化率') }));
+        const cvs = resetCanvases(2), x = pick(data, '年度');
+        chart(cvs[0], 'line', x, [lineSet('普及率 (%)', pick(data, '普及率'), 0)], '下水道普及率');
+        chart(cvs[1], 'line', x, [lineSet('水洗化率 (%)', pick(data, '水洗化率'), 1)], '水洗化率');
     }
     function renderGarbage(data) {
-        const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [
-            { label: '可燃物 投入量 (kl)', data: data.map(r=>r['可燃物投入量']), backgroundColor: '#e67e22' },
-            { label: '不燃物 投入量 (t)', data: data.map(r=>r['不燃物投入量']), backgroundColor: COLORS.grey } ] }, options: getBaseOptions('ごみ投入量') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '可燃物 1人当り (kg)', data: data.map(r=>r['可燃物1人当り']), borderColor: COLORS.accent, backgroundColor: 'rgba(212,93,0,0.1)', fill: true, borderWidth: 3, tension: 0.3 }] }, options: getBaseOptions('1人あたり可燃ごみ排出量') }));
+        const cvs = resetCanvases(2), x = pick(data, '年度');
+        chart(cvs[0], 'bar', x, [barSet('可燃物 投入量 (kl)', pick(data, '可燃物投入量'), 0), barSet('不燃物 投入量 (t)', pick(data, '不燃物投入量'), 1)], 'ごみ投入量');
+        chart(cvs[1], 'line', x, [lineSet('可燃物 1人当り (kg)', pick(data, '可燃物1人当り'), 2)], '1人あたり可燃ごみ排出量');
     }
     function renderTobacco(data) {
-        const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '消費量 (千本)', data: data.map(r=>r['消費量']), backgroundColor: '#8d6e63' }] }, options: getBaseOptions('たばこ年間消費量') }));
+        const cvs = resetCanvases(1), x = pick(data, '年度');
+        chart(cvs[0], 'bar', x, [barSet('消費量 (千本)', pick(data, '消費量'), 0)], 'たばこ年間消費量');
     }
     function renderNhis(data) {
-        const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '被保険者数', data: data.map(r=>r['被保険者数']), backgroundColor: '#1abc9c' }] }, options: getBaseOptions('国保被保険者数') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [{ label: '加入率 (%)', data: data.map(r=>r['加入率']), borderColor: '#16a085', backgroundColor: '#16a085', tension: 0.3 }] }, options: getBaseOptions('国保加入率') }));
+        const cvs = resetCanvases(2), x = pick(data, '年');
+        chart(cvs[0], 'bar', x, [barSet('被保険者数', pick(data, '被保険者数'), 0)], '国保被保険者数');
+        chart(cvs[1], 'line', x, [lineSet('加入率 (%)', pick(data, '加入率'), 1)], '国保加入率');
     }
     function renderLatterElderly(data) {
-        const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '受給者数 (人)', data: data.map(r=>r['受給者数']), backgroundColor: COLORS.accent }] }, options: getBaseOptions('後期高齢者医療 受給者数') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '1人当り費用額 (円)', data: data.map(r=>r['1人当り費用額']), borderColor: COLORS.red, backgroundColor: 'rgba(192,57,43,0.1)', fill: true, tension: 0.3 }] }, options: getBaseOptions('1人当りの費用額') }));
+        const cvs = resetCanvases(2), x = pick(data, '年度');
+        chart(cvs[0], 'bar', x, [barSet('受給者数 (人)', pick(data, '受給者数'), 0)], '後期高齢者医療 受給者数');
+        chart(cvs[1], 'line', x, [lineSet('1人当り費用額 (円)', pick(data, '1人当り費用額'), 1)], '1人当りの費用額');
     }
     function renderNursingCare(data) {
-        const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [
-            { label: '前期高齢者(65-74)', data: data.map(r=>r['前期高齢者']), backgroundColor: '#f1c40f' },
-            { label: '後期高齢者(75-)', data: data.map(r=>r['後期高齢者']), backgroundColor: '#e67e22' } ] },
-            options: getBaseOptions('介護保険1号被保険者数', { x: { stacked: true }, y: { stacked: true } }) }));
+        const cvs = resetCanvases(1), x = pick(data, '年度');
+        chart(cvs[0], 'bar', x, [barSet('前期高齢者(65-74)', pick(data, '前期高齢者'), 0), barSet('後期高齢者(75-)', pick(data, '後期高齢者'), 1)], '介護保険1号被保険者数', STACK);
     }
-    // 要介護認定者数：data/hino_care_certification.csv を原典から転記したあと、dashConfig に戻す
+    // 要介護認定者数：data/hino_care_certification.csv を原典から転記したあと、dashConfig に戻す。
+    // 区分が7つで区別の色の5色を超えるので、戻すときに描き方（区分ごとに分けるなど）と色を決める（hino-portal DESIGN.md 3.4）。いまは使っていない
     function renderCareCertification(data) {
         const cvs = resetCanvases(1);
         const cats = ['要支援1','要支援2','要介護1','要介護2','要介護3','要介護4','要介護5'];
@@ -694,40 +732,31 @@
             options: getBaseOptions('要支援・要介護認定者数', { x: { stacked: true }, y: { stacked: true } }) }));
     }
     function renderChildcare(data) {
-        const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { data: { labels: data.map(r=>r['年']), datasets: [
-            { type: 'line', label: '定員', data: data.map(r=>r['定員']), borderColor: COLORS.purple, backgroundColor: 'transparent', borderWidth: 2, tension: 0.3 },
-            { type: 'bar', label: '在籍人員', data: data.map(r=>r['在籍人員']), backgroundColor: '#9b59b6' } ] }, options: getBaseOptions('保育所・認定こども園の状況') }));
+        const cvs = resetCanvases(1), x = pick(data, '年');
+        chart(cvs[0], 'bar', x, [lineSet('定員', pick(data, '定員'), 0), barSet('在籍人員', pick(data, '在籍人員'), 1)], '保育所・認定こども園の状況');
     }
     function renderDiseases(data) {
-        const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年次']), datasets: [
-            { label: '悪性新生物', data: data.map(r=>r['悪性新生物']), backgroundColor: '#34495e' },
-            { label: '心疾患', data: data.map(r=>r['心疾患']), backgroundColor: COLORS.red },
-            { label: '脳血管疾患', data: data.map(r=>r['脳血管疾患']), backgroundColor: COLORS.grey } ] },
-            options: getBaseOptions('三大疾病別死亡数の推移', { x: { stacked: true }, y: { stacked: true } }) }));
+        const cvs = resetCanvases(1), x = pick(data, '年次');
+        chart(cvs[0], 'bar', x, ['悪性新生物', '心疾患', '脳血管疾患'].map((k, i) => barSet(k, pick(data, k), i)), '三大疾病別死亡数の推移', STACK);
     }
     function renderLibrary(data) {
-        const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '来館者数 (人)', data: data.map(r=>r['来館者数']), backgroundColor: '#16a085' }] }, options: getBaseOptions('図書館 来館者数') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '利用冊数 (冊)', data: data.map(r=>r['利用冊数']), borderColor: '#27ae60', backgroundColor: '#27ae60', tension: 0.3 }] }, options: getBaseOptions('図書館 利用(貸出)冊数') }));
+        const cvs = resetCanvases(2), x = pick(data, '年度');
+        chart(cvs[0], 'bar', x, [barSet('来館者数 (人)', pick(data, '来館者数'), 0)], '図書館 来館者数');
+        chart(cvs[1], 'line', x, [lineSet('利用冊数 (冊)', pick(data, '利用冊数'), 1)], '図書館 利用(貸出)冊数');
     }
     function renderCulturalFacilities(data) {
-        const cvs = resetCanvases(1);
-        activeCharts.push(new Chart(cvs[0], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [
-            { label: '近江日野商人館', data: data.map(r=>r['近江日野商人館']), borderColor: COLORS.primary, backgroundColor: 'transparent', borderWidth: 2, tension: 0.3 },
-            { label: '近江日野ふるさと館', data: data.map(r=>r['近江日野ふるさと館']), borderColor: '#27ae60', backgroundColor: 'transparent', borderWidth: 2, tension: 0.3 },
-            { label: '日野まちかど感応館', data: data.map(r=>r['日野まちかど感応館']), borderColor: '#e67e22', backgroundColor: 'transparent', borderWidth: 2, tension: 0.3 } ] }, options: getBaseOptions('町内主要文化施設 年間入館者数') }));
+        const cvs = resetCanvases(1), x = pick(data, '年度');
+        chart(cvs[0], 'line', x, ['近江日野商人館', '近江日野ふるさと館', '日野まちかど感応館'].map((k, i) => lineSet(k, pick(data, k), i)), '町内主要文化施設 年間入館者数');
     }
     function renderFinanceIndex(data) {
-        const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '経常収支比率 (%)', data: data.map(r=>r['経常収支比率']), backgroundColor: '#f1c40f' }] }, options: getBaseOptions('経常収支比率（低いほど弾力的）', { y: { min: 80 } }) }));
-        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年度']), datasets: [{ label: '将来負担比率 (%)', data: data.map(r=>r['将来負担比率']), borderColor: '#d35400', backgroundColor: 'rgba(211,84,0,0.1)', fill: true, tension: 0.3 }] }, options: getBaseOptions('将来負担比率') }));
+        const cvs = resetCanvases(2), x = pick(data, '年度');
+        chart(cvs[0], 'bar', x, [barSet('経常収支比率 (%)', pick(data, '経常収支比率'), 0)], '経常収支比率', { y: { min: 80, grid: { color: LINE }, ticks: { color: INK } } });
+        chart(cvs[1], 'line', x, [lineSet('将来負担比率 (%)', pick(data, '将来負担比率'), 1)], '将来負担比率');
     }
     function renderFireAmbulance(data) {
-        const cvs = resetCanvases(2);
-        activeCharts.push(new Chart(cvs[0], { type: 'bar', data: { labels: data.map(r=>r['年']), datasets: [{ label: '火災発生件数', data: data.map(r=>r['火災発生件数']), backgroundColor: COLORS.red }] }, options: getBaseOptions('火災発生件数') }));
-        activeCharts.push(new Chart(cvs[1], { type: 'line', data: { labels: data.map(r=>r['年']), datasets: [{ label: '救急車出動件数', data: data.map(r=>r['救急車出動件数']), borderColor: '#e67e22', backgroundColor: '#e67e22', tension: 0.3 }] }, options: getBaseOptions('救急車出動件数') }));
+        const cvs = resetCanvases(2), x = pick(data, '年');
+        chart(cvs[0], 'bar', x, [barSet('火災発生件数', pick(data, '火災発生件数'), 0)], '火災発生件数');
+        chart(cvs[1], 'line', x, [lineSet('救急車出動件数', pick(data, '救急車出動件数'), 1)], '救急車出動件数');
     }
 
     window.onload = init;
