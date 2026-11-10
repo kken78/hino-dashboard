@@ -198,7 +198,7 @@
                     <li>国勢調査の指標（高齢化率・1世帯あたりの人員）：5年ごとの調査で、いちばん新しい値は令和2年（2020年）です。令和7年の調査の結果が公表されたら差し替えます。</li>
                     <li>町の業務・決算の統計（出生数・社会増減・外国籍住民・観光・ごみ・鉄道・財政）：毎年の値で、いちばん新しい値は令和6年・令和6年度です。</li>
                 </ul>
-                <p>出典：<a href="https://www.town.shiga-hino.lg.jp/0000007518.html" target="_blank" rel="noopener" class="source-link">「統計でわかる！日野のすがた2025」（日野町）</a>。比べる相手の出典は各札に書いています。</p>
+                <p>出典：<a href="https://www.town.shiga-hino.lg.jp/0000007518.html" class="source-link">「統計でわかる！日野のすがた2025」（日野町）</a>。比べる相手の出典は各札に書いています。</p>
             </div>
         </div>
         <div class="card-section">
@@ -218,7 +218,7 @@
                 <button class="btn-action" onclick="stopRotation(); navigateDashboard(1)">次の統計 ▶</button>
             </div>
             <div class="nav-cluster">
-                <button id="btnPlay" class="btn-action btn-play" onclick="toggleRotation()">自動巡回</button>
+                <button id="btnPlay" class="btn-action btn-play" onclick="toggleRotation()">分野を順に表示</button>
             </div>
         </div>
         <div class="chart-panel">
@@ -227,7 +227,7 @@
             <div id="chartArea"></div>
             <div class="footer-box">
                 <a id="downloadBtn" href="#" class="download-link" download>CSVデータをダウンロード</a>
-                <span class="dash-src">出典：<a href="https://www.town.shiga-hino.lg.jp/0000007518.html" target="_blank" rel="noopener" class="source-link">「統計でわかる！日野のすがた2025」（日野町）</a></span>
+                <span class="dash-src">出典：<a href="https://www.town.shiga-hino.lg.jp/0000007518.html" class="source-link">「統計でわかる！日野のすがた2025」（日野町）</a></span>
             </div>
         </div>
     </div>
@@ -353,7 +353,7 @@
         grid.innerHTML = kpiDefs.map(d => `
             <section class="kpi-card" id="${d.id}" aria-labelledby="${d.id}-label">
                 <h3 class="kpi-label" id="${d.id}-label">${d.label}</h3>
-                <span class="kpi-src">データ確認中</span>
+                <span class="kpi-src">読み込み中</span>
                 <div class="kpi-value-box"><span class="kpi-value">--</span><span class="kpi-unit">${d.unit}</span></div>
                 <table class="kpi-table"><tbody></tbody></table>
                 <div class="kpi-trend">
@@ -407,13 +407,13 @@
     function toggleRotation() {
         const btn = document.getElementById('btnPlay');
         if (rotateInterval) { stopRotation(); }
-        else { btn.innerText = '自動巡回を止める'; btn.style.background = '#333';
+        else { btn.innerText = '順に表示を止める'; btn.style.background = '#333';
             rotateInterval = setInterval(() => navigateDashboard(1), 5000); }
     }
     function stopRotation() {
         if (rotateInterval) { clearInterval(rotateInterval); rotateInterval = null;
             const btn = document.getElementById('btnPlay');
-            if (btn) { btn.innerText = '自動巡回'; btn.style.background = 'var(--accent)'; } }
+            if (btn) { btn.innerText = '分野を順に表示'; btn.style.background = 'var(--accent)'; } }
     }
 
     function loadKPIData() {
