@@ -24,8 +24,9 @@
     <meta name="twitter:description" content="滋賀県日野町の統計資料「統計でわかる！日野のすがた」の数値を、指標の札とグラフで示す試作のページです。">
     <meta name="twitter:image" content="https://kken78.github.io/hino-dashboard/og.png">
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.6.1/dist/chart.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script src="vendor/chart.umd.min.js"></script>
+    <script src="vendor/papaparse.min.js"></script>
+    <script src="data.js"></script>
     <style>
         :root {
             --primary: #1d4e89; --secondary: #007a5e; --accent: #d45d00;
@@ -416,7 +417,8 @@
     }
 
     function loadKPIData() {
-        const parseKPI = (file, cb) => Papa.parse(`data/${file}`, { download: true, header: true, skipEmptyLines: true, complete: r => cb(r.data) });
+        // CSV は data.js から読む（data/*.csv から tools/build_data.py で作る。ファイルを直接開いても読めるように。DESIGN.md ADR-6）
+        const parseKPI = (file, cb) => Papa.parse(CSV[file], { header: true, skipEmptyLines: true, complete: r => cb(r.data) });
 
         parseKPI('hino_vital_stats.csv', d => {
             if (d.length < 2) return;
@@ -600,7 +602,7 @@
         document.getElementById('dashDesc').innerText = conf.desc;
         document.getElementById('dashSelector').value = key;
         document.getElementById('downloadBtn').href = `data/${conf.file}`;
-        Papa.parse(`data/${conf.file}`, { download: true, header: true, skipEmptyLines: true, complete: r => conf.render(r.data) });
+        Papa.parse(CSV[conf.file], { header: true, skipEmptyLines: true, complete: r => conf.render(r.data) });
     }
 
     function destroyCharts() { activeCharts.forEach(c => c.destroy()); activeCharts = []; }
